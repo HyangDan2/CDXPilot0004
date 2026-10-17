@@ -1169,3 +1169,185 @@ button:disabled:hover {
   width: 100%;
   font-size: 12px;
 }
+
+/* Touch pads share the same lane geometry as the canvas. */
+.touch-controls #lane-keys {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  padding: 0;
+  gap: 0;
+  justify-items: stretch;
+  min-height: 64px;
+}
+.touch-controls #lane-keys kbd {
+  display: grid;
+  place-items: center;
+  width: auto;
+  height: 100%;
+  min-height: 64px;
+  margin: 0;
+  border: 1px solid #58617d;
+  border-radius: 0;
+  font: 700 20px system-ui;
+  background: #151c33;
+}
+.touch-controls #lane-keys kbd.pressed {
+  background: #34496a;
+  box-shadow: inset 0 0 20px var(--key-color);
+}
+/* Only a compact touch play session takes over the viewport. Menus stay scrollable. */
+body.compact-play.in-play {
+  height: var(--play-height, 100dvh);
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.compact-play.in-play > header,
+.compact-play.in-play > footer {
+  display: none;
+}
+.compact-play.in-play main {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  padding: max(4px, env(safe-area-inset-top))
+    max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom))
+    max(6px, env(safe-area-inset-left));
+}
+.compact-play.in-play #play {
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: 42px 3px minmax(0, 1fr);
+  gap: 4px;
+}
+.compact-play.in-play .play-top {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  gap: 8px;
+}
+.compact-play.in-play .play-top > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
+.compact-play.in-play .play-top h2 {
+  font-size: 15px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.compact-play.in-play .play-top button {
+  padding: 8px 10px;
+  min-height: 40px;
+  font-size: 11px;
+  margin: 0;
+}
+.compact-play.in-play .play-top small,
+.compact-play.in-play #audio-mode,
+.compact-play.in-play #pause span,
+.compact-play.in-play .transport-info,
+.compact-play.in-play .drag-help {
+  display: none;
+}
+.compact-play.in-play .progress {
+  margin: 0;
+  height: 3px;
+}
+.compact-play.in-play .arena,
+.compact-play.in-play .arena.six {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 70px;
+  grid-template-rows: 38px minmax(0, 1fr);
+  gap: 4px;
+  min-height: 0;
+}
+.compact-play.in-play .arena > aside {
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.compact-play.in-play .arena > aside:first-child {
+  grid-row: 1;
+  grid-column: 1;
+}
+.compact-play.in-play .combo-side {
+  grid-row: 1;
+  grid-column: 2;
+  justify-content: end;
+}
+.compact-play.in-play .arena aside > small,
+.compact-play.in-play .arena aside > p,
+.compact-play.in-play .combo-side > span,
+.compact-play.in-play .combo-side .mascot,
+.compact-play.in-play .legend,
+.compact-play.in-play #run-mode {
+  display: none;
+}
+.compact-play.in-play .arena .number,
+.compact-play.in-play #accuracy {
+  font-size: 15px;
+  margin: 0;
+}
+.compact-play.in-play #score::before {
+  content: "SCORE ";
+  font-size: 8px;
+}
+.compact-play.in-play #combo::before {
+  content: "COMBO ";
+  font-size: 8px;
+}
+.compact-play.in-play .health-panel {
+  width: 78px;
+  flex-shrink: 0;
+  margin: 0;
+}
+.compact-play.in-play .health-panel small {
+  font-size: 7px;
+}
+.compact-play.in-play .health-panel strong {
+  font-size: 11px;
+}
+.compact-play.in-play #health-meter {
+  height: 4px;
+  margin: 2px 0;
+}
+.compact-play.in-play .highway {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  order: initial;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.compact-play.in-play #game-canvas {
+  flex: 1 1 0;
+  height: 0;
+  min-height: 0;
+  width: 100%;
+}
+.compact-play.in-play #lane-keys {
+  flex: 0 0 64px;
+}
+@media (max-height: 430px) {
+  .compact-play.in-play #lane-keys {
+    flex-basis: 48px;
+    min-height: 48px;
+  }
+  .compact-play.in-play #lane-keys kbd {
+    min-height: 48px;
+  }
+}
+@media (max-width: 360px) {
+  .compact-play.in-play #accuracy {
+    display: none;
+  }
+}

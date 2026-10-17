@@ -52,3 +52,7 @@ A user-reported stall at full-song rendering exposed the cost of constructing/re
 ## Pages readiness and portable local records (2026-10-18)
 
 Keep repository-relative paths and add a configurable local mount for static hosting checks. Do not rename the repository or deploy as part of this task. Local records remain personal: add versioned JSON export/import with atomic validation and stable top-ten merging. Keep the existing origin-scoped storage key so existing records remain accessible; moving from localhost to Pages requires manual transfer.
+
+## Mobile input and play layout (2026-10-18)
+
+Use capability detection plus AUTO/TOUCH/KEYBOARD preference, not user-agent model matching. Aggregate physical sources so a second finger or keyboard key cannot prematurely release a lane. Numbered pads use Pointer Events and restrict browser gestures only on their surface. Slide transitions judge EXPERT drag checkpoints only, preserving TAP behavior and existing score identity. A compact touch-only viewport grid moves the highway above decorative content while desktop layout and scrollable menus remain intact.

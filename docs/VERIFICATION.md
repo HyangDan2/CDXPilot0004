@@ -42,3 +42,11 @@ Follow docs/HARNESS.md in an authorized browser. Run the real-time audit and man
 ## Pages and record backup update — 2026-10-18
 
 Added local JSON backup/restore, explicit LOCAL BEST labels, `.nojekyll`, a configurable server mount, and deployment instructions. Static path tests passed for 127 exact-case pages/assets under both `/CDXPilot0004/` and `/renamed-project/`, including all ten deployment MP3s and eighty charts. No root-absolute runtime asset path was found that required rewriting. Backup tests passed for round trip, reload, duplicates, ties, top-ten limits, atomic validation, distinct boards, bounds, and unavailable storage. Actual Pages deployment and browser file-picker/download behavior remain unverified; no deployment was performed.
+
+## Mobile controls update — 2026-10-18
+
+Implemented persistent AUTO/TOUCH/KEYBOARD capability selection, source-aware keyboard/pointer aggregation, numbered four/six-lane pads, EXPERT-only slide judgements, capture/cancel cleanup, resume-anchor re-hold, and compact viewport-height play layout with safe-area padding. Desktop layout rules remain outside the compact touch override.
+
+The full npm test suite passed, including updated Pages checks for 129 exact-case pages/assets under both repository prefixes. Touch simulations passed for portrait/landscape capability decisions, simultaneous four/six-lane input, repeated moves, TAP isolation, overlapping sources, cancellation, out-of-bounds movement, cleanup, early-release/repress failure, and pause/re-hold recovery. Main module syntax, DOM references, and unique HTML IDs passed checks.
+
+No physical mobile device or browser layout run was performed. Scroll-free layout, safe-area/browser-toolbar handling, finger ergonomics, physical multi-touch limits, and iOS/Android audio activation/latency remain device acceptance items. The existing saved browser permission block was not bypassed. Static asset checks and simulated pointer callbacks do not establish those results.

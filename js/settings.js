@@ -3,6 +3,7 @@ export const DEFAULTS = Object.freeze({
   musicVolume: 100,
   sfxVolume: 70,
   playMode: "standard",
+  inputMode: "auto",
   character: true,
   offset: 0,
   speed: 1,
@@ -20,6 +21,9 @@ export function sanitizeSettings(data = {}) {
     volume: number("volume", 0, 100),
     musicVolume: number("musicVolume", 0, 100),
     sfxVolume: number("sfxVolume", 0, 100),
+    inputMode: ["auto", "touch", "keyboard"].includes(data.inputMode)
+      ? data.inputMode
+      : "auto",
     playMode: data.playMode === "free" ? "free" : "standard",
     character: data.character !== false,
     offset: number("offset", -300, 300),

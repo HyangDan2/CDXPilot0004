@@ -1,3 +1,4 @@
+import { TouchInput, inputEnvironment } from "./touch.js";
 import { HighScores, scoreKey } from "./highscores.js";
 import { Countdown } from "./countdown.js";
 import { SoundEffects } from "./sfx.js";
@@ -48,10 +49,10 @@ const calibration = new Calibration(
   },
 );
 const input = new Input(
-  (lane) => {
+  (lane, slide = false) => {
     advanceCountdown();
     if (state === "playing" && !document.querySelector("dialog[open]")) {
-      game.hit(lane, audio.time);
+      game.hit(lane, audio.time, { dragOnly: slide });
       if (game.failed) finish();
     }
   },
@@ -71,7 +72,63 @@ const input = new Input(
     if (state === "playing") game.release(lane, audio.time);
   },
 );
+let touchEnabled = false;
+const touchInput = new TouchInput(
+  $("lane-keys"),
+  input,
+  () =>
+    touchEnabled &&
+    ["playing", "countdown"].includes(state) &&
+    !document.querySelector("dialog[open]"),
+  () => game?.dragGroups.size > 0,
+);
+const coarsePointer = matchMedia("(any-pointer: coarse)");
+function updateInputEnvironment() {
+  const previous = touchEnabled;
+  const environment = inputEnvironment(settings.inputMode, {
+    touchPoints: navigator.maxTouchPoints || 0,
+    coarse: coarsePointer.matches,
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+  touchEnabled = environment.touch;
+  document.body.classList.toggle("touch-controls", touchEnabled);
+  document.body.classList.toggle("compact-play", environment.compact);
+  const viewport = window.visualViewport;
+  document.documentElement.style.setProperty(
+    "--play-height",
+    (viewport?.height || window.innerHeight) + "px",
+  );
+  if (previous !== touchEnabled) {
+    pause();
+    input.clear();
+  }
+  for (const [index, pad] of [...$("lane-keys").children].entries()) {
+    pad.textContent = touchEnabled
+      ? String(index + 1)
+      : input.keys[index].slice(3);
+    pad.setAttribute("aria-label", "Lane " + (index + 1));
+  }
+  $("input-description").textContent =
+    settings.inputMode.toUpperCase() +
+    " · " +
+    (touchEnabled
+      ? "Touch pads enabled. Keyboard also available."
+      : "Keyboard controls. Select TOUCH to enable pads.");
+}
+let previousWidth = window.innerWidth;
+window.addEventListener("resize", () => {
+  if (touchEnabled && previousWidth !== window.innerWidth) pause();
+  previousWidth = window.innerWidth;
+  updateInputEnvironment();
+});
+window.visualViewport?.addEventListener("resize", updateInputEnvironment);
+coarsePointer.addEventListener("change", updateInputEnvironment);
 function screen(id) {
+  document.body.classList.toggle("in-play", id === "play");
+  updateInputEnvironment();
+  if (id === "play" && document.body.classList.contains("compact-play"))
+    window.scrollTo(0, 0);
   for (const name of ["menu", "play", "results"]) $(name).hidden = name !== id;
   document.querySelector("main > .record-panel").hidden = id !== "menu";
 }
@@ -92,8 +149,10 @@ function renderKeys(id, lanes) {
     }),
   );
   target.style.setProperty("--lanes", lanes);
+  if (id === "lane-keys") updateInputEnvironment();
 }
 function applySettings() {
+  updateInputEnvironment();
   audio.volume = settings.volume / 100;
   audio.musicVolume = settings.musicVolume / 100;
   audio.sfxVolume = settings.sfxVolume / 100;
@@ -284,7 +343,9 @@ function beginCountdown(isResume) {
     if (anchor)
       $("countdown-caption").textContent =
         "RE-HOLD " +
-        MODES[game.lanes].keys[anchor.lane].slice(3) +
+        (touchEnabled
+          ? "LANE " + (anchor.lane + 1)
+          : MODES[game.lanes].keys[anchor.lane].slice(3)) +
         " TO CONTINUE";
   }
   state = "countdown";
@@ -538,10 +599,11 @@ for (const field of [
   "speed",
   "quality",
   "playMode",
+  "inputMode",
 ]) {
   $(field).value = settings[field];
   $(field).addEventListener("input", () => {
-    settings[field] = ["quality", "playMode"].includes(field)
+    settings[field] = ["quality", "playMode", "inputMode"].includes(field)
       ? $(field).value
       : Number($(field).value);
     if (field === "speed")

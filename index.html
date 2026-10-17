@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#080a19" />
     <title>Particle Beat — Find your frequency</title>
     <link rel="icon" href="data:," />
@@ -215,6 +218,21 @@
           <h2>Settings</h2>
           <button aria-label="Close settings">×</button>
         </div>
+        <label for="inputMode">INPUT MODE</label>
+        <select id="inputMode">
+          <option value="auto">AUTO</option>
+          <option value="touch">TOUCH</option>
+          <option value="keyboard">KEYBOARD</option>
+        </select>
+        <p id="input-description">
+          AUTO detects touch support. Keyboard input remains available in every
+          mode.
+        </p>
+        <p>
+          Touch: tap the lane pads. For EXPERT ribbons, hold and slide to the
+          neighboring pad on time. Re-touch the anchor during a resume
+          countdown.
+        </p>
         <label for="volume"
           >MASTER VOLUME <output id="volume-value">70%</output></label
         ><input id="volume" type="range" min="0" max="100" value="70" /><label

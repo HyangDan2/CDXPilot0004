@@ -99,12 +99,13 @@ export class Game {
             this.releasedAt.set(point.lane, audioTime - 0.081);
         }
   }
-  hit(lane, audioTime) {
+  hit(lane, audioTime, { dragOnly = false } = {}) {
     if (this.failed) return;
     this.update(audioTime);
     if (!this.heldSince.has(lane)) this.heldSince.set(lane, audioTime);
     const time = audioTime - this.inputOffset;
     const note = nearestNote(this.notes, lane, time);
+    if (dragOnly && note?.type !== "drag") return;
     let result = note && classify(time - note.at);
     if (note?.type === "drag") {
       const previous = this.dragGroups.get(note.group)[note.step - 1];

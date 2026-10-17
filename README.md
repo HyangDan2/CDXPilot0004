@@ -59,7 +59,7 @@ Records live only in this browser's localStorage, are not shared between devices
 
 Master, Music, and SFX volume are independent. Result melodies vary by grade/failure. Local calibration offers twelve clicks; tap SPACE after two warm-up beats to estimate combined device/reaction delay. Positive input offset compensates late input and applies next run.
 
-Lumi's nine local expressions react to judgement, health, countdown, and outcome. Character visibility, reduced motion, and effect quality are supported. Audio analysis drives bass pulse, rotating galaxy, and treble stars. See assets/characters/README.md for the original asset and generation prompt. Mobile touch controls are not implemented.
+Lumi's nine local expressions react to judgement, health, countdown, and outcome. Character visibility, reduced motion, and effect quality are supported. Audio analysis drives bass pulse, rotating galaxy, and treble stars. See assets/characters/README.md for the original asset and generation prompt. Mobile touch controls and a compact play layout are supported; see the touch controls section below.
 
 ## Authoring and checks
 
@@ -95,3 +95,15 @@ BASE_PATH=/CDXPilot0004 PORT=8766 node scripts/serve.mjs
 ```
 
 Open `http://127.0.0.1:8766/CDXPilot0004/`. `node tests/pages-paths.js` checks exact filename case and HTTP availability under both the current name and an alternative name, including ten MP3s and eighty charts. It is a static asset/HTTP check, not browser gameplay verification. After publication, verify the real site, audio activation, refresh, settings, and backup import/export in the target browser.
+
+## Mobile and touch controls
+
+SETTINGS → INPUT MODE offers AUTO (default), TOUCH, and KEYBOARD. AUTO enables touch pads when maxTouchPoints or a coarse pointer indicates touch capability. TOUCH forces pads on; KEYBOARD hides touch controls. Physical keyboard input remains available in every mode. This is capability detection, not a claim to identify the device model. The choice is saved locally.
+
+Tap a numbered pad as its note reaches the line. Four-key and six-key layouts support independent simultaneous pointers. Two fingers on the same lane count as one held lane, and releasing one cannot release another finger or keyboard source. Pointer cancellation and capture loss release the associated source.
+
+For EXPERT ribbons, hold the starting pad, slide into its neighboring pad at the next checkpoint, and lift after END. Crossing a boundary is one input, not automatic play: moving too early or too late does not wait for a note. Sliding never scores ordinary TAP notes; lift and tap those. Existing windows, health, scoring, and 80 ms ribbon grace apply. Hold the indicated lane again during a resume countdown. Leaving the pad area releases that hold.
+
+On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height layout with a short title/pause bar, compact health/score/accuracy/combo row, highway, and pads. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
+
+Run `node tests/touch.js` for simulated input and capability checks. Real iOS Safari/Android Chrome multi-touch, audio latency, safe areas, and browser chrome changes still require device acceptance; automated pointer tests are not physical-device verification.

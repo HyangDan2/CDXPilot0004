@@ -46,3 +46,11 @@
 - Version charts and fingerprint notes for leaderboards. Never mix modes or chart revisions. Tie scores keep earlier rows ahead.
 - Save only completed runs; use per-run IDs to prevent duplicate saves. Names are bounded and rendered with textContent. Handle unavailable storage without blocking gameplay.
 - Production keeps one decoded song and one selected download. Authoring renders ten-second cores with four-second warm-up and provides progress. Never claim a mock graph test verifies actual sound, render speed, or browser memory.
+
+## Touch contracts
+- Aggregate keyboard and pointer sources; release a lane only after its final source releases.
+- Pointer cancellation, capture loss, pause, and mode changes must clear held/captured state.
+- Slides may judge EXPERT drag checkpoints only, never TAP notes. Preserve the audio clock and ribbon grace.
+- AUTO uses capabilities, not user-agent model guesses. Respect explicit input mode while retaining keyboard support.
+- Compact play must fit the visual viewport and safe areas. Keep menus/settings scrollable and desktop layout unchanged.
+- Distinguish simulated multi-touch tests from real device/browser acceptance.

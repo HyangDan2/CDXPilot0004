@@ -49,3 +49,9 @@ Run `node scripts/verify-audio.mjs` with FFmpeg installed after audio regenerati
 - `node tests/pages-paths.js`: exact-case static references and HTTP loading under `/CDXPilot0004/` and `/renamed-project/`, including all deployment MP3s and charts. Starts isolated local servers on ephemeral ports; closes them after checks.
 - Manually export records, import in another origin, import again, and confirm no duplicates. Try malformed JSON and unavailable storage. Confirm settings remain usable and the backup file control does not close the dialog.
 - Publishing is separate from local readiness. Verify the real Pages URL after publication. A static HTTP pass does not prove browser rendering, audio, or download-picker behavior.
+
+## Mobile acceptance
+
+`node tests/touch.js` covers AUTO/TOUCH/KEYBOARD selection, portrait/landscape capability decisions, four/six simultaneous pointers, timed ribbon slides, repeated moves, TAP isolation, shared keyboard/touch ownership, cancellation, leaving bounds, mode clear, and disposal. These tests simulate pointer events; they do not measure browser layout or touch hardware.
+
+On actual iOS Safari and Android Chrome, check 360×640 and 390×844 portrait plus short landscape viewports: after START, no scroll should be required to see notes, the judgement line, pads, health, or pause. Check notches/home indicator/browser toolbar expansion, six-lane pad boundaries, two/three-finger chords, expert slides in both directions, missed/early handoffs, hold/re-hold across pause, rotation, backgrounding, and touch audio activation. Test AUTO on a touch laptop and KEYBOARD override, then confirm a regular desktop retains its layout. Verify settings scroll and file import still work. Record real device/browser findings separately from simulations.
