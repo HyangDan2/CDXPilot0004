@@ -64,3 +64,9 @@ HighScores validates loaded rows, filters duplicates, and tolerates malformed/un
 ## Presentation boundaries
 
 Renderer uses CSS pixels with capped DPR; sorted notes outside the approach window are skipped. Ribbons clip to the highway. Particle budgets stay fixed at 480/240/100 and reduced motion reduces movement. Lumi uses the original nine-cell local sprite with prioritized 400ms reactions. Settings and records never modify score timing. Calibration estimates human/device delay; it does not measure physical loopback latency.
+
+## Static hosting and record portability
+
+Static assets resolve relative to their HTML/CSS/module owner. Do not add domain-root `/assets` paths or hardcode a repository name. The development server accepts BASE_PATH to reproduce project Pages URLs and redirects the mount root to its trailing-slash URL. Production uses GitHub Pages static hosting only; `.nojekyll` avoids a Jekyll build.
+
+HighScores owns backup schema version 1 (`format: particle-beat-records`, `version`, `exportedAt`, `records`). Validate every incoming row and six-part board identity before changing state. Import deduplicates run IDs (existing wins), keeps stable ties, trims top ten per board, and enforces size/count bounds. Preserve old chart identities rather than merging revisions. Persistence failure leaves a session copy that can be exported. UI downloads via Blob URLs and reads user-selected files; it does not send records over the network. localStorage is origin-scoped, not repository-path-scoped; retain the existing key for compatibility.

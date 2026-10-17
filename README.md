@@ -75,3 +75,23 @@ Generation writes ten catalog entries and 80 JSON charts; saved audio is generat
 Browser logic checks: `/tests/`. Real-time audio/input/render audit: `/tests/browser.html`. The latter uses synthetic input in Free Play; it cannot verify physical keyboard rollover or perceived audio latency. See docs/VERIFICATION.md for what was actually executed.
 
 Contributor guide: AGENTS.md. Ownership and timing: docs/ARCHITECTURE.md. Test workflow: docs/HARNESS.md. Design history: docs/DECISIONS.md. All maintained files are in English.
+
+## Local record backups
+
+SETTINGS → LOCAL RECORDS → EXPORT RECORDS downloads a versioned JSON backup. IMPORT RECORDS merges a backup into this browser's boards. Each board keeps its top ten; duplicate run IDs are skipped, existing equal scores stay ahead, and malformed files are rejected before mutation. Files are limited to 2 MB and 2,000 records. Unknown chart revisions remain separate. Import does not alter your preferred player name or gameplay settings.
+
+Records are personal, not an online ranking. Clearing browser data removes them. Back up before moving from localhost to GitHub Pages, then import on the destination site. Storage is scoped to the browser origin (scheme, host, port), not the repository path: renaming a repository on the same GitHub Pages domain does not itself create a separate storage area. Other projects on that domain using the same storage key can share that area. If persistence fails, records remain in memory for the session and can still be exported.
+
+## GitHub Pages readiness
+
+The repository can remain named `CDXPilot0004`. The expected project address is `https://<account>.github.io/CDXPilot0004/`. No source code contains that repository name as a runtime base path. HTML/CSS/module references are relative, and audio URLs resolve against the module's project root. The root `.nojekyll` file marks this as a static site.
+
+When ready to publish, push the project files (including MP3s, charts, artwork, and `.nojekyll`) and open the repository's Settings → Pages. Choose **Deploy from a branch**, the intended branch, and **/(root)**, then Save. Do not select `/docs`, which contains documentation rather than the game. See [GitHub's publishing-source guide](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). This task has not enabled Pages or published the repository.
+
+Reproduce a project subpath locally:
+
+```sh
+BASE_PATH=/CDXPilot0004 PORT=8766 node scripts/serve.mjs
+```
+
+Open `http://127.0.0.1:8766/CDXPilot0004/`. `node tests/pages-paths.js` checks exact filename case and HTTP availability under both the current name and an alternative name, including ten MP3s and eighty charts. It is a static asset/HTTP check, not browser gameplay verification. After publication, verify the real site, audio activation, refresh, settings, and backup import/export in the target browser.

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "test": "node tests/run.js && node tests/runtime.js && node tests/library.js && node tests/expansion.js && node tests/volume3.js && node tests/synth-graph.js && node tests/saved-audio.js",
+    "test": "node tests/run.js && node tests/runtime.js && node tests/library.js && node tests/expansion.js && node tests/volume3.js && node tests/synth-graph.js && node tests/saved-audio.js && node tests/record-backup.js && node tests/pages-paths.js",
     "generate:library": "node scripts/generate-library.mjs"
   }
 }

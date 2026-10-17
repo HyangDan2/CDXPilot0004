@@ -422,7 +422,7 @@ function recordResult() {
       date: new Date().toISOString(),
     };
     if (highScores.isBest(key, game.score)) {
-      $("record-message").textContent = "NEW HIGH SCORE!";
+      $("record-message").textContent = "NEW LOCAL BEST!";
       $("record-name").value = highScores.lastName;
       $("record-dialog").showModal();
     } else savePending(highScores.lastName);
@@ -444,6 +444,7 @@ function openSettings() {
   if (busy) return;
   if (["playing", "countdown"].includes(state)) pause();
   $("calibrate-open").disabled = state === "paused";
+  $("backup-status").textContent = highScores.error;
   $("settings").showModal();
 }
 let lastFrame = 0;
@@ -561,6 +562,42 @@ $("speed-number").onchange = () => {
 $("playMode").addEventListener("change", () => {
   if (chart) renderLeaderboard(chart, settings.playMode);
 });
+$("records-export").onclick = () => {
+  const url = URL.createObjectURL(
+    new Blob([highScores.exportBackup()], { type: "application/json" }),
+  );
+  const link = document.createElement("a");
+  link.href = url;
+  link.download =
+    "particle-beat-records-" + new Date().toISOString().slice(0, 10) + ".json";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  $("backup-status").textContent =
+    "Backup download requested. Keep the JSON file to restore your local records.";
+};
+$("records-import").onchange = async (event) => {
+  const field = event.target,
+    file = field.files[0];
+  if (!file) return;
+  field.disabled = true;
+  try {
+    if (file.size > 2 * 1024 * 1024)
+      throw new Error("Backup exceeds the 2 MB limit.");
+    const result = highScores.importBackup(await file.text());
+    $("backup-status").textContent = result.ok
+      ? result.imported + " records merged. Saved in this browser."
+      : highScores.error;
+    if (chart) renderLeaderboard(chart, settings.playMode);
+    if (run) renderLeaderboard(run.chart, run.playMode, "result-leaderboard");
+  } catch (error) {
+    $("backup-status").textContent = error.message;
+  } finally {
+    field.value = "";
+    field.disabled = false;
+  }
+};
 $("record-save").onclick = () => savePending($("record-name").value);
 $("record-skip").onclick = () => savePending("PLAYER");
 $("record-dialog").addEventListener("cancel", (event) => {

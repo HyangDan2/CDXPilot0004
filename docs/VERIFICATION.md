@@ -38,3 +38,7 @@ Actual layout, browser console cleanliness, browser file loading/decoding perfor
 ## Remaining acceptance work
 
 Follow docs/HARNESS.md in an authorized browser. Run the real-time audit and manually play both key modes, including EXPERT ribbons, pause/resume during a ribbon, game over, Free Play, new-record entry, reload persistence, and high-speed rendering. Listen to all ten compositions and check timing near the beginning and end of each track. Record browser/device details and actual findings before claiming browser acceptance. Deployment remains out of scope.
+
+## Pages and record backup update — 2026-10-18
+
+Added local JSON backup/restore, explicit LOCAL BEST labels, `.nojekyll`, a configurable server mount, and deployment instructions. Static path tests passed for 127 exact-case pages/assets under both `/CDXPilot0004/` and `/renamed-project/`, including all ten deployment MP3s and eighty charts. No root-absolute runtime asset path was found that required rewriting. Backup tests passed for round trip, reload, duplicates, ties, top-ten limits, atomic validation, distinct boards, bounds, and unavailable storage. Actual Pages deployment and browser file-picker/download behavior remain unverified; no deployment was performed.

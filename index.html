@@ -282,6 +282,25 @@
           Reduced-motion preferences are respected. Changes are saved on this
           device.
         </p>
+        <fieldset class="backup-controls">
+          <legend>LOCAL RECORDS</legend>
+          <p>
+            Records are saved in this browser only. Other browsers and devices
+            do not share them. Clearing browser data removes them.
+          </p>
+          <button type="button" id="records-export">EXPORT RECORDS</button>
+          <label for="records-import">IMPORT RECORDS · JSON, MAX 2 MB</label>
+          <input
+            type="file"
+            id="records-import"
+            accept=".json,application/json"
+          />
+          <p>
+            Import merges each board's top ten and skips duplicate runs.
+            Existing records win ties. No online ranking or account is used.
+          </p>
+          <p id="backup-status" role="status"></p>
+        </fieldset>
         <button type="button" id="calibrate-open">CALIBRATE AUDIO ↗</button
         ><button class="primary">DONE</button>
       </form>
@@ -331,7 +350,7 @@
     </dialog>
     <dialog id="record-dialog">
       <form id="record-form">
-        <div class="eyebrow">NEW HIGH SCORE!</div>
+        <div class="eyebrow">NEW LOCAL BEST!</div>
         <h2>Leave your signal.</h2>
         <label for="record-name">NAME · UP TO 12 CHARACTERS</label
         ><input

@@ -42,3 +42,10 @@ Record exact commands, selected track/mode/difficulty, browser/OS, audio output 
 ## Saved asset checks
 
 Run `node scripts/verify-audio.mjs` with FFmpeg installed after audio regeneration. It decodes deployed MP3s, compares decoded sample counts and alignment with their WAV masters, checks finite samples/peaks and signal in every ten-second segment, and writes assets/music/rendered-v3/verification.json. This is signal analysis, not physical listening or a browser benchmark.
+
+## Pages and record backups
+
+- `node tests/record-backup.js`: export/import, reload, duplicate runs, ties, board limits, atomic rejection, partitions, bounded input, and storage failure.
+- `node tests/pages-paths.js`: exact-case static references and HTTP loading under `/CDXPilot0004/` and `/renamed-project/`, including all deployment MP3s and charts. Starts isolated local servers on ephemeral ports; closes them after checks.
+- Manually export records, import in another origin, import again, and confirm no duplicates. Try malformed JSON and unavailable storage. Confirm settings remain usable and the backup file control does not close the dialog.
+- Publishing is separate from local readiness. Verify the real Pages URL after publication. A static HTTP pass does not prove browser rendering, audio, or download-picker behavior.

@@ -3,7 +3,12 @@ import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
 const root = fileURLToPath(new URL("../", import.meta.url)).replace(/\/$/, "");
+const basePath =
+  "/" + (process.env.BASE_PATH || "").split("/").filter(Boolean).join("/");
+const prefix = basePath === "/" ? "" : basePath;
 const types = {
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
   ".html": "text/html",
   ".js": "text/javascript",
   ".css": "text/css",
@@ -14,9 +19,18 @@ const types = {
 };
 const server = http.createServer(async (request, response) => {
   try {
-    const pathname = decodeURIComponent(
+    let pathname = decodeURIComponent(
       new URL(request.url, "http://localhost").pathname,
     );
+    if (prefix && pathname === prefix) {
+      response.writeHead(301, { Location: prefix + "/" }).end();
+      return;
+    }
+    if (prefix && !pathname.startsWith(prefix + "/")) {
+      response.writeHead(404).end("Not found");
+      return;
+    }
+    pathname = pathname.slice(prefix.length);
     const file = resolve(
       root,
       "." + (pathname.endsWith("/") ? pathname + "index.html" : pathname),
@@ -35,6 +49,8 @@ const server = http.createServer(async (request, response) => {
     response.writeHead(404).end("Not found");
   }
 });
-server.listen(Number(process.env.PORT) || 8765, "127.0.0.1", () =>
-  console.log(`Particle Beat: http://127.0.0.1:${server.address().port}`),
+server.listen(Number(process.env.PORT ?? 8765), "127.0.0.1", () =>
+  console.log(
+    `Particle Beat: http://127.0.0.1:${server.address().port}${prefix}/`,
+  ),
 );

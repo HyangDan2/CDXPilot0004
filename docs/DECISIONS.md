@@ -48,3 +48,7 @@ The user explicitly expanded scope to five two-minute tracks, 4/6-key modes, thr
 ## Saved soundtrack playback (2026-10-17)
 
 A user-reported stall at full-song rendering exposed the cost of constructing/rendering a complete graph before play. Move synthesis into optional authoring tools. Ship gapless MP3 copies and WAV masters; prefetch selected audio and decode after activation. Preserve the AudioContext transport and chart timestamps. Load failures are visible/retryable, with no synthesis fallback for catalog tracks. Windowed authoring bounds graph size; its native execution is not evidence of browser acceptance.
+
+## Pages readiness and portable local records (2026-10-18)
+
+Keep repository-relative paths and add a configurable local mount for static hosting checks. Do not rename the repository or deploy as part of this task. Local records remain personal: add versioned JSON export/import with atomic validation and stable top-ten merging. Keep the existing origin-scoped storage key so existing records remain accessible; moving from localhost to Pages requires manual transfer.
