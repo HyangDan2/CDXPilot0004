@@ -1,0 +1,352 @@
+[
+  {
+    "id": "neon-galaxy",
+    "title": "Neon Galaxy",
+    "bpm": 124,
+    "root": 57,
+    "color": "#7be9ff",
+    "genre": "CELESTIAL SYNTHWAVE",
+    "description": "Warm analog chords. A neon horizon.",
+    "motif": [
+      0,
+      7,
+      12,
+      10,
+      7,
+      3,
+      5,
+      7
+    ],
+    "chords": [
+      0,
+      -5,
+      -2,
+      -7
+    ],
+    "seed": 11,
+    "tone": 0,
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/neon-galaxy.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "violet-drift",
+    "title": "Violet Drift",
+    "bpm": 100,
+    "root": 54,
+    "color": "#bd9aff",
+    "genre": "ORBITAL DOWNTEMPO",
+    "description": "Weightless bells in a violet dusk.",
+    "motif": [
+      12,
+      7,
+      3,
+      10,
+      5,
+      7,
+      0,
+      3
+    ],
+    "chords": [
+      0,
+      -2,
+      -5,
+      3
+    ],
+    "seed": 23,
+    "tone": 1,
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/violet-drift.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "solar-rush",
+    "title": "Solar Rush",
+    "bpm": 140,
+    "root": 60,
+    "color": "#ffb56c",
+    "genre": "SOLAR ELECTRO",
+    "description": "Bright pulses. Full-throttle ascent.",
+    "motif": [
+      0,
+      0,
+      7,
+      12,
+      10,
+      7,
+      5,
+      3
+    ],
+    "chords": [
+      0,
+      3,
+      -5,
+      -2
+    ],
+    "seed": 37,
+    "tone": 2,
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/solar-rush.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "deep-orbit",
+    "title": "Deep Orbit",
+    "bpm": 112,
+    "root": 50,
+    "color": "#62efcd",
+    "genre": "DEEP SPACE HOUSE",
+    "description": "A rolling bassline beyond the stars.",
+    "motif": [
+      0,
+      3,
+      7,
+      5,
+      12,
+      10,
+      7,
+      3
+    ],
+    "chords": [
+      0,
+      -7,
+      -5,
+      -2
+    ],
+    "seed": 53,
+    "tone": 3,
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/deep-orbit.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "starlight-engine",
+    "title": "Starlight Engine",
+    "bpm": 132,
+    "root": 59,
+    "color": "#ff8ad5",
+    "genre": "PRISMATIC TRANCE",
+    "description": "Shimmering arpeggios. Infinite motion.",
+    "motif": [
+      0,
+      7,
+      3,
+      12,
+      7,
+      15,
+      10,
+      7
+    ],
+    "chords": [
+      0,
+      -5,
+      3,
+      -2
+    ],
+    "seed": 71,
+    "tone": 4,
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/starlight-engine.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "pixel-sunrise",
+    "title": "Pixel Sunrise",
+    "bpm": 168,
+    "root": 60,
+    "color": "#a2f5ff",
+    "genre": "FORMANT ELECTROPOP",
+    "description": "Digital syllables and a bright arcade chorus.",
+    "motif": [
+      0,
+      4,
+      7,
+      12,
+      11,
+      7,
+      9,
+      4
+    ],
+    "chords": [
+      0,
+      -5,
+      2,
+      -3
+    ],
+    "seed": 89,
+    "tone": 5,
+    "style": "electro",
+    "sections": [
+      8,
+      32,
+      56,
+      70,
+      106
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/pixel-sunrise.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "velvet-satellite",
+    "title": "Velvet Satellite",
+    "bpm": 118,
+    "root": 58,
+    "color": "#e3a2ff",
+    "genre": "DREAM DANCE POP",
+    "description": "Airy bells, soft harmony, and a floating groove.",
+    "motif": [
+      7,
+      11,
+      14,
+      9,
+      4,
+      7,
+      2,
+      11
+    ],
+    "chords": [
+      0,
+      -2,
+      -5,
+      2
+    ],
+    "seed": 101,
+    "tone": 6,
+    "style": "dream",
+    "sections": [
+      12,
+      36,
+      60,
+      78,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/velvet-satellite.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "chrome-heart",
+    "title": "Chrome Heart",
+    "bpm": 104,
+    "root": 55,
+    "color": "#ffa0b7",
+    "genre": "MILLENNIUM DANCE POP",
+    "description": "Punchy brass, syncopated bass, and answering leads.",
+    "motif": [
+      0,
+      3,
+      0,
+      7,
+      5,
+      3,
+      10,
+      7
+    ],
+    "chords": [
+      0,
+      -5,
+      -2,
+      -7
+    ],
+    "seed": 113,
+    "tone": 7,
+    "style": "dance",
+    "sections": [
+      6,
+      30,
+      54,
+      72,
+      104
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/chrome-heart.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "comet-riot",
+    "title": "Comet Riot",
+    "bpm": 156,
+    "root": 52,
+    "color": "#ffb36c",
+    "genre": "SYNTH GUITAR ROCK",
+    "description": "Overdriven power chords and tumbling drum fills.",
+    "motif": [
+      0,
+      7,
+      12,
+      7,
+      3,
+      5,
+      10,
+      7
+    ],
+    "chords": [
+      0,
+      3,
+      -5,
+      -2
+    ],
+    "seed": 127,
+    "tone": 8,
+    "style": "rock",
+    "sections": [
+      10,
+      34,
+      58,
+      74,
+      110
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/comet-riot.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "rainfall-circuit",
+    "title": "Rainfall Circuit",
+    "bpm": 172,
+    "root": 57,
+    "color": "#8edcb8",
+    "genre": "PIANO DRUM AND BASS",
+    "description": "Falling piano notes above a broken-beat engine.",
+    "motif": [
+      12,
+      7,
+      3,
+      10,
+      14,
+      7,
+      5,
+      3
+    ],
+    "chords": [
+      0,
+      -5,
+      3,
+      -2
+    ],
+    "seed": 139,
+    "tone": 9,
+    "style": "dnb",
+    "sections": [
+      16,
+      40,
+      64,
+      80,
+      112
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/rainfall-circuit.mp3",
+    "synthesis": "web-audio-v3"
+  }
+]

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Particle Beat — Verification Harness</title>
+    <style>
+      body {
+        background: #0b1020;
+        color: #c8fff1;
+        font: 16px monospace;
+        padding: 40px;
+      }
+      pre {
+        line-height: 2;
+        white-space: pre-wrap;
+      }
+      a {
+        color: #9fefff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Verification Harness</h1>
+    <p id="summary">Running…</p>
+    <pre id="results"></pre>
+    <a href="../">Return to game</a>
+    <h2>Survival and presentation checks</h2>
+    <pre id="expansion-results"></pre>
+    <script type="module" src="run.js"></script>
+    <script type="module" src="expansion.js"></script>
+    <h2>Volume 03 checks</h2>
+    <pre id="volume3-results"></pre>
+    <script type="module" src="volume3.js"></script>
+  </body>
+</html>

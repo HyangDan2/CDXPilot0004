@@ -1,0 +1,77 @@
+# Particle Beat — Volume 03
+
+A buildless desktop rhythm game with ten original two-minute Web Audio compositions, 80 versioned charts, 4/6 keys, four difficulty tiers, EXPERT keyboard ribbons, local named records, and a reactive cosmic stage with Lumi.
+
+## Run
+
+```sh
+node scripts/serve.mjs
+```
+
+Open http://127.0.0.1:8765/. Node.js 22+ is recommended for the optional server. Any static HTTP server works; no install or build is required. Do not use file://. Runtime requires a browser with AudioContext. Bundled audio files load from the same static server. No external services, Python, accounts, or API keys are required. No deployment has been performed.
+
+## Collection
+
+Every composition lasts 120 seconds. Audio is pre-rendered during authoring from oscillators, filters, noise, envelopes, stereo panning, delay, and distortion. There are no lyrics, real singers, borrowed melodies, or cloned voices. Each mode/difficulty shares the same soundtrack.
+
+| Track | Style | BPM |
+| --- | --- | --- |
+| Neon Galaxy | Celestial synthwave | 124 |
+| Violet Drift | Orbital downtempo | 100 |
+| Solar Rush | Solar electro | 140 |
+| Deep Orbit | Deep space house | 112 |
+| Starlight Engine | Prismatic trance | 132 |
+| Pixel Sunrise | Formant electropop | 168 |
+| Velvet Satellite | Dream dance pop | 118 |
+| Chrome Heart | Millennium dance pop | 104 |
+| Comet Riot | Synth guitar rock | 156 |
+| Rainfall Circuit | Piano drum and bass | 172 |
+
+The five new tracks use distinct instruments and arrangements. Selection prefetches a saved MP3; Start decodes it and begins the count-in. Gameplay never synthesizes the soundtrack. Only the current decoded song is cached; retries and difficulty changes reuse it. Failed loads show a retry message. Ten deployment MP3s total approximately 24 MB. WAV masters and the separate authoring procedure are documented in assets/music/README.md.
+
+## Controls and difficulty
+
+4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. PERFECT +2 health, GOOD +1, MISS -8; health is capped at 100. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
+
+Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and keyboard ribbons. HARD/EXPERT have at most two-note chords in 4-key mode and three-note chords in 6-key mode. Chart revision 3 separates new records from earlier data.
+
+### EXPERT ribbons
+
+A connected neon ribbon joins HOLD, directional checkpoints, and END. Press the first key on time and keep it held. Press the adjacent key at the next checkpoint, then release the previous key. Short overlaps are allowed. Releasing the previous key up to 80ms before the next hit is allowed; an earlier release breaks that link even if you re-press just before the checkpoint. Every checkpoint scores once, using the same judgement/health rules as TAP notes. A missed checkpoint can be followed by a successful recovery; a timed input re-anchors the chain.
+
+There are no competing TAPs inside generated ribbon windows. On pause, held-key state is cleared. Re-hold the indicated anchor key during the resume countdown to reconnect. Countdown input cannot score. Release the last key after END. EASY/NORMAL/HARD contain only TAP notes.
+
+### Speed and scoring
+
+Scroll speed ranges from 0.5× to 10× in 0.25 steps, using either slider or numeric entry. It changes approach time only; music tempo, windows, and scores are unchanged. At 10× the visible approach is approximately 180ms. Settings apply speed immediately while paused and persist locally.
+
+PERFECT <=50ms: 1000 points. GOOD <=120ms: 500. MISS <=180ms: zero and combo reset. Unplayed points expire after 180ms. The nearest unresolved same-lane point is selected; empty inputs have no penalty. Accuracy is score / (all TAPs and ribbon checkpoints × 1000). Grades are S >=95%, A >=90%, B >=80%, C >=70%, otherwise D. Failed runs receive no completion grade.
+
+## High scores
+
+Each track/key mode/difficulty/play mode/chart revision has a local top ten. The board key also fingerprints note data and chart offset, so changed charts cannot silently share old scores. Scroll speed is not a ranking category.
+
+Only completed runs qualify. A strictly new first-place score opens a name prompt, prefilled with the last name. Names are limited to 12 characters. Save, or Skip/Escape to use PLAYER. Other qualifying top-ten runs use the last name. Ties keep existing entries ahead and do not trigger a record prompt. Every run has an ID to prevent duplicate storage. Records show score, accuracy, maximum combo, and date; the menu and result screen expose the relevant board.
+
+Records live only in this browser's localStorage, are not shared between devices, and are not cheat-resistant. Storage failure keeps the record for the current session and displays a message. Invalid stored rows are filtered. No server or database is used.
+
+## Presentation and audio settings
+
+Master, Music, and SFX volume are independent. Result melodies vary by grade/failure. Local calibration offers twelve clicks; tap SPACE after two warm-up beats to estimate combined device/reaction delay. Positive input offset compensates late input and applies next run.
+
+Lumi's nine local expressions react to judgement, health, countdown, and outcome. Character visibility, reduced motion, and effect quality are supported. Audio analysis drives bass pulse, rotating galaxy, and treble stars. See assets/characters/README.md for the original asset and generation prompt. Mobile touch controls are not implemented.
+
+## Authoring and checks
+
+Edit `js/music.js` for compositions, cue placement, and lane patterns; `js/synth.js` owns instrument graphs. Regenerate JSON only:
+
+```sh
+node scripts/generate-library.mjs
+npm test
+```
+
+Generation writes ten catalog entries and 80 JSON charts; saved audio is generated separately using tools/render-audio.html or scripts/render-audio.mjs (see assets/music/README.md). A drag checkpoint uses `{time, lane, type: "drag", group, step}` with contiguous steps, strictly increasing times, and adjacent lanes. Only EXPERT allows this type. Keep competing notes outside each ribbon window plus 180ms margin. All charts carry a version.
+
+Browser logic checks: `/tests/`. Real-time audio/input/render audit: `/tests/browser.html`. The latter uses synthetic input in Free Play; it cannot verify physical keyboard rollover or perceived audio latency. See docs/VERIFICATION.md for what was actually executed.
+
+Contributor guide: AGENTS.md. Ownership and timing: docs/ARCHITECTURE.md. Test workflow: docs/HARNESS.md. Design history: docs/DECISIONS.md. All maintained files are in English.

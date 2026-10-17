@@ -1,0 +1,111 @@
+import { DIFFICULTIES } from "./config.js";
+export function validateBeatmap(data) {
+  if (
+    !data ||
+    typeof data.id !== "string" ||
+    !data.id.trim() ||
+    typeof data.title !== "string" ||
+    !data.title.trim() ||
+    typeof data.artist !== "string"
+  )
+    throw new Error("Track identity is incomplete.");
+  if (
+    !Number.isFinite(data.bpm) ||
+    data.bpm <= 0 ||
+    !Number.isFinite(data.offsetMs)
+  )
+    throw new Error("Invalid BPM or chart offset.");
+  if (data.audio != null && typeof data.audio !== "string")
+    throw new Error("Audio must be a path or null.");
+  if (!Array.isArray(data.notes) || !data.notes.length)
+    throw new Error("A track must contain notes.");
+  const lanes = data.lanes ?? 4;
+  if (![4, 6].includes(lanes))
+    throw new Error("Only four or six lanes are supported.");
+  if (data.difficulty != null && !DIFFICULTIES.includes(data.difficulty))
+    throw new Error("Unknown difficulty.");
+  if (
+    data.duration != null &&
+    (!Number.isFinite(data.duration) || data.duration <= 0)
+  )
+    throw new Error("Invalid track duration.");
+  const seen = new Set(),
+    groups = new Map();
+  const notes = data.notes
+    .map((note) => {
+      if (
+        !Number.isFinite(note.time) ||
+        note.time < 0 ||
+        !Number.isInteger(note.lane) ||
+        note.lane < 0 ||
+        note.lane >= lanes ||
+        note.time + data.offsetMs / 1000 < 0
+      )
+        throw new Error("Invalid note time or lane.");
+      if (
+        data.duration != null &&
+        note.time + data.offsetMs / 1000 + 0.18 >= data.duration
+      )
+        throw new Error("Note extends past duration.");
+      const key = note.time + ":" + note.lane;
+      if (seen.has(key)) throw new Error("Duplicate note.");
+      seen.add(key);
+      if (note.type != null && !["tap", "drag"].includes(note.type))
+        throw new Error("Unknown note type.");
+      if (note.type === "drag") {
+        if (
+          data.difficulty !== "expert" ||
+          typeof note.group !== "string" ||
+          !note.group ||
+          !Number.isInteger(note.step) ||
+          note.step < 0
+        )
+          throw new Error("Invalid EXPERT drag metadata.");
+        const copy = {
+          time: note.time,
+          lane: note.lane,
+          type: "drag",
+          group: note.group,
+          step: note.step,
+        };
+        if (!groups.has(note.group)) groups.set(note.group, []);
+        groups.get(note.group).push(copy);
+        return copy;
+      }
+      return { time: note.time, lane: note.lane };
+    })
+    .sort((a, b) => a.time - b.time || a.lane - b.lane);
+  const intervals = [];
+  for (const [id, points] of groups) {
+    points.sort((a, b) => a.step - b.step);
+    if (points.length < 2)
+      throw new Error("A ribbon needs at least two checkpoints.");
+    points.forEach((point, i) => {
+      if (
+        point.step !== i ||
+        (i > 0 &&
+          (point.time <= points[i - 1].time ||
+            Math.abs(point.lane - points[i - 1].lane) !== 1))
+      )
+        throw new Error("Invalid ribbon order or adjacency.");
+    });
+    const start = points[0].time,
+      end = points.at(-1).time;
+    if (
+      notes.some(
+        (n) => n.group !== id && n.time >= start - 0.18 && n.time <= end + 0.18,
+      )
+    )
+      throw new Error("Competing notes overlap a ribbon.");
+    if (intervals.some(([a, b]) => start <= b && end >= a))
+      throw new Error("Overlapping ribbons.");
+    intervals.push([start, end]);
+  }
+  return { ...data, lanes, notes };
+}
+export async function loadBeatmap(path) {
+  const response = await fetch(path);
+  if (!response.ok)
+    throw new Error(`Cannot load beatmap (${response.status}).`);
+  return validateBeatmap(await response.json());
+}

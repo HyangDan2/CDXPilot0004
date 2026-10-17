@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><title>Particle Beat Audio Authoring</title>
+  <style>
+    body {
+      font: 18px system-ui;
+      background: #101323;
+      color: #e2eaff;
+      max-width: 760px;
+      margin: 60px auto;
+      padding: 20px;
+    }
+    button,
+    select {
+      font: inherit;
+      margin: 12px;
+      padding: 12px;
+    }
+    a {
+      color: #7be9ff;
+    }
+  </style>
+  <h1>Soundtrack Authoring</h1>
+  <p>
+    Development tool only. Render one 120-second soundtrack, then download its
+    WAV master. Rendering can be expensive. The game never runs this tool.
+  </p>
+  <select id="track" aria-label="Track"></select
+  ><button id="render">Render WAV</button>
+  <p id="status" role="status">Ready.</p>
+  <a id="download" hidden>Download WAV master</a>
+  <p>
+    Encode the master with FFmpeg at 160 kbps with a Xing header. See
+    assets/music/README.md. Keep sample zero and chart timestamps unchanged.
+  </p>
+  <script type="module" src="./render-audio.js"></script>
+</html>

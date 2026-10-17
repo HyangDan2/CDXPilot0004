@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080a19" />
+    <title>Particle Beat — Find your frequency</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <canvas id="cosmos" aria-hidden="true"></canvas>
+    <header>
+      <a class="brand" href="./"
+        ><span class="brand-icon">✳</span> PARTICLE<span>BEAT</span></a
+      ><span class="edition">VOLUME 03 <i></i> TEN COSMIC FREQUENCIES</span
+      ><button id="settings-open" class="small">SETTINGS ↗</button>
+    </header>
+    <main>
+      <section id="menu" class="screen">
+        <div class="hero">
+          <div class="eyebrow">
+            <span class="live-dot"></span> YOUR KEYS. ONE UNIVERSE.
+          </div>
+          <h1>Find your<br /><span>frequency.</span></h1>
+          <p>
+            A rhythm in the dark. A signal through the stars.<br />Lock into the
+            beat and make every note count.
+          </p>
+          <div class="play-options">
+            <label
+              >KEY MODE<select id="mode">
+                <option value="4">4 KEYS · D F J K</option>
+                <option value="6">6 KEYS · S D F J K L</option>
+              </select></label
+            ><label
+              >DIFFICULTY<select id="difficulty">
+                <option value="easy">EASY</option>
+                <option value="normal" selected>NORMAL</option>
+                <option value="hard">HARD</option>
+                <option value="expert">EXPERT</option>
+              </select></label
+            >
+          </div>
+          <div class="actions">
+            <button id="start" class="primary" disabled>
+              START GAME <span>↗</span></button
+            ><button id="tracks-open">TRACK SELECT <span>≡</span></button>
+          </div>
+          <div class="keyboard-help">
+            <div id="menu-keys">
+              <kbd>D</kbd><kbd>F</kbd><span></span><kbd>J</kbd><kbd>K</kbd>
+            </div>
+            <small
+              ><span id="key-help-label"
+                >FOUR LANES · TAP TO THE BEAT</span
+              ></small
+            >
+          </div>
+        </div>
+        <div class="orbit-art" aria-hidden="true">
+          <div class="orbit o1"></div>
+          <div class="orbit o2"></div>
+          <div class="orbit o3"></div>
+          <div class="planet"></div>
+          <div class="signal s1"></div>
+          <div class="signal s2"></div>
+          <div class="orbit-caption">
+            SIGNAL DETECTED<br /><strong id="orbit-bpm">124 BPM</strong>
+          </div>
+        </div>
+        <div class="track-strip">
+          <span class="track-number">01</span>
+          <div class="mini-art">◈</div>
+          <div>
+            <small>NOW LOADED</small>
+            <h3 id="loaded-title">Connecting to the signal…</h3>
+            <span id="loaded-meta"
+              >Saved soundtracks · No external streaming</span
+            >
+          </div>
+          <div class="track-badge" id="track-badge">NORMAL</div>
+          <span class="duration"
+            ><span id="track-duration">02:00</span
+            ><small id="track-mode">4 KEY</small></span
+          >
+        </div>
+      </section>
+      <details class="record-panel">
+        <summary>LOCAL TOP 10 / SELECTED CHART</summary>
+        <ol id="leaderboard"></ol>
+        <p>
+          Records are separate by key mode, difficulty, play mode, and chart
+          revision. Stored on this browser only.
+        </p>
+      </details>
+      <section id="play" class="screen" hidden>
+        <div class="play-top">
+          <div>
+            <small>NOW PLAYING</small>
+            <h2 id="play-title"></h2>
+            <span id="audio-mode"></span>
+          </div>
+          <div>
+            <button id="pause">PAUSE <span>ESC</span></button
+            ><button id="restart">RESTART</button>
+          </div>
+        </div>
+        <div class="transport-info">
+          <span id="play-selection"></span
+          ><span id="elapsed">00:00 / 02:00</span>
+        </div>
+        <p class="drag-help">
+          EXPERT RIBBONS: hold the start key, press each neighboring key on
+          time, then release the previous key. Re-hold the active key during a
+          resume countdown.
+        </p>
+        <div class="progress"><div id="progress-fill"></div></div>
+        <div class="arena">
+          <aside>
+            <div class="health-panel">
+              <div>
+                <small>SIGNAL / HEALTH</small
+                ><strong id="health-value">100</strong>
+              </div>
+              <div
+                id="health-meter"
+                role="progressbar"
+                aria-label="Health"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="100"
+              >
+                <div id="health-fill"></div>
+              </div>
+              <span id="run-mode">STANDARD</span>
+            </div>
+            <small>SCORE</small>
+            <div id="score" class="number">000000</div>
+            <small>ACCURACY</small>
+            <div id="accuracy">0.00%</div>
+            <p>Stay in the moment.<br />Follow the signal.</p>
+          </aside>
+          <div class="highway">
+            <div id="countdown" class="countdown" hidden aria-live="polite">
+              <small id="countdown-caption">GET READY</small
+              ><strong id="countdown-number">3</strong>
+            </div>
+            <canvas id="game-canvas" aria-label="Rhythm game highway"></canvas>
+            <div id="lane-keys" class="lane-keys">
+              <kbd>D</kbd><kbd>F</kbd><kbd>J</kbd><kbd>K</kbd>
+            </div>
+          </div>
+          <aside class="combo-side">
+            <small>COMBO</small>
+            <div id="combo" class="number">0</div>
+            <span>KEEP THE SIGNAL ALIVE</span>
+            <div
+              id="mascot"
+              class="mascot"
+              role="img"
+              aria-label="Lumi, your space DJ"
+            ></div>
+            <small class="mascot-name">LUMI / YOUR CO-PILOT</small>
+            <div class="legend">
+              <p>PERFECT <b>±50ms</b></p>
+              <p>GOOD <b>±120ms</b></p>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section id="results" class="screen result-screen" hidden>
+        <div id="result-eyebrow" class="eyebrow">TRANSMISSION COMPLETE</div>
+        <h1 id="result-heading">Your frequency.<br /><span>Found.</span></h1>
+        <div
+          id="result-mascot"
+          class="mascot result-mascot"
+          role="img"
+          aria-label="Lumi"
+        ></div>
+        <div class="result-card">
+          <div id="grade" class="grade">S</div>
+          <div>
+            <small>FINAL SCORE</small>
+            <div id="final-score" class="number"></div>
+          </div>
+          <div>
+            <small>ACCURACY</small>
+            <h2 id="final-accuracy"></h2>
+            <small>MAXIMUM COMBO</small>
+            <h2 id="final-combo"></h2>
+          </div>
+        </div>
+        <p id="result-track"></p>
+        <p id="record-message" role="status"></p>
+        <details class="record-panel">
+          <summary>LOCAL TOP 10 / THIS RUN</summary>
+          <ol id="result-leaderboard"></ol>
+        </details>
+        <div id="counts" class="counts"></div>
+        <div class="actions">
+          <button id="retry" class="primary">PLAY AGAIN ↗</button
+          ><button id="result-tracks">TRACK SELECT</button
+          ><button id="main-menu">MAIN MENU</button>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span>HEADPHONES ON. WORLD OFF.</span
+      ><span>LOCAL AUDIO <i></i> VOLUME 03 / COSMIC EDITION</span>
+    </footer>
+    <dialog id="settings">
+      <form method="dialog">
+        <div class="dialog-title">
+          <h2>Settings</h2>
+          <button aria-label="Close settings">×</button>
+        </div>
+        <label for="volume"
+          >MASTER VOLUME <output id="volume-value">70%</output></label
+        ><input id="volume" type="range" min="0" max="100" value="70" /><label
+          for="offset"
+          >INPUT OFFSET (ms)</label
+        ><input
+          id="offset"
+          type="number"
+          min="-300"
+          max="300"
+          step="5"
+          value="0"
+        />
+        <p>
+          Positive values compensate for late input. Applies on the next run.
+          Chart offset is configured separately.
+        </p>
+        <label for="speed"
+          >NOTE SPEED <output id="speed-value">1.00×</output></label
+        ><input
+          id="speed"
+          type="range"
+          min="0.5"
+          max="10"
+          step="0.25"
+          value="1"
+        />
+        <p>
+          Changes travel speed only. Range: 0.5× to 10×. Music and judgement
+          timing stay unchanged.
+        </p>
+        <label for="speed-number">EXACT NOTE SPEED</label
+        ><input
+          id="speed-number"
+          type="number"
+          min="0.5"
+          max="10"
+          step="0.25"
+          value="1"
+        /><label for="musicVolume"
+          >MUSIC VOLUME <output id="music-volume-value">100%</output></label
+        ><input id="musicVolume" type="range" min="0" max="100" value="100" />
+        <label for="sfxVolume"
+          >SFX VOLUME <output id="sfx-volume-value">70%</output></label
+        ><input id="sfxVolume" type="range" min="0" max="100" value="70" />
+        <label for="playMode">PLAY MODE</label
+        ><select id="playMode">
+          <option value="standard">STANDARD · HEALTH + GAME OVER</option>
+          <option value="free">FREE PLAY · NO GAME OVER</option>
+        </select>
+        <p>
+          Applies on the next run. Free Play keeps scoring and health but lets
+          you finish every song.
+        </p>
+        <label class="toggle-label"
+          ><input id="character" type="checkbox" checked /> SHOW LUMI
+          CHARACTER</label
+        ><label for="quality">EFFECT QUALITY</label
+        ><select id="quality">
+          <option value="high">HIGH · FULL GALAXY</option>
+          <option value="medium">MEDIUM · BALANCED</option>
+          <option value="low">LOW · REDUCED EFFECTS</option>
+        </select>
+        <p>
+          Reduced-motion preferences are respected. Changes are saved on this
+          device.
+        </p>
+        <button type="button" id="calibrate-open">CALIBRATE AUDIO ↗</button
+        ><button class="primary">DONE</button>
+      </form>
+    </dialog>
+    <dialog id="tracks">
+      <form method="dialog">
+        <div class="dialog-title">
+          <div>
+            <small>THE COSMIC COLLECTION</small>
+            <h2>Choose your signal.</h2>
+          </div>
+          <button aria-label="Close track selection">×</button>
+        </div>
+        <div id="track-list"></div>
+        <p>
+          Ten original Web Audio tracks. Two minutes each. Eight charts per
+          track.
+        </p>
+        <button class="primary">BACK TO PLAY ↗</button>
+      </form>
+    </dialog>
+    <dialog id="paused">
+      <div class="eyebrow">SIGNAL ON HOLD</div>
+      <h2>Take a breath.</h2>
+      <p>The universe can wait.</p>
+      <button id="resume" class="primary">RESUME ↗</button
+      ><button id="pause-settings">SETTINGS</button
+      ><button id="pause-menu">MAIN MENU</button>
+    </dialog>
+    <dialog id="calibration">
+      <div class="dialog-title">
+        <h2>Find your timing.</h2>
+        <button id="calibration-close" aria-label="Close calibration">×</button>
+      </div>
+      <p>
+        Listen to the clicks. Tap SPACE with each click after the first two
+        warm-up beats. The ring marks the same audio-clock beats.
+      </p>
+      <div id="calibration-ring">SPACE</div>
+      <p id="calibration-message">Use your usual headphones or speakers.</p>
+      <button id="calibration-start" class="primary">START 12-BEAT CHECK</button
+      ><button id="calibration-apply" disabled>APPLY MEASURED OFFSET</button>
+      <p>
+        Human reaction and output latency are combined. Repeat if the timing
+        feels inconsistent.
+      </p>
+    </dialog>
+    <dialog id="record-dialog">
+      <form id="record-form">
+        <div class="eyebrow">NEW HIGH SCORE!</div>
+        <h2>Leave your signal.</h2>
+        <label for="record-name">NAME · UP TO 12 CHARACTERS</label
+        ><input
+          id="record-name"
+          type="text"
+          maxlength="12"
+          autocomplete="nickname"
+          value="PLAYER"
+        /><button id="record-save" type="button" class="primary">
+          SAVE RECORD</button
+        ><button id="record-skip" type="button">SKIP / USE PLAYER</button>
+      </form>
+    </dialog>
+    <div id="status" role="status" aria-live="polite">Loading demo…</div>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

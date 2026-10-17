@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Particle Beat — Live Audio Audit</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+      main {
+        max-width: 1000px;
+        padding: 25px;
+      }
+      h1 {
+        font-size: 40px;
+        letter-spacing: -1px;
+      }
+      pre {
+        white-space: pre-wrap;
+        line-height: 1.7;
+        background: #111b2d;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      canvas {
+        height: 340px;
+        max-width: 500px;
+        margin: 20px auto;
+      }
+      .audit-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .audit-controls select {
+        width: auto;
+      }
+      #audit-status {
+        color: #91fff2;
+      }
+      a {
+        color: #91fff2;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Live Audio Audit</h1>
+      <p>
+        This page plays the full two-minute track through a real AudioContext
+        after saved soundtrack loading and decoding. Synthetic keyboard events exercise
+        the production Input and Game modules. It measures browser scheduling,
+        not physical speaker or human response latency. Keep this tab visible.
+      </p>
+      <div class="audit-controls">
+        <select id="track" aria-label="Audit track"></select
+        ><select id="lanes" aria-label="Audit lanes">
+          <option value="4">4 KEYS</option>
+          <option value="6" selected>6 KEYS</option></select
+        ><select id="difficulty" aria-label="Audit difficulty">
+          <option>easy</option>
+          <option>normal</option>
+          <option>hard</option>
+          <option selected>expert</option></select
+        ><button id="run" class="primary">RUN 120-SECOND AUDIT</button
+        ><button id="pause" disabled>PAUSE</button
+        ><button id="resume" disabled>RESUME</button
+        ><button id="stop" disabled>STOP</button>
+      </div>
+      <p id="audit-status" role="status">
+        Ready. No audio plays until Run is clicked.
+      </p>
+      <canvas id="audit-canvas"></canvas>
+      <pre id="report">No measurements yet.</pre>
+      <p><a href="./">Logic checks</a> · <a href="../">Return to game</a></p>
+    </main>
+    <script type="module" src="browser.js"></script>
+  </body>
+</html>
