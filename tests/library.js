@@ -80,7 +80,9 @@ for (const track of TRACKS) {
       const failed = new Game(chart);
       failed.update(120);
       assert(
-        failed.failed && failed.counts.MISS === 13,
+        failed.failed &&
+          failed.counts.MISS ===
+            { easy: 13, normal: 10, hard: 9, expert: 7 }[difficulty],
         "Standard terminal freeze",
       );
       assert(

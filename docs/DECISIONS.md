@@ -56,3 +56,9 @@ Keep repository-relative paths and add a configurable local mount for static hos
 ## Mobile input and play layout (2026-10-18)
 
 Use capability detection plus AUTO/TOUCH/KEYBOARD preference, not user-agent model matching. Aggregate physical sources so a second finger or keyboard key cannot prematurely release a lane. Numbered pads use Pointer Events and restrict browser gestures only on their surface. Slide transitions judge EXPERT drag checkpoints only, preserving TAP behavior and existing score identity. A compact touch-only viewport grid moves the highway above decorative content while desktop layout and scrollable menus remain intact.
+
+## Full-lane touch and difficulty health (2026-10-18)
+
+Replace numbered touch pads with the canvas as the input surface. Retain audio-time judgement, independent pointer ownership, and EXPERT-only horizontal slide checkpoints. Remove the pad footprint so the highway fills remaining mobile space. Suppress mobile play gestures locally, keeping menus/dialogs scrollable and avoiding a permanent global zoom restriction.
+
+Reduce recovery and raise miss damage by difficulty using the approved table. GOOD no longer heals. Preserve fractional health internally, round the HUD only, and retain Free Play at zero. Scoring/charts and existing local records remain unchanged; this release does not retroactively invalidate previous records.

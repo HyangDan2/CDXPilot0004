@@ -1170,32 +1170,18 @@ button:disabled:hover {
   font-size: 12px;
 }
 
-/* Touch pads share the same lane geometry as the canvas. */
-.touch-controls #lane-keys {
+/* Touch uses the entire canvas; keyboard labels remain on desktop. */
+.touch-controls #game-canvas {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
-  padding: 0;
-  gap: 0;
-  justify-items: stretch;
-  min-height: 64px;
 }
-.touch-controls #lane-keys kbd {
-  display: grid;
-  place-items: center;
-  width: auto;
-  height: 100%;
-  min-height: 64px;
-  margin: 0;
-  border: 1px solid #58617d;
-  border-radius: 0;
-  font: 700 20px system-ui;
-  background: #151c33;
+.touch-controls #lane-keys {
+  display: none;
 }
-.touch-controls #lane-keys kbd.pressed {
-  background: #34496a;
-  box-shadow: inset 0 0 20px var(--key-color);
+.compact-play.in-play #play {
+  touch-action: none;
 }
 /* Only a compact touch play session takes over the viewport. Menus stay scrollable. */
 body.compact-play.in-play {
@@ -1334,18 +1320,7 @@ body.compact-play.in-play {
   min-height: 0;
   width: 100%;
 }
-.compact-play.in-play #lane-keys {
-  flex: 0 0 64px;
-}
-@media (max-height: 430px) {
-  .compact-play.in-play #lane-keys {
-    flex-basis: 48px;
-    min-height: 48px;
-  }
-  .compact-play.in-play #lane-keys kbd {
-    min-height: 48px;
-  }
-}
+
 @media (max-width: 360px) {
   .compact-play.in-play #accuracy {
     display: none;

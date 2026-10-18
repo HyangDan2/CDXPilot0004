@@ -1,4 +1,4 @@
-import { TouchInput, inputEnvironment } from "./touch.js";
+import { TouchInput, PlayGestureGuard, inputEnvironment } from "./touch.js";
 import { HighScores, scoreKey } from "./highscores.js";
 import { Countdown } from "./countdown.js";
 import { SoundEffects } from "./sfx.js";
@@ -74,13 +74,20 @@ const input = new Input(
 );
 let touchEnabled = false;
 const touchInput = new TouchInput(
-  $("lane-keys"),
+  $("game-canvas"),
   input,
   () =>
     touchEnabled &&
     ["playing", "countdown"].includes(state) &&
     !document.querySelector("dialog[open]"),
   () => game?.dragGroups.size > 0,
+);
+const playGestures = new PlayGestureGuard(
+  $("play"),
+  () =>
+    document.body.classList.contains("compact-play") &&
+    document.body.classList.contains("in-play") &&
+    !document.querySelector("dialog[open]"),
 );
 const coarsePointer = matchMedia("(any-pointer: coarse)");
 function updateInputEnvironment() {
@@ -103,18 +110,12 @@ function updateInputEnvironment() {
     pause();
     input.clear();
   }
-  for (const [index, pad] of [...$("lane-keys").children].entries()) {
-    pad.textContent = touchEnabled
-      ? String(index + 1)
-      : input.keys[index].slice(3);
-    pad.setAttribute("aria-label", "Lane " + (index + 1));
-  }
   $("input-description").textContent =
     settings.inputMode.toUpperCase() +
     " · " +
     (touchEnabled
-      ? "Touch pads enabled. Keyboard also available."
-      : "Keyboard controls. Select TOUCH to enable pads.");
+      ? "Touch lanes enabled. Keyboard also available."
+      : "Keyboard controls. Select TOUCH to enable lane touch.");
 }
 let previousWidth = window.innerWidth;
 window.addEventListener("resize", () => {
@@ -295,7 +296,7 @@ async function start() {
       : "SAVED AUDIO · ORIGINAL INSTRUMENTAL";
     $("game-canvas").setAttribute(
       "aria-label",
-      `${selectedChart.lanes} lanes. Use ${MODES[selectedChart.lanes].keys.map((k) => k.slice(3)).join(" ")}.`,
+      `${selectedChart.lanes} lanes. ${touchEnabled ? "Touch anywhere in a lane on time. Slide sideways for EXPERT ribbons." : "Use " + MODES[selectedChart.lanes].keys.map((k) => k.slice(3)).join(" ") + "."}`,
     );
     beginCountdown(false);
     clearFocus();
@@ -535,7 +536,7 @@ function frame(timestamp) {
       audio.context.currentTime,
       settings.character,
     );
-    $("health-value").textContent = game.health;
+    $("health-value").textContent = Math.round(game.health);
     $("health-fill").style.width = game.health + "%";
     $("health-meter").setAttribute("aria-valuenow", game.health);
     $("health-meter").classList.toggle("low", game.health <= 25);

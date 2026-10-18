@@ -31,7 +31,7 @@ The five new tracks use distinct instruments and arrangements. Selection prefetc
 
 ## Controls and difficulty
 
-4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. PERFECT +2 health, GOOD +1, MISS -8; health is capped at 100. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
+4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. Health starts at 100 and is capped at 100. PERFECT recovery / MISS damage are EASY +0.5 / −8, NORMAL +0.4 / −10, HARD +0.3 / −12, EXPERT +0.2 / −15. GOOD does not heal. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
 
 Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and keyboard ribbons. HARD/EXPERT have at most two-note chords in 4-key mode and three-note chords in 6-key mode. Chart revision 3 separates new records from earlier data.
 
@@ -98,12 +98,16 @@ Open `http://127.0.0.1:8766/CDXPilot0004/`. `node tests/pages-paths.js` checks e
 
 ## Mobile and touch controls
 
-SETTINGS → INPUT MODE offers AUTO (default), TOUCH, and KEYBOARD. AUTO enables touch pads when maxTouchPoints or a coarse pointer indicates touch capability. TOUCH forces pads on; KEYBOARD hides touch controls. Physical keyboard input remains available in every mode. This is capability detection, not a claim to identify the device model. The choice is saved locally.
+SETTINGS → INPUT MODE offers AUTO (default), TOUCH, and KEYBOARD. AUTO enables lane touch when maxTouchPoints or a coarse pointer indicates touch capability. TOUCH forces lane touch on; KEYBOARD hides touch controls. Physical keyboard input remains available in every mode. This is capability detection, not a claim to identify the device model. The choice is saved locally.
 
-Tap a numbered pad as its note reaches the line. Four-key and six-key layouts support independent simultaneous pointers. Two fingers on the same lane count as one held lane, and releasing one cannot release another finger or keyboard source. Pointer cancellation and capture loss release the associated source.
+Tap anywhere inside the relevant lane as its note reaches the judgement line; you do not need to touch the moving note. Numbered buttons are hidden in touch mode. Vertical movement within a lane does not create another hit. Four-key and six-key layouts support independent simultaneous pointers. Two fingers on the same lane count as one held lane, and releasing one cannot release another finger or keyboard source. Pointer cancellation and capture loss release the associated source.
 
-For EXPERT ribbons, hold the starting pad, slide into its neighboring pad at the next checkpoint, and lift after END. Crossing a boundary is one input, not automatic play: moving too early or too late does not wait for a note. Sliding never scores ordinary TAP notes; lift and tap those. Existing windows, health, scoring, and 80 ms ribbon grace apply. Hold the indicated lane again during a resume countdown. Leaving the pad area releases that hold.
+For EXPERT ribbons, hold the starting lane, slide into its neighboring lane at the next checkpoint, and lift after END. Crossing a boundary is one input, not automatic play: moving too early or too late does not wait for a note. Sliding never scores ordinary TAP notes; lift and tap those. Existing windows, health, scoring, and 80 ms ribbon grace apply. Hold the indicated lane again during a resume countdown. Leaving the canvas releases that hold.
 
-On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height layout with a short title/pause bar, compact health/score/accuracy/combo row, highway, and pads. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
+On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height layout with a short title/pause bar, compact health/score/accuracy/combo row, and full-height touch highway. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
 
 Run `node tests/touch.js` for simulated input and capability checks. Real iOS Safari/Android Chrome multi-touch, audio latency, safe areas, and browser chrome changes still require device acceptance; automated pointer tests are not physical-device verification.
+
+During compact mobile play, CSS touch-action and scoped gesture handlers suppress pinch, double-tap/double-click zoom, and touch scrolling. These handlers are inactive outside play or while a dialog is open. Browser/OS accessibility zoom may override page restrictions and requires real-device verification.
+
+Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and ribbon checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT. Charts, timing windows, scores, and existing records remain unchanged; older records may have been earned under the previous survival rules.

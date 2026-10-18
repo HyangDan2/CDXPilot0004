@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { Input } from "../js/input.js";
-import { TouchInput, inputEnvironment } from "../js/touch.js";
+import { TouchInput, PlayGestureGuard, inputEnvironment } from "../js/touch.js";
 import { Game } from "../js/game.js";
 import { sanitizeSettings } from "../js/settings.js";
 assert.deepEqual(
@@ -172,6 +172,41 @@ assert.equal(
   2000,
   "Re-holding the anchor restores the paused ribbon",
 );
+assert.equal(touch.laneAt({ clientX: 50, clientY: 1 }), 0);
+assert.equal(touch.laneAt({ clientX: 50, clientY: 99 }), 0);
+assert.equal(touch.laneAt({ clientX: 50, clientY: 100 }), null);
+const guards = new Map();
+let active = true,
+  prevented = 0;
+const guardSurface = {
+  addEventListener(name, fn, options) {
+    assert.equal(options.passive, false);
+    guards.set(name, fn);
+  },
+  removeEventListener(name) {
+    guards.delete(name);
+  },
+};
+const guard = new PlayGestureGuard(guardSurface, () => active);
+for (const fn of guards.values())
+  fn({
+    cancelable: true,
+    preventDefault() {
+      prevented++;
+    },
+  });
+assert.equal(prevented, 5);
+active = false;
+for (const fn of guards.values())
+  fn({
+    cancelable: true,
+    preventDefault() {
+      prevented++;
+    },
+  });
+assert.equal(prevented, 5, "Menus/dialogs retain gestures");
+guard.dispose();
+assert.equal(guards.size, 0);
 touch.dispose();
 input.dispose();
 assert.equal(Object.keys(handlers).length, 0);

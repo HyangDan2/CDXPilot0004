@@ -26,7 +26,6 @@ export class TouchInput {
         input.release("pointer:" + id);
         if (surface.hasPointerCapture?.(id)) surface.releasePointerCapture(id);
       }
-      this.paint();
     };
     input.clearHooks.add(this.reset);
     this.down = (event) => {
@@ -38,7 +37,6 @@ export class TouchInput {
       this.pointers.set(event.pointerId, lane);
       surface.setPointerCapture?.(event.pointerId);
       input.press("pointer:" + event.pointerId, lane);
-      this.paint();
     };
     this.move = (event) => {
       if (!this.pointers.has(event.pointerId)) return;
@@ -50,19 +48,17 @@ export class TouchInput {
       const lane = this.laneAt(event),
         previous = this.pointers.get(event.pointerId);
       if (lane === previous) return;
-      // Leaving the pad releases the anchor; re-entering cannot fabricate a hold.
+      // Leaving the highway releases the anchor; re-entering cannot fabricate a hold.
       input.release("pointer:" + event.pointerId);
       this.pointers.set(event.pointerId, lane);
       if (lane != null && canSlide())
         input.press("pointer:" + event.pointerId, lane, true);
-      this.paint();
     };
     this.end = (event) => {
       if (!this.pointers.delete(event.pointerId)) return;
       input.release("pointer:" + event.pointerId);
       if (surface.hasPointerCapture?.(event.pointerId))
         surface.releasePointerCapture(event.pointerId);
-      this.paint();
     };
     this.handlers = {
       pointerdown: this.down,
@@ -88,15 +84,33 @@ export class TouchInput {
       ((event.clientX - box.left) / box.width) * this.input.keys.length,
     );
   }
-  paint() {
-    [...this.surface.children].forEach((pad, lane) =>
-      pad.classList.toggle("pressed", this.input.held.has(lane)),
-    );
-  }
   dispose() {
     this.reset();
     this.input.clearHooks.delete(this.reset);
     for (const [name, handler] of Object.entries(this.handlers))
       this.surface.removeEventListener(name, handler);
+  }
+}
+
+// Scoped to active mobile play; menus and dialogs retain normal gestures.
+export class PlayGestureGuard {
+  constructor(surface, enabled) {
+    this.surface = surface;
+    this.prevent = (event) => {
+      if (enabled() && event.cancelable) event.preventDefault();
+    };
+    this.events = [
+      "gesturestart",
+      "gesturechange",
+      "gestureend",
+      "dblclick",
+      "touchmove",
+    ];
+    for (const name of this.events)
+      surface.addEventListener(name, this.prevent, { passive: false });
+  }
+  dispose() {
+    for (const name of this.events)
+      this.surface.removeEventListener(name, this.prevent);
   }
 }

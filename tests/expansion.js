@@ -18,6 +18,7 @@ function assert(value, message) {
 }
 const chart = {
   lanes: 6,
+  difficulty: "easy",
   offsetMs: 0,
   notes: Array.from({ length: 30 }, (_, i) => ({ time: i + 1, lane: i % 6 })),
 };
@@ -43,10 +44,10 @@ test("Health cap, recovery, and duplicate prevention", () => {
   g.hit(1, 2.15);
   assert(g.health === 92, "Miss costs eight");
   g.hit(2, 3.1);
-  assert(g.health === 93, "Good heals one");
+  assert(g.health === 92, "Good does not heal");
   g.hit(3, 4);
   g.hit(3, 4);
-  assert(g.health === 95, "Perfect heals two once");
+  assert(g.health === 92.5, "Perfect heals half a point once");
 });
 test("Free Play survives zero and can recover", () => {
   const g = new Game(chart, 0, "free");
@@ -56,7 +57,7 @@ test("Free Play survives zero and can recover", () => {
     "Free mode must not fail",
   );
   g.hit(1, 14);
-  assert(g.health === 2, "Recover from zero");
+  assert(g.health === 0.5, "Recover from zero");
   g.update(40);
   assert(g.complete && !g.failed, "Free mode reaches completion");
 });

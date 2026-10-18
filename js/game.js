@@ -1,9 +1,10 @@
-import { CONFIG, grade } from "./config.js";
+import { CONFIG, HEALTH_RULES, grade } from "./config.js";
 import { classify, nearestNote } from "./judgement.js";
 export class Game {
   constructor(chart, inputOffsetMs = 0, playMode = "standard") {
     this.playMode = playMode === "free" ? "free" : "standard";
     this.health = CONFIG.health.start;
+    this.healthRules = HEALTH_RULES[chart.difficulty] || HEALTH_RULES.normal;
     this.failed = false;
     this.failedAt = null;
     this.lanes = chart.lanes || 4;
@@ -59,7 +60,10 @@ export class Game {
     this.events.push(this.feedback);
     this.health = Math.max(
       0,
-      Math.min(CONFIG.health.maximum, this.health + CONFIG.health[result]),
+      Math.min(
+        CONFIG.health.maximum,
+        Math.round((this.health + this.healthRules[result]) * 10) / 10,
+      ),
     );
     if (this.health === 0 && this.playMode === "standard") {
       this.failed = true;

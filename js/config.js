@@ -8,6 +8,12 @@ export const MODES = Object.freeze({
     colors: ["#55f2cb", "#4de6ff", "#9d8dff", "#e580ff", "#ff62b7", "#ffc47e"],
   },
 });
+export const HEALTH_RULES = Object.freeze({
+  easy: Object.freeze({ PERFECT: 0.5, GOOD: 0, MISS: -8 }),
+  normal: Object.freeze({ PERFECT: 0.4, GOOD: 0, MISS: -10 }),
+  hard: Object.freeze({ PERFECT: 0.3, GOOD: 0, MISS: -12 }),
+  expert: Object.freeze({ PERFECT: 0.2, GOOD: 0, MISS: -15 }),
+});
 export const CONFIG = Object.freeze({
   ...MODES[4],
   perfect: 0.05,
@@ -16,7 +22,7 @@ export const CONFIG = Object.freeze({
   points: { PERFECT: 1000, GOOD: 500, MISS: 0 },
   approach: 1.8,
   dragGrace: 0.08,
-  health: { maximum: 100, start: 100, low: 25, PERFECT: 2, GOOD: 1, MISS: -8 },
+  health: { maximum: 100, start: 100, low: 25 },
 });
 export const DIFFICULTIES = ["easy", "normal", "hard", "expert"];
 export const grade = (accuracy) =>

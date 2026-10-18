@@ -50,3 +50,9 @@ Implemented persistent AUTO/TOUCH/KEYBOARD capability selection, source-aware ke
 The full npm test suite passed, including updated Pages checks for 129 exact-case pages/assets under both repository prefixes. Touch simulations passed for portrait/landscape capability decisions, simultaneous four/six-lane input, repeated moves, TAP isolation, overlapping sources, cancellation, out-of-bounds movement, cleanup, early-release/repress failure, and pause/re-hold recovery. Main module syntax, DOM references, and unique HTML IDs passed checks.
 
 No physical mobile device or browser layout run was performed. Scroll-free layout, safe-area/browser-toolbar handling, finger ergonomics, physical multi-touch limits, and iOS/Android audio activation/latency remain device acceptance items. The existing saved browser permission block was not bypassed. Static asset checks and simulated pointer callbacks do not establish those results.
+
+## Full-lane touch and health update — 2026-10-18
+
+Touch now targets game-canvas instead of numbered controls. Touch labels are hidden and compact canvas layout uses the reclaimed height. Added scoped mobile-play gesture prevention and difficulty-specific health rules (EASY +0.5/−8, NORMAL +0.4/−10, HARD +0.3/−12, EXPERT +0.2/−15; GOOD zero). Free Play remains nonterminal at zero.
+
+Expanded automated checks cover upper/lower canvas coordinates, gesture guards active/inactive/disposed, decimal recovery, neutral GOOD, repeated hits, consecutive/intermittent misses, chords, ribbon checkpoint loss, caps, and Free Play. Real-device pinch/double-tap behavior, perceived touch timing, and the expanded layout remain unverified. No new browser/device acceptance is claimed.
