@@ -175,6 +175,20 @@ assert.equal(
 assert.equal(touch.laneAt({ clientX: 50, clientY: 1 }), 0);
 assert.equal(touch.laneAt({ clientX: 50, clientY: 99 }), 0);
 assert.equal(touch.laneAt({ clientX: 50, clientY: 100 }), null);
+input.clear();
+const scoreBeforeHud = game.score;
+fire("pointerdown", 30, 50, 150);
+assert.equal(input.held.size, 0, "HUD below the canvas is not a lane target");
+assert.equal(touch.pointers.size, 0);
+assert.equal(game.score, scoreBeforeHud);
+fire("pointerdown", 31, 50, 50);
+fire("pointermove", 31, 50, 150);
+assert.equal(
+  input.held.size,
+  0,
+  "Dragging from a lane into the HUD releases it",
+);
+input.clear();
 const guards = new Map();
 let active = true,
   prevented = 0;

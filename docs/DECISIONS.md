@@ -62,3 +62,15 @@ Use capability detection plus AUTO/TOUCH/KEYBOARD preference, not user-agent mod
 Replace numbered touch pads with the canvas as the input surface. Retain audio-time judgement, independent pointer ownership, and EXPERT-only horizontal slide checkpoints. Remove the pad footprint so the highway fills remaining mobile space. Suppress mobile play gestures locally, keeping menus/dialogs scrollable and avoiding a permanent global zoom restriction.
 
 Reduce recovery and raise miss damage by difficulty using the approved table. GOOD no longer heals. Preserve fractional health internally, round the HUD only, and retain Free Play at zero. Scoring/charts and existing local records remain unchanged; this release does not retroactively invalidate previous records.
+
+## Recovery correction (2026-10-18)
+
+Restore PERFECT +2 and GOOD +1 across every difficulty at the user's request. Retain EASY/NORMAL/HARD/EXPERT MISS damage −8/−10/−12/−15, the 100-point cap, and nonterminal Free Play. This supersedes the reduced-recovery values above.
+
+## Mobile lower HUD (2026-10-18)
+
+Reserve the lower 25% of safe-area-adjusted mobile play for the existing reactive character and status values. Keep title, progress, and highway in the upper 75%, raising the judgement line away from the system navigation edge. Use CSS placement of existing elements, preserving desktop layout, character preferences, canvas-only touch ownership, and existing scoped gesture prevention.
+
+## Selectable cosmetic co-pilots (2026-10-18)
+
+Add an original NOVA nine-expression sprite alongside LUMI. Reuse one reaction contract, with a validated character catalog and separate visibility/identity preferences. The menu thumbnail opens a native selector; paused settings offer the same selection. Keep previews visible even if in-game character display is disabled. Bundle generated assets locally and document their generation prompts. Preserve mobile HUD allocation and gameplay/record semantics.

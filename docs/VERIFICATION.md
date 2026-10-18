@@ -56,3 +56,21 @@ No physical mobile device or browser layout run was performed. Scroll-free layou
 Touch now targets game-canvas instead of numbered controls. Touch labels are hidden and compact canvas layout uses the reclaimed height. Added scoped mobile-play gesture prevention and difficulty-specific health rules (EASY +0.5/−8, NORMAL +0.4/−10, HARD +0.3/−12, EXPERT +0.2/−15; GOOD zero). Free Play remains nonterminal at zero.
 
 Expanded automated checks cover upper/lower canvas coordinates, gesture guards active/inactive/disposed, decimal recovery, neutral GOOD, repeated hits, consecutive/intermittent misses, chords, ribbon checkpoint loss, caps, and Free Play. Real-device pinch/double-tap behavior, perceived touch timing, and the expanded layout remain unverified. No new browser/device acceptance is claimed.
+
+## Recovery correction verification — 2026-10-18
+
+Restored PERFECT +2 and GOOD +1 at every difficulty; tiered MISS damage remains unchanged. Updated current README/architecture/harness contracts. `node tests/health-balance.js` and `node tests/expansion.js` passed, covering recovery, caps, duplicate prevention, all four failure thresholds, intermittent errors, chords, ribbon damage, and Free Play. This supersedes the reduced-recovery values in the earlier update record.
+
+## Mobile lower HUD update — 2026-10-18
+
+Changed compact play to an upper 75% game / lower 25% character-and-information grid. Restored the existing reactive Lumi in the mobile lower panel, honoring character visibility. Health, score, accuracy, and combo occupy the lower row; no duplicate UI state was introduced. Desktop rules and scoped zoom/scroll prevention remain in place.
+
+Touch tests passed for rejecting taps in the area below the canvas and releasing a captured pointer dragged into it. Existing gesture guard and multi-touch tests passed. Both repository-subpath HTTP checks passed for 130 pages/assets. Actual CSS geometry, character presentation, browser zoom handling, and system navigation edges remain unverified on a physical device.
+
+## Character selection update — 2026-10-18
+
+Generated NOVA with the built-in image_gen tool, copied it into assets/characters/nova-expressions.png, and visually inspected the returned full sheet. PNG metadata confirms 1254×1254 RGBA with equal 418-pixel grid cells. Full prompt is saved in assets/characters/nova-prompt.md. No browser runtime image generation is used.
+
+Implemented main-menu thumbnail/selector, settings access, persisted LUMI/NOVA choice, and shared selection on menu/play/results. Existing SHOW CHARACTER, reduced motion, and mobile 75:25 rules are retained. Character tests passed for nine expressions across three simulated views, image grids, selection/visibility persistence, invalid/legacy preference fallback, and storage failure. Repository-subpath checks include both images.
+
+Actual browser selection dialog, focus, sprite cropping, mobile menu size, and live reactions remain unverified. The generated sheet inspection and automated tests are not browser acceptance.

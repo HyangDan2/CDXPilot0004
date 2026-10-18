@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { Game } from "../js/game.js";
 const rules = {
-  easy: [0.5, 8, 13],
-  normal: [0.4, 10, 10],
-  hard: [0.3, 12, 9],
-  expert: [0.2, 15, 7],
+  easy: [2, 8, 13],
+  normal: [2, 10, 10],
+  hard: [2, 12, 9],
+  expert: [2, 15, 7],
 };
 for (const [difficulty, [heal, damage, misses]] of Object.entries(rules)) {
   const chart = {
@@ -20,11 +20,11 @@ for (const [difficulty, [heal, damage, misses]] of Object.entries(rules)) {
   game.hit(0, 1.15);
   assert.equal(game.health, 100 - damage);
   game.hit(1, 2.1);
-  assert.equal(game.health, 100 - damage, "GOOD must not heal");
+  assert.equal(game.health, 100 - damage + 1, "GOOD heals one");
   game.hit(2, 3);
-  assert.equal(game.health, 100 - damage + heal);
+  assert.equal(game.health, 100 - damage + 1 + heal);
   game.hit(2, 3);
-  assert.equal(game.health, 100 - damage + heal, "No duplicate recovery");
+  assert.equal(game.health, 100 - damage + 1 + heal, "No duplicate recovery");
   const failed = new Game(chart);
   failed.update(300);
   assert.equal(failed.counts.MISS, misses);
@@ -41,17 +41,17 @@ for (const [difficulty, [heal, damage, misses]] of Object.entries(rules)) {
   for (let i = 21; i < 100; i++) free.hit(i % 4, i + 1);
   assert.equal(
     free.health,
-    80 * heal,
-    "Fractional recovery remains exact over many hits",
+    Math.min(100, 80 * heal),
+    "Recovery caps at 100 over many hits",
   );
   const intermittent = new Game(chart);
   for (const [i, note] of chart.notes.entries()) {
-    intermittent.hit(note.lane, note.time + (i % 5 === 0 ? 0.15 : 0));
+    intermittent.hit(note.lane, note.time + (i % 3 === 0 ? 0.15 : 0));
     if (intermittent.failed) break;
   }
   assert(
     intermittent.failed,
-    "One miss per four perfects must eventually fail",
+    "One miss per two perfects must eventually fail",
   );
   const chords = new Game(
     { ...chart, notes: [0, 1, 2].map((lane) => ({ time: 1, lane })) },
@@ -68,7 +68,7 @@ for (const [difficulty, [heal, damage, misses]] of Object.entries(rules)) {
   capped.hit(0, 1);
   assert.equal(capped.health, 100);
   console.log(
-    `PASS ${difficulty}: fractional recovery, GOOD neutral, ${misses}-miss failure, intermittent errors, chords, Free Play and cap`,
+    `PASS ${difficulty}: PERFECT +2, GOOD +1, ${misses}-miss failure, intermittent errors, chords, Free Play and cap`,
   );
 }
 const ribbon = new Game(

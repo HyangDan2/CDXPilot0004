@@ -1,3 +1,4 @@
+import { characterById } from "./characters.js";
 export const DEFAULTS = Object.freeze({
   volume: 70,
   musicVolume: 100,
@@ -5,6 +6,7 @@ export const DEFAULTS = Object.freeze({
   playMode: "standard",
   inputMode: "auto",
   character: true,
+  characterId: "lumi",
   offset: 0,
   speed: 1,
   lanes: 4,
@@ -26,6 +28,7 @@ export function sanitizeSettings(data = {}) {
       : "auto",
     playMode: data.playMode === "free" ? "free" : "standard",
     character: data.character !== false,
+    characterId: characterById(data.characterId).id,
     offset: number("offset", -300, 300),
     speed: Math.round(number("speed", 0.5, 10) * 4) / 4,
     lanes: [4, 6].includes(Number(data.lanes)) ? Number(data.lanes) : 4,

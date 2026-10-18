@@ -1,6 +1,6 @@
 # Particle Beat — Volume 03
 
-A buildless desktop rhythm game with ten original two-minute Web Audio compositions, 80 versioned charts, 4/6 keys, four difficulty tiers, EXPERT keyboard ribbons, local named records, and a reactive cosmic stage with Lumi.
+A buildless desktop rhythm game with ten original two-minute Web Audio compositions, 80 versioned charts, 4/6 keys, four difficulty tiers, EXPERT keyboard ribbons, local named records, and a reactive cosmic stage with selectable LUMI and NOVA.
 
 ## Run
 
@@ -31,7 +31,7 @@ The five new tracks use distinct instruments and arrangements. Selection prefetc
 
 ## Controls and difficulty
 
-4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. Health starts at 100 and is capped at 100. PERFECT recovery / MISS damage are EASY +0.5 / −8, NORMAL +0.4 / −10, HARD +0.3 / −12, EXPERT +0.2 / −15. GOOD does not heal. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
+4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. Health starts at 100 and is capped at 100. PERFECT heals +2 and GOOD heals +1 on every difficulty. MISS damage is EASY −8, NORMAL −10, HARD −12, EXPERT −15. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
 
 Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and keyboard ribbons. HARD/EXPERT have at most two-note chords in 4-key mode and three-note chords in 6-key mode. Chart revision 3 separates new records from earlier data.
 
@@ -59,7 +59,7 @@ Records live only in this browser's localStorage, are not shared between devices
 
 Master, Music, and SFX volume are independent. Result melodies vary by grade/failure. Local calibration offers twelve clicks; tap SPACE after two warm-up beats to estimate combined device/reaction delay. Positive input offset compensates late input and applies next run.
 
-Lumi's nine local expressions react to judgement, health, countdown, and outcome. Character visibility, reduced motion, and effect quality are supported. Audio analysis drives bass pulse, rotating galaxy, and treble stars. See assets/characters/README.md for the original asset and generation prompt. Mobile touch controls and a compact play layout are supported; see the touch controls section below.
+The selected character's nine local expressions react to judgement, health, countdown, and outcome. Character visibility, reduced motion, and effect quality are supported. Audio analysis drives bass pulse, rotating galaxy, and treble stars. See assets/characters/README.md for the original asset and generation prompt. Mobile touch controls and a compact play layout are supported; see the touch controls section below.
 
 ## Authoring and checks
 
@@ -104,10 +104,20 @@ Tap anywhere inside the relevant lane as its note reaches the judgement line; yo
 
 For EXPERT ribbons, hold the starting lane, slide into its neighboring lane at the next checkpoint, and lift after END. Crossing a boundary is one input, not automatic play: moving too early or too late does not wait for a note. Sliding never scores ordinary TAP notes; lift and tap those. Existing windows, health, scoring, and 80 ms ribbon grace apply. Hold the indicated lane again during a resume countdown. Leaving the canvas releases that hold.
 
-On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height layout with a short title/pause bar, compact health/score/accuracy/combo row, and full-height touch highway. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
+On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height 75:25 layout. The upper 75% contains the short title/pause bar, progress bar, and touch highway. The lower 25% shows health, score, accuracy, combo, and the reactive Lumi character. This lower information area does not accept lane input. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
 
 Run `node tests/touch.js` for simulated input and capability checks. Real iOS Safari/Android Chrome multi-touch, audio latency, safe areas, and browser chrome changes still require device acceptance; automated pointer tests are not physical-device verification.
 
 During compact mobile play, CSS touch-action and scoped gesture handlers suppress pinch, double-tap/double-click zoom, and touch scrolling. These handlers are inactive outside play or while a dialog is open. Browser/OS accessibility zoom may override page restrictions and requires real-device verification.
 
-Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and ribbon checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT. Charts, timing windows, scores, and existing records remain unchanged; older records may have been earned under the previous survival rules.
+Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and ribbon checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Charts, timing windows, scores, and existing records remain unchanged; older records may have been earned under the previous survival rules.
+
+The mobile 75:25 split uses the available area after safe-area padding. The judgement line moves upward with the shorter highway, away from the system navigation edge. Short landscape screens reduce HUD text and character size. Character visibility settings still apply. This layout does not disable OS back gestures; it separates the lane input area from the bottom edge.
+
+## Character selection
+
+Click the character in the loaded-track strip on the main menu to open the co-pilot selector. Choose LUMI (cyan/lavender space DJ) or NOVA (silver hair, violet eyes, magenta star accents). The selection immediately updates menu, play, and result views and is saved in this browser. Settings → CHANGE CHARACTER provides the same selector while paused or on results. Selection never changes score, health, timing, or record identity.
+
+SHOW CHARACTER remains independent: choosing a character does not override a hidden-character preference. When hidden, the menu still offers a text selection button and settings access. Character previews in the selector remain visible so you can choose. Reduced-motion preferences disable the menu float and reaction bounce; the idle/blink expressions remain available. Mobile play retains the 75:25 split with the selected character in the lower quarter. The compact menu thumbnail appears below START, without adding content above it.
+
+NOVA is an original generated transparent 3×3 sprite sheet. Generation provenance, prompt, and cell order are documented in assets/characters/README.md and assets/characters/nova-prompt.md. All images are bundled locally; no image generation or network service is used during play.

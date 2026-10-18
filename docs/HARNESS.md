@@ -58,6 +58,16 @@ On actual iOS Safari and Android Chrome, check 360×640 and 390×844 portrait pl
 
 ## Lane touch and survival balance regression
 
-Run `node tests/health-balance.js` for difficulty-specific recovery/damage, GOOD neutrality, repeated-input immunity, fractional accumulation, failure thresholds, sparse misses among PERFECTs, chord losses, EXPERT checkpoint losses, caps, and Free Play recovery. `tests/touch.js` also checks upper/lower canvas coordinates and scoped gesture cancellation/disposal.
+Run `node tests/health-balance.js` for difficulty-specific recovery/damage, GOOD recovery, repeated-input immunity, fractional accumulation, failure thresholds, sparse misses among PERFECTs, chord losses, EXPERT checkpoint losses, caps, and Free Play recovery. `tests/touch.js` also checks upper/lower canvas coordinates and scoped gesture cancellation/disposal.
 
 On physical devices, verify tapping the top, middle, and judgement-line portions of each lane, vertical motion without repeated hits, sideways EXPERT slides, pinch and double-tap suppression during play, and normal gestures in menus/settings. Check that removing buttons expands the canvas and keeps the line visible. Browser/OS accessibility zoom is outside page control. Do not report a gesture callback simulation as verified prevention on iOS or Android.
+
+## Mobile 75:25 HUD acceptance
+
+The touch simulation also rejects pointer-down below the canvas and releases a captured pointer moved from the canvas into the lower HUD. On a real mobile browser, verify that the lower quarter contains Lumi, health, score, accuracy, and combo while the title/progress/highway fit the upper three quarters. Check safe areas, short landscape, character-hidden mode, expression changes, scroll-free play, pinch/double-tap blocking, and no judgement from touching the lower HUD. CSS layout and OS navigation gesture behavior require real-device verification.
+
+## Character selection acceptance
+
+`node tests/characters.js` checks both local RGBA sheets and equal grids, nine expression cells on three simulated views, skin changes at unchanged expressions, names, visibility, persisted selection, legacy/unknown ID migration, and unavailable storage. Pages checks include both registered sheets under repository subpaths.
+
+In a browser, click/tap the menu character and select each option; refresh and confirm persistence. Check menu/play/results, paused settings selection, cancel/Escape/focus behavior, keyboard navigation, hidden-character preference, reduced motion, and mobile menu START visibility. Inspect all nine sprite crops at small HUD sizes, including mobile 75:25 layout. Node DOM stubs and PNG metadata do not establish visual correctness or interaction acceptance.

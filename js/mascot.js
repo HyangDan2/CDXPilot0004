@@ -1,3 +1,4 @@
+import { characterById, characterSheet } from "./characters.js";
 const CELLS = {
   idle: 0,
   perfect: 1,
@@ -48,7 +49,18 @@ export class MascotReaction {
 export class Mascot {
   constructor(element) {
     this.element = element;
+    this.characterId = null;
+    this.setCharacter("lumi");
     this.reaction = new MascotReaction();
+    this.current = null;
+  }
+  setCharacter(id) {
+    const character = characterById(id);
+    if (this.characterId === character.id) return;
+    this.characterId = character.id;
+    this.element.style.backgroundImage =
+      'url("' + characterSheet(character.id) + '")';
+    this.element.dataset.character = character.id;
     this.current = null;
   }
   reset() {
@@ -66,7 +78,7 @@ export class Mascot {
     this.element.dataset.expression = expression;
     this.element.setAttribute(
       "aria-label",
-      `Lumi, your space DJ: ${expression}`,
+      `${characterById(this.characterId).name}, your space DJ: ${expression}`,
     );
   }
 }

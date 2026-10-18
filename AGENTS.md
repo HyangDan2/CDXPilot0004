@@ -54,3 +54,8 @@
 - AUTO uses capabilities, not user-agent model guesses. Respect explicit input mode while retaining keyboard support.
 - Compact play must fit the visual viewport and safe areas. Keep menus/settings scrollable and desktop layout unchanged.
 - Distinguish simulated multi-touch tests from real device/browser acceptance.
+
+## Character catalog
+- Register local skins in characters.js with the shared nine-cell expression order. Document generated asset prompts/provenance.
+- Keep characterId separate from visibility; selection must not re-enable hidden characters or alter gameplay/records.
+- Synchronize menu/play/result views and preserve reduced motion and mobile HUD sizing.

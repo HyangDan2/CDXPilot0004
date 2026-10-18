@@ -1,4 +1,4 @@
-# Lumi Character Asset
+# Character Assets
 
 `lumi-expressions.png` is the original transparent 3-by-3 expression sheet generated for Particle Beat with the built-in image_gen tool on 2026-10-17. It is a project-local asset; no generation service is called during gameplay. CSS selects equal grid cells without modifying the source image.
 
@@ -7,3 +7,11 @@ Row-major mapping: idle, perfect, good, miss, worried, failed, clear, ready, bli
 ## Final generation prompt
 
 Use case: stylized-concept. Asset type: production game character expression sprite sheet, ONE square image with EXACTLY 3 columns and 3 rows of equal-sized cells, no borders and no text. Primary request: an original adorable Japanese rhythm-game style chibi space DJ girl mascot, polished 2D anime cel illustration. Consistent character in ALL NINE cells: short pale lavender bob with cyan tips, small star hair clip, oversized cyan-and-purple futuristic headphones, violet eyes, navy space jacket with cyan trim, white gloves, tiny star pendant. Bust portrait only, front view, large head, shoulders visible, each portrait centered at precisely the center of its grid cell and same scale, generous transparent margins so no artwork crosses cell edges. Cell order row-major: 1 neutral gentle smile; 2 PERFECT delighted sparkling eyes wide joyful smile; 3 GOOD pleased closed-eye smile small nod pose; 4 MISS surprised disappointed small open mouth; 5 low-health worried eyebrows; 6 game-over downcast eyes and pout; 7 clear celebratory joyful eyes and both tiny gloved hands raised; 8 ready determined focused smile; 9 blink neutral smile with eyes closed. Palette cyan purple magenta matches neon cosmic arcade. Cute wholesome expressive face, strong readable silhouette at 140 pixels, crisp outlines, sophisticated soft highlights, fully opaque character with genuinely transparent surrounding background. All nine separate portraits of exactly the same character, aligned on a uniform 3x3 grid. No labels, no lettering, no watermark, no background decoration outside portraits.
+
+## NOVA
+
+`nova-expressions.png` was generated with the built-in image_gen tool on 2026-10-18. Original silver-white bob, violet eyes, magenta star hair clip, black/magenta headphones and jacket. The transparent RGBA PNG is 1254×1254 with nine equal 418×418 cells. Same row-major expression order as LUMI. The complete final prompt is in [nova-prompt.md](nova-prompt.md). The generated sheet was visually inspected, but live browser cropping remains unverified.
+
+## Adding another character
+
+Create an original transparent square sheet with a uniform 3×3 grid in the existing expression order. Place it here, document provenance and the full prompt, and register its stable ID, display name, description, and project-relative sheet path in js/characters.js. Keep portrait centers/scale consistent across cells. Mascot.setCharacter changes only the sheet and accessible name; all characters share MascotReaction. Settings validates IDs against the catalog and falls back to LUMI for absent/unknown values. Run tests/characters.js and tests/pages-paths.js, then inspect all cells in the actual UI at desktop and mobile sizes.

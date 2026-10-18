@@ -74,7 +74,23 @@
         </div>
         <div class="track-strip">
           <span class="track-number">01</span>
-          <div class="mini-art">◈</div>
+          <button
+            type="button"
+            id="character-open"
+            class="menu-companion"
+            aria-haspopup="dialog"
+            aria-controls="characters"
+            aria-label="Change character"
+          >
+            <span
+              id="menu-mascot"
+              class="mascot"
+              role="img"
+              aria-label="Your space DJ"
+            ></span>
+            <strong id="menu-character-name">LUMI</strong
+            ><span>CHANGE CHARACTER</span>
+          </button>
           <div>
             <small>NOW LOADED</small>
             <h3 id="loaded-title">Connecting to the signal…</h3>
@@ -164,7 +180,9 @@
               role="img"
               aria-label="Lumi, your space DJ"
             ></div>
-            <small class="mascot-name">LUMI / YOUR CO-PILOT</small>
+            <small class="mascot-name"
+              ><span id="play-character-name">LUMI</span> / YOUR CO-PILOT</small
+            >
             <div class="legend">
               <p>PERFECT <b>±50ms</b></p>
               <p>GOOD <b>±120ms</b></p>
@@ -287,8 +305,9 @@
           Applies on the next run. Free Play keeps scoring and health but lets
           you finish every song.
         </p>
+        <button type="button" id="character-settings">CHANGE CHARACTER</button>
         <label class="toggle-label"
-          ><input id="character" type="checkbox" checked /> SHOW LUMI
+          ><input id="character" type="checkbox" checked /> SHOW CHARACTER
           CHARACTER</label
         ><label for="quality">EFFECT QUALITY</label
         ><select id="quality">
@@ -322,6 +341,17 @@
         <button type="button" id="calibrate-open">CALIBRATE AUDIO ↗</button
         ><button class="primary">DONE</button>
       </form>
+    </dialog>
+    <dialog id="characters" aria-labelledby="characters-title">
+      <form method="dialog">
+        <div class="dialog-title">
+          <h2 id="characters-title">Choose your co-pilot.</h2>
+          <button aria-label="Close character selection">×</button>
+        </div>
+      </form>
+      <p>Cosmetic only. Scores, health, and timing stay the same.</p>
+      <div id="character-options"></div>
+      <p id="character-status" role="status"></p>
     </dialog>
     <dialog id="tracks">
       <form method="dialog">

@@ -1,3 +1,4 @@
+import { CHARACTERS, characterById, characterSheet } from "./characters.js";
 import { TouchInput, PlayGestureGuard, inputEnvironment } from "./touch.js";
 import { HighScores, scoreKey } from "./highscores.js";
 import { Countdown } from "./countdown.js";
@@ -18,7 +19,8 @@ const audio = new AudioEngine(),
   renderer = new Renderer($("game-canvas"), $("cosmos"));
 const countdown = new Countdown(),
   sfx = new SoundEffects(audio);
-const mascot = new Mascot($("mascot")),
+const menuMascot = new Mascot($("menu-mascot")),
+  mascot = new Mascot($("mascot")),
   resultMascot = new Mascot($("result-mascot"));
 let scoreStorage;
 try {
@@ -57,7 +59,13 @@ const input = new Input(
     }
   },
   () => {
-    if ($("settings").open || $("tracks").open || $("calibration").open) return;
+    if (
+      $("settings").open ||
+      $("tracks").open ||
+      $("calibration").open ||
+      $("characters").open
+    )
+      return;
     if (state === "playing" || state === "countdown") {
       pause();
       return true;
@@ -154,6 +162,16 @@ function renderKeys(id, lanes) {
 }
 function applySettings() {
   updateInputEnvironment();
+  for (const view of [menuMascot, mascot, resultMascot])
+    view.setCharacter(settings.characterId);
+  const character = characterById(settings.characterId);
+  $("menu-character-name").textContent = character.name;
+  $("play-character-name").textContent = character.name;
+  $("character-open").setAttribute(
+    "aria-label",
+    "Change character. Selected: " + character.name,
+  );
+  menuMascot.draw("menu", 100, performance.now() / 1000, settings.character);
   audio.volume = settings.volume / 100;
   audio.musicVolume = settings.musicVolume / 100;
   audio.sfxVolume = settings.sfxVolume / 100;
@@ -511,6 +529,8 @@ function openSettings() {
 }
 let lastFrame = 0;
 function frame(timestamp) {
+  if (state === "menu")
+    menuMascot.draw("menu", 100, timestamp / 1000, settings.character);
   advanceCountdown();
   if (countdown.active) {
     const label = countdown.label(audio.context.currentTime);
@@ -571,6 +591,44 @@ function frame(timestamp) {
   calibration.frame();
   requestAnimationFrame(frame);
 }
+function openCharacters() {
+  if (busy) return;
+  pause();
+  $("character-status").textContent = settings.character
+    ? "Select a character to use on every screen."
+    : "Character display is off. Your selection will appear when enabled in Settings.";
+  $("character-options").replaceChildren(
+    ...CHARACTERS.map((character) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "character-option";
+      button.setAttribute(
+        "aria-pressed",
+        String(character.id === settings.characterId),
+      );
+      button.setAttribute("aria-label", "Select " + character.name);
+      const preview = document.createElement("span");
+      preview.className = "character-preview";
+      preview.style.backgroundImage =
+        'url("' + characterSheet(character.id) + '")';
+      preview.setAttribute("aria-hidden", "true");
+      const name = document.createElement("strong");
+      name.textContent = character.name;
+      const description = document.createElement("span");
+      description.textContent = character.description;
+      button.append(preview, name, description);
+      button.onclick = () => {
+        settings.characterId = character.id;
+        applySettings();
+        $("characters").close();
+      };
+      return button;
+    }),
+  );
+  $("characters").showModal();
+}
+$("character-open").onclick = openCharacters;
+$("character-settings").onclick = openCharacters;
 $("start").onclick = start;
 $("restart").onclick = start;
 $("retry").onclick = start;

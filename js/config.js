@@ -9,10 +9,10 @@ export const MODES = Object.freeze({
   },
 });
 export const HEALTH_RULES = Object.freeze({
-  easy: Object.freeze({ PERFECT: 0.5, GOOD: 0, MISS: -8 }),
-  normal: Object.freeze({ PERFECT: 0.4, GOOD: 0, MISS: -10 }),
-  hard: Object.freeze({ PERFECT: 0.3, GOOD: 0, MISS: -12 }),
-  expert: Object.freeze({ PERFECT: 0.2, GOOD: 0, MISS: -15 }),
+  easy: Object.freeze({ PERFECT: 2, GOOD: 1, MISS: -8 }),
+  normal: Object.freeze({ PERFECT: 2, GOOD: 1, MISS: -10 }),
+  hard: Object.freeze({ PERFECT: 2, GOOD: 1, MISS: -12 }),
+  expert: Object.freeze({ PERFECT: 2, GOOD: 1, MISS: -15 }),
 });
 export const CONFIG = Object.freeze({
   ...MODES[4],

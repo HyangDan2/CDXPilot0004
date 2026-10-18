@@ -1207,10 +1207,14 @@ body.compact-play.in-play {
   min-height: 0;
   padding: 0;
   display: grid;
-  grid-template-rows: 42px 3px minmax(0, 1fr);
+  /* Header, progress, and highway share the upper 75%; HUD owns 25%. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: 42px 3px minmax(0, 1fr) minmax(0, 25%);
   gap: 4px;
 }
 .compact-play.in-play .play-top {
+  grid-row: 1;
+  grid-column: 1 / -1;
   margin: 0;
   padding: 0;
   min-width: 0;
@@ -1241,37 +1245,43 @@ body.compact-play.in-play {
   display: none;
 }
 .compact-play.in-play .progress {
+  grid-row: 2;
+  grid-column: 1 / -1;
   margin: 0;
   height: 3px;
 }
 .compact-play.in-play .arena,
 .compact-play.in-play .arena.six {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 70px;
-  grid-template-rows: 38px minmax(0, 1fr);
-  gap: 4px;
-  min-height: 0;
+  display: contents;
 }
 .compact-play.in-play .arena > aside {
-  padding: 0;
+  padding: 4px 8px;
   min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid #3b405a;
+  background: #10172b;
 }
 .compact-play.in-play .arena > aside:first-child {
-  grid-row: 1;
+  grid-row: 4;
   grid-column: 1;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 2px;
 }
 .compact-play.in-play .combo-side {
-  grid-row: 1;
+  grid-row: 4;
   grid-column: 2;
-  justify-content: end;
+  display: grid;
+  grid-template-rows: 20px minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  gap: 0;
 }
 .compact-play.in-play .arena aside > small,
 .compact-play.in-play .arena aside > p,
 .compact-play.in-play .combo-side > span,
-.compact-play.in-play .combo-side .mascot,
 .compact-play.in-play .legend,
 .compact-play.in-play #run-mode {
   display: none;
@@ -1290,7 +1300,8 @@ body.compact-play.in-play {
   font-size: 8px;
 }
 .compact-play.in-play .health-panel {
-  width: 78px;
+  width: 100%;
+  max-width: 240px;
   flex-shrink: 0;
   margin: 0;
 }
@@ -1305,7 +1316,7 @@ body.compact-play.in-play {
   margin: 2px 0;
 }
 .compact-play.in-play .highway {
-  grid-row: 2;
+  grid-row: 3;
   grid-column: 1 / -1;
   order: initial;
   width: 100%;
@@ -1321,8 +1332,149 @@ body.compact-play.in-play {
   width: 100%;
 }
 
-@media (max-width: 360px) {
+.compact-play.in-play #accuracy::before {
+  content: "ACCURACY ";
+  font-size: 8px;
+}
+.compact-play.in-play .combo-side #combo {
+  grid-row: 1;
+}
+.compact-play.in-play .combo-side #mascot {
+  display: block;
+  grid-row: 2;
+  width: min(100%, 120px, calc(var(--play-height, 100dvh) * 0.25 - 42px));
+  height: auto;
+  aspect-ratio: 1;
+  max-height: 100%;
+  margin: 0;
+  align-self: center;
+}
+.compact-play.in-play .combo-side #mascot[hidden],
+.compact-play.in-play.hide-character .combo-side #mascot {
+  display: none;
+}
+@media (max-height: 430px) {
+  .compact-play.in-play .arena > aside {
+    padding: 2px 6px;
+  }
+  .compact-play.in-play .arena .number,
   .compact-play.in-play #accuracy {
+    font-size: 12px;
+  }
+  .compact-play.in-play .health-panel small {
+    font-size: 7px;
+  }
+}
+
+/* The menu selector stays below START, in the existing loaded-track strip. */
+.menu-companion {
+  flex: 0 0 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid #596083;
+  border-radius: 10px;
+  background: #171d32;
+}
+.menu-companion #menu-mascot {
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  animation: companion-float 4s ease-in-out infinite;
+}
+.menu-companion > span:last-child {
+  font-size: 8px;
+  letter-spacing: 0;
+}
+.menu-companion strong {
+  font-size: 11px;
+}
+.menu-companion #menu-mascot[hidden],
+.hide-character .menu-companion #menu-mascot {
+  display: none;
+}
+#characters {
+  width: min(580px, 94vw);
+  max-height: 88dvh;
+  overflow: auto;
+}
+#character-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.character-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  white-space: normal;
+}
+.character-option[aria-pressed="true"] {
+  border-color: var(--cyan);
+  background: #263149;
+}
+.character-option > span:last-child {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.character-preview {
+  display: block;
+  width: min(100%, 160px);
+  aspect-ratio: 1;
+  background-size: 300% 300%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+@keyframes companion-float {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@media (max-width: 620px) {
+  .menu-companion {
+    flex-basis: 78px;
+  }
+  .menu-companion #menu-mascot {
+    width: 56px;
+    height: 56px;
+  }
+  .menu-companion > span:last-child {
+    font-size: 7px;
+  }
+  #character-options {
+    gap: 8px;
+  }
+  .character-option {
+    padding: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-companion #menu-mascot {
+    animation: none;
+  }
+}
+@media (max-width: 620px) {
+  .track-strip {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr) auto;
+    padding: 12px;
+    gap: 8px;
+  }
+  .track-strip .track-number {
     display: none;
+  }
+  .track-strip > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .track-strip .duration {
+    font-size: 11px;
   }
 }

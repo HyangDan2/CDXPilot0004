@@ -3,8 +3,11 @@ import { readFile, readdir } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import http from "node:http";
 import { TRACKS } from "../js/music.js";
+import { CHARACTERS } from "../js/characters.js";
 const root = new URL("../", import.meta.url);
 const paths = new Set(["index.html", "assets/tracks.json", ".nojekyll"]);
+for (const character of CHARACTERS)
+  paths.add(character.sheet.replace(/^\.\//, ""));
 async function scan(dir) {
   for (const entry of await readdir(new URL(dir, root), {
     withFileTypes: true,
