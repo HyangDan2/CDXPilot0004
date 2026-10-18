@@ -1,9 +1,9 @@
-import { CHARACTERS, characterById, characterSheet } from "./characters.js";
+import { CHARACTERS, characterById } from "./characters.js";
 import { TouchInput, PlayGestureGuard, inputEnvironment } from "./touch.js";
 import { HighScores, scoreKey } from "./highscores.js";
 import { Countdown } from "./countdown.js";
 import { SoundEffects } from "./sfx.js";
-import { Mascot } from "./mascot.js";
+import { Mascot, mountCharacterSprite } from "./mascot.js";
 import { loadBeatmap } from "./beatmap.js";
 import { AudioEngine } from "./audio.js";
 import { Game } from "./game.js";
@@ -609,8 +609,7 @@ function openCharacters() {
       button.setAttribute("aria-label", "Select " + character.name);
       const preview = document.createElement("span");
       preview.className = "character-preview";
-      preview.style.backgroundImage =
-        'url("' + characterSheet(character.id) + '")';
+      mountCharacterSprite(preview, character.id);
       preview.setAttribute("aria-hidden", "true");
       const name = document.createElement("strong");
       name.textContent = character.name;

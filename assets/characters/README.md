@@ -15,3 +15,11 @@ Use case: stylized-concept. Asset type: production game character expression spr
 ## Adding another character
 
 Create an original transparent square sheet with a uniform 3×3 grid in the existing expression order. Place it here, document provenance and the full prompt, and register its stable ID, display name, description, and project-relative sheet path in js/characters.js. Keep portrait centers/scale consistent across cells. Mascot.setCharacter changes only the sheet and accessible name; all characters share MascotReaction. Settings validates IDs against the catalog and falls back to LUMI for absent/unknown values. Run tests/characters.js and tests/pages-paths.js, then inspect all cells in the actual UI at desktop and mobile sizes.
+
+## Active padded sheets
+
+The catalog now uses `lumi-expressions-padded.png` and `nova-expressions-padded.png`. The original sheets above remain preserved as references. Both revised 1254×1254 RGBA atlases were edited with built-in image_gen to separate portraits, restore boundaries, and reduce surrounding decoration. The full final prompts are in [padding-prompts.md](padding-prompts.md).
+
+Generated gutters are not perfectly uniform. All eighteen cells were checked for substantial artwork (alpha >32) touching a border; their measured margins are in padding-verification.json. Faint antialiasing/glow below that threshold is excluded from the measurement. Run `node scripts/verify-character-frames.mjs` with FFmpeg installed to repeat this read-only inspection.
+
+A fixed outer frame clips the display, while a separate sprite child has a 10% inset on every side. The child owns the sheet, expression crop, modest shadow, and movement. This protects names and adjacent HUD text even when source gutters differ. All menu/selection/play/result views share this framing rule. Reduced motion still disables animation. Actual device layout/cropping acceptance remains separate from image analysis.

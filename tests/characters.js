@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { CHARACTERS, characterById } from "../js/characters.js";
-import { Mascot } from "../js/mascot.js";
+import { Mascot, mountCharacterSprite } from "../js/mascot.js";
 import {
   sanitizeSettings,
   saveSettings,
@@ -32,6 +32,10 @@ assert.equal(loadSettings().characterId, "lumi");
 globalThis.localStorage = previous;
 const makeElement = () => ({
   style: {},
+  ownerDocument: { createElement: () => makeElement() },
+  replaceChildren(child) {
+    this.children = [child];
+  },
   dataset: {},
   hidden: false,
   setAttribute(name, value) {
@@ -47,6 +51,13 @@ for (const character of CHARACTERS) {
   assert.equal(png.readUInt32BE(16) % 3, 0);
   for (const view of views) {
     view.setCharacter(character.id);
+    assert.equal(view.element.children.length, 1);
+    assert.equal(view.sprite.className, "mascot-sprite");
+    assert.equal(
+      view.element.style.backgroundImage,
+      undefined,
+      "Outer frame must not render the sheet",
+    );
     view.reset();
     const cases = [
       ["menu", 100, 0, "idle", 0],
@@ -60,7 +71,7 @@ for (const character of CHARACTERS) {
       view.draw(state, health, time);
       assert.equal(view.element.dataset.expression, expression);
       assert.equal(
-        view.element.style.backgroundPosition,
+        view.sprite.style.backgroundPosition,
         `${(cell % 3) * 50}% ${Math.floor(cell / 3) * 50}%`,
       );
     }
@@ -74,13 +85,13 @@ for (const character of CHARACTERS) {
       view.draw("playing", 100, 1);
       assert.equal(view.element.dataset.expression, result.toLowerCase());
       assert.equal(
-        view.element.style.backgroundPosition,
+        view.sprite.style.backgroundPosition,
         `${(cell % 3) * 50}% ${Math.floor(cell / 3) * 50}%`,
       );
     }
     assert(
-      view.element.style.backgroundImage.includes(
-        character.id + "-expressions.png",
+      view.sprite.style.backgroundImage.includes(
+        character.id + "-expressions-padded.png",
       ),
     );
     assert(view.element["aria-label"].includes(character.name));
@@ -98,4 +109,13 @@ assert(
 );
 console.log(
   "PASS characters: two RGBA grid sheets, nine expressions on three views, selection persistence, legacy migration, invalid fallback, visibility and storage failure",
+);
+
+const preview = makeElement();
+mountCharacterSprite(preview, "nova");
+assert.equal(preview.children.length, 1);
+assert(
+  preview.children[0].style.backgroundImage.includes(
+    "nova-expressions-padded.png",
+  ),
 );

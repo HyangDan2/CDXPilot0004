@@ -46,9 +46,19 @@ export class MascotReaction {
     return now % 5.5 > 5.35 ? "blink" : "idle";
   }
 }
+// Keep layout dimensions fixed; only this inset layer may animate.
+export function mountCharacterSprite(element, id) {
+  const sprite = element.ownerDocument.createElement("span");
+  sprite.className = "mascot-sprite";
+  sprite.setAttribute("aria-hidden", "true");
+  sprite.style.backgroundImage = 'url("' + characterSheet(id) + '")';
+  element.replaceChildren(sprite);
+  return sprite;
+}
 export class Mascot {
   constructor(element) {
     this.element = element;
+    this.sprite = mountCharacterSprite(element, "lumi");
     this.characterId = null;
     this.setCharacter("lumi");
     this.reaction = new MascotReaction();
@@ -58,7 +68,7 @@ export class Mascot {
     const character = characterById(id);
     if (this.characterId === character.id) return;
     this.characterId = character.id;
-    this.element.style.backgroundImage =
+    this.sprite.style.backgroundImage =
       'url("' + characterSheet(character.id) + '")';
     this.element.dataset.character = character.id;
     this.current = null;
@@ -74,7 +84,7 @@ export class Mascot {
     if (expression === this.current) return;
     this.current = expression;
     const cell = CELLS[expression];
-    this.element.style.backgroundPosition = `${(cell % 3) * 50}% ${Math.floor(cell / 3) * 50}%`;
+    this.sprite.style.backgroundPosition = `${(cell % 3) * 50}% ${Math.floor(cell / 3) * 50}%`;
     this.element.dataset.expression = expression;
     this.element.setAttribute(
       "aria-label",

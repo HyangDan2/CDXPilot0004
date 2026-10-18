@@ -74,3 +74,9 @@ Generated NOVA with the built-in image_gen tool, copied it into assets/character
 Implemented main-menu thumbnail/selector, settings access, persisted LUMI/NOVA choice, and shared selection on menu/play/results. Existing SHOW CHARACTER, reduced motion, and mobile 75:25 rules are retained. Character tests passed for nine expressions across three simulated views, image grids, selection/visibility persistence, invalid/legacy preference fallback, and storage failure. Repository-subpath checks include both images.
 
 Actual browser selection dialog, focus, sprite cropping, mobile menu size, and live reactions remain unverified. The generated sheet inspection and automated tests are not browser acceptance.
+
+## Sprite isolation update — 2026-10-18
+
+Edited both original atlases with built-in image_gen and saved padded sibling files without modifying the originals. Visually inspected the returned sheets. All eighteen active cells passed the FFmpeg alpha >32 boundary check (minimum substantial-art margin: LUMI 3 px, NOVA 13 px). Faint glow/noise below that threshold is not counted; source margins remain uneven. Full measurements and prompts are saved in assets/characters/padding-verification.json and padding-prompts.md.
+
+Added a fixed clipped frame and separate 10%-inset sprite child to all Mascot views and selection previews. Sheet cropping, reduced shadows, and smaller percentage-based animations now belong to the child. The full npm test suite passed; main syntax and DOM references passed. Character tests verify frame/child ownership, expressions, visibility, selection, and preview reuse. Actual browser/device layout, animation clipping, and small-size readability remain unverified; image inspection and alpha analysis do not establish live UI acceptance.

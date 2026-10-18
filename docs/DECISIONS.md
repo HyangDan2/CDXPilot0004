@@ -74,3 +74,7 @@ Reserve the lower 25% of safe-area-adjusted mobile play for the existing reactiv
 ## Selectable cosmetic co-pilots (2026-10-18)
 
 Add an original NOVA nine-expression sprite alongside LUMI. Reuse one reaction contract, with a validated character catalog and separate visibility/identity preferences. The menu thumbnail opens a native selector; paused settings offer the same selection. Keep previews visible even if in-game character display is disabled. Bundle generated assets locally and document their generation prompts. Preserve mobile HUD allocation and gameplay/record semantics.
+
+## Sprite padding and animation isolation (2026-10-18)
+
+Original LUMI/NOVA atlases had visible artwork on cell borders. Preserve them and use edited padded siblings. Because generated margins vary, add a deterministic 10% runtime inset and clip the fixed outer frame. Animate only the inner sprite, with smaller movement/scale and shadow. Reuse this structure in selection previews so each surface has the same isolation contract.

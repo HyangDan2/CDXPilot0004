@@ -1,0 +1,186 @@
+{
+  "frameInsetPercent": 10,
+  "notes": "Alpha threshold excludes faint glow/noise. Runtime clipping and inset provide additional isolation. Not a live-browser layout test.",
+  "reports": [
+    {
+      "id": "lumi",
+      "width": 1254,
+      "height": 1254,
+      "cellSize": 418,
+      "alphaThreshold": 32,
+      "cells": [
+        {
+          "cell": 0,
+          "marginsLeftTopRightBottom": [
+            61,
+            48,
+            28,
+            32
+          ]
+        },
+        {
+          "cell": 1,
+          "marginsLeftTopRightBottom": [
+            45,
+            47,
+            47,
+            32
+          ]
+        },
+        {
+          "cell": 2,
+          "marginsLeftTopRightBottom": [
+            45,
+            47,
+            49,
+            32
+          ]
+        },
+        {
+          "cell": 3,
+          "marginsLeftTopRightBottom": [
+            57,
+            34,
+            25,
+            48
+          ]
+        },
+        {
+          "cell": 4,
+          "marginsLeftTopRightBottom": [
+            49,
+            34,
+            38,
+            47
+          ]
+        },
+        {
+          "cell": 5,
+          "marginsLeftTopRightBottom": [
+            52,
+            35,
+            38,
+            46
+          ]
+        },
+        {
+          "cell": 6,
+          "marginsLeftTopRightBottom": [
+            45,
+            9,
+            3,
+            68
+          ]
+        },
+        {
+          "cell": 7,
+          "marginsLeftTopRightBottom": [
+            51,
+            9,
+            36,
+            69
+          ]
+        },
+        {
+          "cell": 8,
+          "marginsLeftTopRightBottom": [
+            50,
+            12,
+            38,
+            69
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nova",
+      "width": 1254,
+      "height": 1254,
+      "cellSize": 418,
+      "alphaThreshold": 32,
+      "cells": [
+        {
+          "cell": 0,
+          "marginsLeftTopRightBottom": [
+            66,
+            90,
+            35,
+            23
+          ]
+        },
+        {
+          "cell": 1,
+          "marginsLeftTopRightBottom": [
+            49,
+            89,
+            54,
+            23
+          ]
+        },
+        {
+          "cell": 2,
+          "marginsLeftTopRightBottom": [
+            21,
+            90,
+            80,
+            22
+          ]
+        },
+        {
+          "cell": 3,
+          "marginsLeftTopRightBottom": [
+            65,
+            66,
+            28,
+            40
+          ]
+        },
+        {
+          "cell": 4,
+          "marginsLeftTopRightBottom": [
+            44,
+            66,
+            49,
+            39
+          ]
+        },
+        {
+          "cell": 5,
+          "marginsLeftTopRightBottom": [
+            20,
+            67,
+            76,
+            39
+          ]
+        },
+        {
+          "cell": 6,
+          "marginsLeftTopRightBottom": [
+            67,
+            43,
+            13,
+            68
+          ]
+        },
+        {
+          "cell": 7,
+          "marginsLeftTopRightBottom": [
+            45,
+            43,
+            50,
+            69
+          ]
+        },
+        {
+          "cell": 8,
+          "marginsLeftTopRightBottom": [
+            23,
+            44,
+            70,
+            65
+          ]
+        }
+      ]
+    }
+  ]
+}

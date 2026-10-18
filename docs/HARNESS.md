@@ -71,3 +71,9 @@ The touch simulation also rejects pointer-down below the canvas and releases a c
 `node tests/characters.js` checks both local RGBA sheets and equal grids, nine expression cells on three simulated views, skin changes at unchanged expressions, names, visibility, persisted selection, legacy/unknown ID migration, and unavailable storage. Pages checks include both registered sheets under repository subpaths.
 
 In a browser, click/tap the menu character and select each option; refresh and confirm persistence. Check menu/play/results, paused settings selection, cancel/Escape/focus behavior, keyboard navigation, hidden-character preference, reduced motion, and mobile menu START visibility. Inspect all nine sprite crops at small HUD sizes, including mobile 75:25 layout. Node DOM stubs and PNG metadata do not establish visual correctness or interaction acceptance.
+
+## Sprite spacing regression
+
+`node scripts/verify-character-frames.mjs` (FFmpeg required) checks all eighteen active cells for a minimum two-pixel substantial-art gutter at alpha >32 and saves margin measurements. This threshold intentionally excludes faint glow/noise. It does not verify a perfectly empty alpha border or browser interpolation. Character tests check that sheet/position live on a single inset child and that the outer frame is not a second sheet renderer; selection previews use the same helper.
+
+Inspect all expressions at menu thumbnail, selection card, desktop play/result, and short mobile HUD sizes. Verify that cheer/nod/float and shadow cannot cross the fixed frame into labels, that hair/hands are not clipped, and that character hiding/reduced-motion settings still work. Preserve the mobile 75:25 allocation. Record any browser or device checks separately from PNG alpha analysis.
