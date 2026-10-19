@@ -136,3 +136,9 @@ Replaced the active social card URL with share-card-v2.png, retaining v1. The fi
 ## NOVA hand anatomy redraw — 2026-10-19
 
 The v2 digit count was insufficient: NOVA's fingers were distributed radially around the palm. Redrew the hand and wrist as an upright open-palm wave in v3. Visually checked four top-edge fingers, one side thumb, and a wrist below; preserved LUMI and the composition. Both sharing tags now point to share-card-v3.png. Sharing metadata/dimension checks, both repository-prefix asset checks, and whitespace checks passed. Actual social-cache refresh remains unverified.
+
+## Larger characters — 2026-10-19
+
+Enlarged menu frames from 80/56px to 128/96px (desktop/mobile), desktop play up to 240px, result frames to 260/210/200px, and compact HUD maximum from 120px to 180px where available space permits. The sprite inset is 6% rather than 10%. Mobile play retains 75:25 layout and a protected combo row. Desktop results now use grid flow; mobile menu information uses a separate right column so the larger selector does not squeeze a third column.
+
+Passed character logic tests, exact-case repository-subpath HTTP tests (148 pages/assets), ES-module syntax checks for both updated browser layout fixtures, and whitespace checks. No gameplay/state/asset changes were made. The browser fixtures were updated but not executed due to the existing browser access restriction. Actual device sizing, animation clipping, and CSS geometry remain unverified; follow the larger-character acceptance checklist.

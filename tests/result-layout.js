@@ -9,7 +9,7 @@ try {
   const section=source.querySelector('#results');section.hidden=false;
   const stylesheet=new URL('../css/style.css',import.meta.url).href;
   const lines=[];
-  for(const [width,height] of [[320,568],[390,844],[620,800],[844,390]]) {
+  for(const [width,height] of [[320,568],[390,844],[620,800],[844,390],[1280,900]]) {
     const frame=document.createElement('iframe');
     frame.title=`Results ${width} by ${height}`;frame.style.cssText=`width:${width}px;height:${height}px;border:1px solid gray;display:block`;
     const loaded=new Promise(resolve=>frame.addEventListener('load',resolve,{once:true}));
@@ -34,9 +34,13 @@ try {
       assert(Math.abs(outer.width-outer.height)<1,'Character frame must remain square');
       assert(inner.left>=outer.left && inner.right<=outer.right && inner.top>=outer.top && inner.bottom<=outer.bottom,'Sprite escaped its own frame');
       if(width<=620) {
-        assert(Math.abs(outer.width-140)<1,'Mobile frame must be 140px');
+        assert(Math.abs(outer.width-200)<1,'Mobile frame must be 200px');
         assert(doc.querySelector('#result-heading').getBoundingClientRect().bottom<=outer.top,'Character overlaps title');
         assert(outer.bottom<=doc.querySelector('.result-card').getBoundingClientRect().top,'Character overlaps score card');
+      } else {
+        assert(Math.abs(outer.width-(width<=900?210:260))<1,'Desktop result frame size');
+        assert(doc.querySelector('#result-heading').getBoundingClientRect().right<=outer.left,'Desktop character overlaps title');
+        assert(outer.bottom<=doc.querySelector('.result-card').getBoundingClientRect().top,'Desktop character overlaps score card');
       }
     }
     view.draw('clear',100,0,false);assert(win.getComputedStyle(element).display==='none','Hidden preference must be respected');

@@ -102,3 +102,7 @@ Revision 5 replaces all EXPERT slides with one-lane HOLDs to remove required hor
 ## Sharing cards and site icons (2026-10-19)
 
 Add static Open Graph/large-card metadata rather than runtime DOM injection. Use one versioned 1200×630 opaque PNG with LUMI/NOVA and English title copy. Use a separate simple star/music-note SVG mark for small tabs, with PNG/ICO and opaque Apple touch fallbacks. Public canonical/image URLs include the verified CDXPilot0004 Pages prefix; relative icons preserve local and alternate-prefix serving. Artwork is generated once during authoring and stored locally.
+
+## Increase character visibility (2026-10-19)
+
+Enlarge character frames across menu/play/results and reduce the isolated sprite inset from 10% to 6%. Keep existing atlas assets, expression mapping, selection persistence, and mobile 75:25 allocation. Replace desktop result absolute placement with grid flow before enlarging it, and size mobile HUD characters from available safe-area-adjusted space instead of a fixed 120px cap. The frame still clips animations; no transform scales artwork outside its layout box.

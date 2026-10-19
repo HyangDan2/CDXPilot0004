@@ -97,11 +97,11 @@ Main owns three Mascot views (menu, play, result). applySettings synchronizes th
 
 ## Sprite isolation
 
-Mascot elements are fixed layout frames. mountCharacterSprite installs one aria-hidden mascot-sprite child; only that child owns the background image/position, shadow, and reaction transform. The outer frame clips overflow and never animates. Selection previews use the same helper and inset rule. The 10% inset is independent of atlas spacing, so adding CSS padding cannot accidentally change sprite-cell coordinates. Animation uses small percentage translations and 1.02 scaling; compact shadows are reduced. Character IDs/preferences and the nine-cell mapping are unchanged. The active catalog points to versioned padded sheets; originals are preserved.
+Mascot elements are fixed layout frames. mountCharacterSprite installs one aria-hidden mascot-sprite child; only that child owns the background image/position, shadow, and reaction transform. The outer frame clips overflow and never animates. Selection previews use the same helper and inset rule. The 6% inset is independent of atlas spacing, so adding CSS padding cannot accidentally change sprite-cell coordinates. Animation uses small percentage translations and 1.02 scaling; compact shadows are reduced. Character IDs/preferences and the nine-cell mapping are unchanged. The active catalog points to versioned padded sheets; originals are preserved.
 
 ## Result sprite containing block
 
-Every Mascot frame must establish the containing block of its absolute sprite child. Mobile result frames use position:relative with inset:auto, explicit 140×140 dimensions, and normal document flow between the heading and score card. Never change them to position:static: that anchors the child to the larger result section and stretches the sheet. Desktop result placement remains absolute; both variants retain overflow clipping.
+Every Mascot frame must establish the containing block of its absolute sprite child. Mobile result frames use position:relative with inset:auto, explicit 200×200 dimensions, and normal document flow between the heading and score card. Never change them to position:static: that anchors the child to the larger result section and stretches the sheet. Desktop results use a two-column heading/character grid with a 260px character frame (210px at intermediate widths). Mobile results stack in one column. Both variants retain overflow clipping.
 
 Compact combo typography overrides the general narrow-screen sidebar typography through selector specificity, without `!important`. Keep the combo line within its 20px HUD row, with no wrapping; portrait uses 15px and short landscape uses 12px. General desktop/sidebar typography remains separate.
 
@@ -120,3 +120,7 @@ VisualViewport scale differing from 1 by more than 0.02 blocks start/resume; bot
 ## Static sharing metadata and branding
 
 index.html owns description, canonical, Open Graph and large-card metadata in its initial head; no JavaScript is needed by a crawler. The canonical/og:url and absolute public sharing-image URL are the deliberate exception to repository-name-independent asset references: they identify the actual published site. Game and icon references stay project-relative. assets/branding owns local promotional artwork and code-native icon exports, with prompt/provenance documentation. No gameplay imports or state change. Renaming the public site requires metadata and sharing-test updates.
+
+## Larger character presentation
+
+Menu frames are 128px desktop / 96px mobile, with a wider selector slot and a two-column mobile track strip. Desktop play uses a square frame up to 240px (170px at intermediate widths), constrained to its sidebar. Compact play retains the 75:25 split and 20px combo row: character size is bounded by sidebar width, 180px, and the safe-area-adjusted quarter-height minus HUD padding/border/combo space. A 6% sprite gutter enlarges visible artwork while preserving clipped frame ownership, small reaction transforms, hidden preferences, and reduced motion. Result frames remain in grid flow, preventing larger characters from overlaying titles or scores.

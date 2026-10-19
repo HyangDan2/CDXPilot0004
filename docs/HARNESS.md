@@ -111,3 +111,7 @@ The browser audit now holds keys through END instead of issuing slide transition
 Run npm test. tests/sharing.js checks unique static metadata, title/description/image consistency, canonical Pages prefix, image PNG signature/1200×630 dimensions/size budget, relative icon paths, ICO sizes and Apple/PNG dimensions. pages-paths.js serves every branding image under both repository prefixes and checks HTTP 200 and MIME types.
 
 After publication, read the live HTML and fetch the absolute og:image URL and icons. Confirm no redirects to a login page or missing repository prefix. Then inspect previews in the intended social service and browser tab/home-screen icons. Do not send a message to another person without authorization. Services may retain cached previews; use their preview refresh tools or a new versioned image when needed. HTTP/metadata checks are distinct from actual social-card acceptance.
+
+## Larger character layout acceptance
+
+The result-layout browser fixture now covers 1280px desktop as well as phone/tablet widths, checking 260/210/200px frames and title/card separation. The mobile-hud fixture mounts both actual character views, checks square bounded HUD frames and combo separation, hidden preference, 96/128px menu frames, and track-strip overflow. These browser fixtures must be executed separately; Node syntax/character tests do not verify their CSS geometry. On physical phones, check safe areas and short landscape; on desktop, check 4/6-key sidebar widths, all expressions, reduced motion, and hidden characters.
