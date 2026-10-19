@@ -78,3 +78,7 @@ Add an original NOVA nine-expression sprite alongside LUMI. Reuse one reaction c
 ## Sprite padding and animation isolation (2026-10-18)
 
 Original LUMI/NOVA atlases had visible artwork on cell borders. Preserve them and use edited padded siblings. Because generated margins vary, add a deterministic 10% runtime inset and clip the fixed outer frame. Animate only the inner sprite, with smaller movement/scale and shadow. Reuse this structure in selection previews so each surface has the same isolation contract.
+
+## Mobile result containing-block fix (2026-10-19)
+
+The user supplied a screenshot of a vertically stretched result character covering scores. Inspection found that the mobile result rule reset the sprite frame to position:static, while its new child used absolute positioning and percentage insets. Restore position:relative, clear inherited top/right offsets with inset:auto, retain a fixed square, and add normal-flow spacing. Reduce the mobile heading size. No image regeneration is necessary.

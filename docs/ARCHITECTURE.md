@@ -94,3 +94,7 @@ Main owns three Mascot views (menu, play, result). applySettings synchronizes th
 ## Sprite isolation
 
 Mascot elements are fixed layout frames. mountCharacterSprite installs one aria-hidden mascot-sprite child; only that child owns the background image/position, shadow, and reaction transform. The outer frame clips overflow and never animates. Selection previews use the same helper and inset rule. The 10% inset is independent of atlas spacing, so adding CSS padding cannot accidentally change sprite-cell coordinates. Animation uses small percentage translations and 1.02 scaling; compact shadows are reduced. Character IDs/preferences and the nine-cell mapping are unchanged. The active catalog points to versioned padded sheets; originals are preserved.
+
+## Result sprite containing block
+
+Every Mascot frame must establish the containing block of its absolute sprite child. Mobile result frames use position:relative with inset:auto, explicit 140×140 dimensions, and normal document flow between the heading and score card. Never change them to position:static: that anchors the child to the larger result section and stretches the sheet. Desktop result placement remains absolute; both variants retain overflow clipping.

@@ -77,3 +77,7 @@ In a browser, click/tap the menu character and select each option; refresh and c
 `node scripts/verify-character-frames.mjs` (FFmpeg required) checks all eighteen active cells for a minimum two-pixel substantial-art gutter at alpha >32 and saves margin measurements. This threshold intentionally excludes faint glow/noise. It does not verify a perfectly empty alpha border or browser interpolation. Character tests check that sheet/position live on a single inset child and that the outer frame is not a second sheet renderer; selection previews use the same helper.
 
 Inspect all expressions at menu thumbnail, selection card, desktop play/result, and short mobile HUD sizes. Verify that cheer/nod/float and shadow cannot cross the fixed frame into labels, that hair/hands are not clipped, and that character hiding/reduced-motion settings still work. Preserve the mobile 75:25 allocation. Record any browser or device checks separately from PNG alpha analysis.
+
+## Result-frame browser regression
+
+Open `/tests/result-layout.html` over HTTP. This fixture loads the production result section and CSS into 320×568, 390×844, 620×800, and 844×390 frames and uses the real Mascot renderer. It checks both characters and clear/fail states, square frames, sprite containment, mobile title/card separation, and hiding. Animation is frozen for deterministic bounds. A test file being present is not evidence that the browser test was executed. Also inspect the real game result screen with animation on an iPhone.

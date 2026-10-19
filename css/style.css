@@ -1080,10 +1080,24 @@ button:disabled:hover {
     margin-bottom: 12px;
   }
   .result-mascot {
-    position: static;
-    margin: 0 auto;
+    /* Keep the absolute sprite anchored to this frame, not the results page. */
+    position: relative;
+    inset: auto;
+    margin: 12px auto 20px;
     width: 140px;
     height: 140px;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+  }
+  .result-screen {
+    padding: 24px 0;
+  }
+  .result-screen h1 {
+    font-size: clamp(30px, 8vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin: 12px 0;
+    overflow-wrap: anywhere;
   }
   .countdown strong {
     font-size: 80px;
