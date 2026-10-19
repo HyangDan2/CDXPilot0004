@@ -32,7 +32,7 @@ for (const track of TRACKS) {
       assert(
         chart.duration === 120 &&
           chart.audio === track.audio &&
-          chart.version === "3",
+          chart.version === "4",
         "Web Audio content contract",
       );
       const game = new Game(chart, 0, "free"),
@@ -65,7 +65,7 @@ for (const track of TRACKS) {
       );
       assert(
         Math.max(...groups.values()) <=
-          (["hard", "expert"].includes(difficulty) && lanes === 6 ? 3 : 2),
+          2,
         "Chord cap",
       );
       assert(
@@ -75,6 +75,30 @@ for (const track of TRACKS) {
         `Full perfect replay ${chart.id}: ${game.score}`,
       );
       const missed = new Game(chart, 0, "free");
+      // Replay every chart with source-aware touch handoffs as well as keyboard holds.
+      const touchGame = new Game(chart, 0, "free");
+      for (const note of chart.notes) {
+        if (note.type === "drag") {
+          const source = `pointer:${note.group}`;
+          const previous = touchGame.dragGroups.get(note.group)[note.step - 1];
+          if (previous) {
+            touchGame.releaseSource(source, note.time, true);
+            touchGame.release(previous.lane, note.time);
+          }
+          touchGame.hit(note.lane, note.time, {
+            kind: "touch", source, dragOnly: note.step > 0,
+            fromLane: previous?.lane ?? null,
+          });
+          if (note.step === touchGame.dragGroups.get(note.group).length - 1) {
+            touchGame.releaseSource(source, note.time);
+            touchGame.release(note.lane, note.time);
+          }
+        } else {
+          touchGame.hit(note.lane, note.time, { kind: "touch", source: `pointer:tap-${note.lane}` });
+          touchGame.release(note.lane, note.time);
+        }
+      }
+      assert(touchGame.complete && touchGame.accuracy === 100, `Touch full replay ${chart.id}`);
       missed.update(120);
       assert(missed.counts.MISS === chart.notes.length, "Complete miss replay");
       const failed = new Game(chart);

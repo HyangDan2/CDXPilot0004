@@ -97,6 +97,28 @@ test("Ribbon metadata validation rejects non-expert and conflicts", () => {
     assert(failed, "Reject invalid ribbon");
   }
 });
+test("Two-note chord cap rejects three-note chords in either mode", () => {
+  for (const lanes of [4, 6]) {
+    let rejected = false;
+    try {
+      validateBeatmap({ ...chart, lanes, notes: [0, 1, 2].map(lane => ({ time: 1, lane })) });
+    } catch { rejected = true; }
+    assert(rejected, "Three-note chord must be rejected");
+    validateBeatmap({ ...chart, lanes, notes: [0, 1].map(lane => ({ time: 1, lane })) });
+  }
+});
+test("Source-aware keyboard transfer preserves grace and prevents touch substitution", () => {
+  for (const gap of [0, 0.08, 0.081]) {
+    const g = new Game(chart);
+    g.hit(0, 1, { source: "key:KeyD" });
+    g.releaseSource("key:KeyD", 2 - gap);
+    g.release(0, 2 - gap);
+    assert(g.hit(1, 2, { source: "key:KeyF" }) === (gap <= 0.08 ? "PERFECT" : "MISS"), "Keyboard grace boundary");
+  }
+  const g = new Game(chart);
+  g.hit(0, 1, { kind: "touch", source: "pointer:1:1" });
+  assert(g.hit(1, 2, { source: "key:KeyF" }) === "MISS", "Keyboard cannot replace a touch gesture");
+});
 const memory = () => {
   const data = new Map();
   return {
@@ -149,6 +171,16 @@ test("Boards separate modes, lanes and chart revisions", () => {
     ),
   ];
   assert(new Set(keys).size === 5, "Independent leaderboards");
+});
+test("Revision 4 preserves old records without mixing changed judgement rules", () => {
+  const store = memory(), h = new HighScores(store);
+  const oldKey = scoreKey({ ...chart, version: "3" }, "standard");
+  const newKey = scoreKey({ ...chart, version: "4" }, "standard");
+  h.save(row("old", 3000, oldKey), "OLD");
+  h.save(row("new", 2000, newKey), "NEW");
+  const reload = new HighScores(store);
+  assert(reload.table(oldKey)[0].name === "OLD", "Old record preserved");
+  assert(reload.table(newKey).length === 1 && reload.table(newKey)[0].name === "NEW", "New rules use a separate board even with identical notes");
 });
 test("Names are bounded and storage failure preserves session records", () => {
   assert(Array.from(cleanName("abcdefghijklmnop")).length === 12, "Name bound");

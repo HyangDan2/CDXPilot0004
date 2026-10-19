@@ -51,10 +51,10 @@ const calibration = new Calibration(
   },
 );
 const input = new Input(
-  (lane, slide = false) => {
+  (lane, slide = false, metadata = {}) => {
     advanceCountdown();
     if (state === "playing" && !document.querySelector("dialog[open]")) {
-      game.hit(lane, audio.time, { dragOnly: slide });
+      game.hit(lane, audio.time, { ...metadata, dragOnly: slide });
       if (game.failed) finish();
     }
   },
@@ -78,6 +78,9 @@ const input = new Input(
   },
   (lane) => {
     if (state === "playing") game.release(lane, audio.time);
+  },
+  (source, transferring) => {
+    if (state === "playing") game.releaseSource(source, audio.time, transferring);
   },
 );
 let touchEnabled = false;
@@ -373,7 +376,7 @@ function advanceCountdown() {
   if (state === "countdown" && countdown.ready(audio.context.currentTime)) {
     state = "playing";
     $("countdown").classList.add("go");
-    game.resumeInputs(input.held, audio.time);
+    game.resumeInputs(input.held, audio.time, input.sources);
   }
 }
 function pause() {

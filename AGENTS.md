@@ -37,7 +37,7 @@
 - Result handling is idempotent: one screen transition and one SFX sequence per run.
 - Master, music, and SFX volumes use separate gain stages. Analyser reads music only.
 - Mascot consumes feedback events; it cannot mutate Game. Keep sheet assets local and document prompt/provenance.
-- HARD/EXPERT support at most two-note chords for 4 keys and three-note chords for 6 keys. Generated same-lane spacing floors are 80ms for HARD/EXPERT and 160ms for EASY/NORMAL.
+- All difficulties support at most two-note chords in both 4-key and 6-key modes. Generated same-lane spacing floors are 80ms for HARD/EXPERT and 160ms for EASY/NORMAL.
 
 ## Ribbons, records, and synthesis
 - Only EXPERT may contain drag checkpoints. Validate group order, adjacency, and isolation from competing notes.
@@ -51,6 +51,7 @@
 - Aggregate keyboard and pointer sources; release a lane only after its final source releases.
 - Pointer cancellation, capture loss, pause, and mode changes must clear held/captured state.
 - Slides may judge EXPERT drag checkpoints only, never TAP notes. Preserve the audio clock and ribbon grace.
+- Touch ribbons require one uninterrupted gesture and actual lane movement; no release grace. Keyboard ribbons retain 80ms grace. Track source releases independently from aggregated lane holds; explicitly rebind during resume count-in.
 - AUTO uses capabilities, not user-agent model guesses. Respect explicit input mode while retaining keyboard support.
 - Compact play must fit the visual viewport and safe areas. Keep menus/settings scrollable and desktop layout unchanged.
 - Distinguish simulated multi-touch tests from real device/browser acceptance.

@@ -19,13 +19,16 @@ export class TouchInput {
     this.enabled = enabled;
     this.canSlide = canSlide;
     this.pointers = new Map();
+    this.pointerSources = new Map();
+    this.gestureSequence = 0;
     this.reset = () => {
       const ids = [...this.pointers.keys()];
       this.pointers.clear();
       for (const id of ids) {
-        input.release("pointer:" + id);
+        input.release(this.pointerSources.get(id));
         if (surface.hasPointerCapture?.(id)) surface.releasePointerCapture(id);
       }
+      this.pointerSources.clear();
     };
     input.clearHooks.add(this.reset);
     this.down = (event) => {
@@ -35,8 +38,11 @@ export class TouchInput {
       if (lane == null || this.pointers.has(event.pointerId)) return;
       event.preventDefault();
       this.pointers.set(event.pointerId, lane);
+      // Browsers can reuse pointer IDs after a lift; each contact needs a fresh identity.
+      const source = `pointer:${event.pointerId}:${++this.gestureSequence}`;
+      this.pointerSources.set(event.pointerId, source);
       surface.setPointerCapture?.(event.pointerId);
-      input.press("pointer:" + event.pointerId, lane);
+      input.press(source, lane);
     };
     this.move = (event) => {
       if (!this.pointers.has(event.pointerId)) return;
@@ -49,14 +55,17 @@ export class TouchInput {
         previous = this.pointers.get(event.pointerId);
       if (lane === previous) return;
       // Leaving the highway releases the anchor; re-entering cannot fabricate a hold.
-      input.release("pointer:" + event.pointerId);
+      const source = this.pointerSources.get(event.pointerId);
+      const transferring = lane != null && previous != null && canSlide();
+      input.release(source, transferring);
       this.pointers.set(event.pointerId, lane);
       if (lane != null && canSlide())
-        input.press("pointer:" + event.pointerId, lane, true);
+        input.press(source, lane, true, previous);
     };
     this.end = (event) => {
       if (!this.pointers.delete(event.pointerId)) return;
-      input.release("pointer:" + event.pointerId);
+      input.release(this.pointerSources.get(event.pointerId));
+      this.pointerSources.delete(event.pointerId);
       if (surface.hasPointerCapture?.(event.pointerId))
         surface.releasePointerCapture(event.pointerId);
     };

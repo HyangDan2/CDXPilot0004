@@ -1,11 +1,12 @@
 import { MODES } from "./config.js";
 export class Input {
-  constructor(onHit, onPause, onRelease = () => {}) {
+  constructor(onHit, onPause, onRelease = () => {}, onSourceRelease = () => {}) {
     this.held = new Set();
     this.sources = new Map();
     this.clearHooks = new Set();
     this.onHit = onHit;
     this.onRelease = onRelease;
+    this.onSourceRelease = onSourceRelease;
     this.keys = MODES[4].keys;
     this.down = (event) => {
       if (
@@ -30,17 +31,22 @@ export class Input {
     window.addEventListener("keydown", this.down);
     window.addEventListener("keyup", this.up);
   }
-  press(source, lane, slide = false) {
+  press(source, lane, slide = false, fromLane = null) {
     if (this.sources.has(source)) return;
     this.sources.set(source, lane);
     if (this.held.has(lane)) return;
     this.held.add(lane);
-    this.onHit(lane, slide);
+    this.onHit(lane, slide, {
+      source,
+      kind: source.startsWith("pointer:") ? "touch" : "keyboard",
+      fromLane,
+    });
   }
-  release(source) {
+  release(source, transferring = false) {
     const lane = this.sources.get(source);
     if (lane == null) return;
     this.sources.delete(source);
+    this.onSourceRelease(source, transferring);
     if ([...this.sources.values()].includes(lane)) return;
     this.held.delete(lane);
     this.onRelease(lane);

@@ -82,3 +82,9 @@ Original LUMI/NOVA atlases had visible artwork on cell borders. Preserve them an
 ## Mobile result containing-block fix (2026-10-19)
 
 The user supplied a screenshot of a vertically stretched result character covering scores. Inspection found that the mobile result rule reset the sprite frame to position:static, while its new child used absolute positioning and percentage insets. Restore position:relative, clear inherited top/right offsets with inset:auto, retain a fixed square, and add normal-flow spacing. Reduce the mobile heading size. No image regeneration is necessary.
+
+## Source-aware touch ribbons and two-finger charts (2026-10-19)
+
+Touch ribbons require one uninterrupted gesture rather than lane-held state or keyboard grace. A unique pointerdown token prevents reused pointer IDs from reconnecting. Per-source release notification is separate from final-lane release so mixed input sources cannot conceal a broken gesture. Keyboard hold transitions retain 80ms grace; resume is an explicit rebind exception. Timed failed checkpoints can re-anchor later segments.
+
+All modes now cap simultaneous targets at two, with existing isolated ribbon windows excluding competing holds/TAPs. Removed only the third-note generation branch; score/audio definitions and four-key notes are unchanged. Regenerated all 80 charts as revision 4, which also separates scores earned under the older touch rules. Existing six-part leaderboard keys and backup format are unchanged; old records remain stored.

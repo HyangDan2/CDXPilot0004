@@ -870,8 +870,8 @@ button:disabled:hover {
   .arena aside .number {
     font-size: 30px;
   }
-  .combo-side .number {
-    font-size: 45px !important;
+  .arena .combo-side .number {
+    font-size: 45px;
   }
   .orbit-art {
     opacity: 0.25;
@@ -1351,6 +1351,9 @@ body.compact-play.in-play {
 }
 .compact-play.in-play .combo-side #combo {
   grid-row: 1;
+  line-height: 20px;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 .compact-play.in-play .combo-side #mascot {
   display: block;

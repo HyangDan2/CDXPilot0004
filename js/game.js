@@ -85,16 +85,33 @@ export class Game {
             point.releasedAt = audioTime;
     }
   }
+  releaseSource(source, audioTime, transferring = false) {
+    // A second source holding the lane must not conceal the original source's release.
+    for (const points of this.dragGroups.values())
+      for (const point of points)
+        if (point.anchorSource === source && point.anchorAt != null) {
+          if (point.anchorKind === "touch") {
+            if (!transferring) point.touchBroken = true;
+          } else if (point.releasedAt == null) point.releasedAt = audioTime;
+        }
+  }
   suspendInputs() {
     this.heldSince.clear();
     this.releasedAt.clear();
   }
-  resumeInputs(held, audioTime) {
+  resumeInputs(held, audioTime, sources = null) {
     this.suspendInputs();
     for (const lane of held) this.heldSince.set(lane, audioTime);
     for (const points of this.dragGroups.values())
       for (const point of points)
         if (point.anchorAt != null) {
+          if (sources) {
+            const entry = [...sources].find(([source, lane]) =>
+              lane === point.lane &&
+              source.startsWith("pointer:") === (point.anchorKind === "touch"));
+            point.anchorSource = entry?.[0];
+            point.touchBroken = !entry;
+          }
           point.anchorAt = audioTime;
           point.releasedAt = held.has(point.lane)
             ? undefined
@@ -103,7 +120,11 @@ export class Game {
             this.releasedAt.set(point.lane, audioTime - 0.081);
         }
   }
-  hit(lane, audioTime, { dragOnly = false } = {}) {
+  hit(
+    lane,
+    audioTime,
+    { dragOnly = false, source = null, kind = "keyboard", fromLane = null } = {},
+  ) {
     if (this.failed) return;
     this.update(audioTime);
     if (!this.heldSince.has(lane)) this.heldSince.set(lane, audioTime);
@@ -116,15 +137,23 @@ export class Game {
       if (previous && previous.anchorAt != null) {
         const since = this.heldSince.get(previous.lane),
           released = previous.releasedAt;
-        const connected =
-          (since != null && since <= previous.anchorAt + 1e-9) ||
+        const keyboardConnected =
+          (released == null && since != null && since <= previous.anchorAt + 1e-9) ||
           (released != null &&
             released >= previous.anchorAt &&
             audioTime - released <= CONFIG.dragGrace + 1e-9);
+        const connected = kind === "touch"
+          ? previous.anchorKind === "touch" && !previous.touchBroken &&
+            source != null && source === previous.anchorSource && dragOnly &&
+            fromLane === previous.lane
+          : previous.anchorKind === "keyboard" && !previous.touchBroken && keyboardConnected;
         if (!connected) result = "MISS";
       } else if (previous && !previous.done) result = "MISS";
       // A timed input re-anchors the chain even after a broken link; later points can recover.
       note.anchorAt = audioTime;
+      note.anchorKind = kind;
+      note.anchorSource = source;
+      note.touchBroken = false;
       note.releasedAt = undefined;
     }
     return this.judge(note, result, audioTime);

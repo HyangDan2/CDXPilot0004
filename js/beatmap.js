@@ -76,6 +76,12 @@ export function validateBeatmap(data) {
     })
     .sort((a, b) => a.time - b.time || a.lane - b.lane);
   const intervals = [];
+  const chordSizes = new Map();
+  for (const note of notes) {
+    const size = (chordSizes.get(note.time) || 0) + 1;
+    if (size > 2) throw new Error("Chords may contain at most two notes.");
+    chordSizes.set(note.time, size);
+  }
   for (const [id, points] of groups) {
     points.sort((a, b) => a.step - b.step);
     if (points.length < 2)

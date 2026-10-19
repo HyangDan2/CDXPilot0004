@@ -86,3 +86,19 @@ Added a fixed clipped frame and separate 10%-inset sprite child to all Mascot vi
 The supplied phone screenshot exposed a mobile CSS override that made the result Mascot frame static. Its absolute sprite child therefore used the larger results section as its containing block. Restored a relative 140×140 frame with reset insets and normal-flow margins; reduced the mobile result heading size. Desktop positioning is unchanged.
 
 Passed `node tests/characters.js`, `node tests/pages-paths.js` (135 exact-case pages/assets under both repository prefixes), and the ES-module syntax check for tests/result-layout.js. Added a browser geometry fixture for both characters, clear/fail headings, visibility, and four viewport sizes. That fixture has not been executed; live Safari and physical iPhone layout remain unverified. The existing browser access restriction was respected. No deployment was performed.
+
+## Compact combo clipping correction — 2026-10-19
+
+Source inspection found a max-width:900px rule forcing combo text to 45px with !important, overriding the compact 15px/12px rules inside a 20px grid row. Removed that priority override while preserving the general sidebar's 45px size through selector specificity. Added an explicit 20px compact line height, normal letter spacing, and no wrapping.
+
+Passed touch simulations, repository-prefix checks (137 pages/assets), mobile-hud.js ES-module syntax, and git diff whitespace checks. Added tests/mobile-hud.html for viewport geometry and five-digit combo coverage. The browser fixture and real phone display have not been executed or verified; existing browser access restrictions remain respected. No commit, push, or deployment was performed for this correction.
+
+## Revision 4 ribbons and two-note chords — 2026-10-19
+
+Implemented per-gesture touch identity and source-release tracking. Touch links require actual same-gesture lane movement without lifting/cancellation/exit; keyboard retains hold transitions and 80ms grace. Resume explicitly binds a held same-kind source. Existing aggregate input ownership, per-checkpoint MISS/health, Free Play, and timed recovery are retained.
+
+Regenerated all 80 charts as revision 4. Compared generated files against HEAD: only the 20 six-key HARD/EXPERT note arrays changed; four-key patterns, other difficulties, and audio remain unchanged. All difficulties/modes now cap chords at two, and validation rejects competing notes throughout each ribbon window. Existing records are preserved with independent revision-4 boards; backup schema is unchanged.
+
+The full npm test suite passed after the new regressions were added. Checks include 80 keyboard and source-aware touch full replays, 4/6-lane pointer lifecycles (including lift/re-touch within 80ms), different-finger rejection, cancellation/capture loss/exit, recovery, missed checkpoint damage, resume, keyboard grace boundaries, triple-chord rejection, and old/new leaderboard persistence. Re-ran library tests after adding final-touch release cleanup; main/game syntax and git diff whitespace checks passed. No failed checks remain. Earlier compact COMBO styling and its browser fixture are included in this update.
+
+These are logic/simulated-event and static-asset checks. Actual mobile touch hardware, Safari rendering, the mobile HUD browser fixture, and deployed Pages behavior remain unverified. Existing browser access restrictions were respected. No audio rendering or listening test was necessary or performed for this change.

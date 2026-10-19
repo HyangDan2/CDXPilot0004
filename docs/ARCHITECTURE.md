@@ -6,7 +6,7 @@ main.js composes UI, audio, Game, Input, Renderer, countdown, SFX, calibration, 
 
 | Module | Responsibility |
 | --- | --- |
-| music | Ten deterministic 120-second score definitions, section boundaries, note cues, revision-3 chart generator |
+| music | Ten deterministic 120-second score definitions, section boundaries, note cues, revision-4 chart generator |
 | synth | Authoring-only OfflineAudioContext instrument graph, windowed rendering, final soft limiting/fade |
 | audio | Live AudioContext, one decoded buffer cache, transport, gains and analyser |
 | game | Mutable notes, health/failure, score/combo, held/released key history, ribbon continuity |
@@ -47,13 +47,13 @@ Note position uses `line - (target - songTime) / (1.8 / speed) * line`. Speed is
 
 Each flat checkpoint is `{time, lane, type: "drag", group, step}`. Flat notes preserve existing scoring: the maximum is the complete array length × 1000. A group has at least two checkpoints, contiguous steps from zero, increasing times, and adjacent lanes. Only EXPERT accepts groups. The generator inserts three-checkpoint paths in isolated windows and removes competing TAPs within a 180ms margin. The validator rejects overlaps instead of silently repairing them.
 
-A hit anchors the current checkpoint. The next point requires the previous key to have remained held since that anchor, or its first release to be within 80ms of the new hit. The first release time is retained, so early release/repress cannot forge continuity. A broken link scores MISS once. A timed hit re-anchors even after a broken link; after an automatically missed point, the following timed checkpoint can become a new anchor. Auto expiry never generates an anchor. Key repeat prevention lives in Input; both keydown and keyup timestamps reach Game.
+A keyboard hit anchors the current checkpoint. The next point requires the previous key to have remained held since that anchor, or its first release to be within 80ms of the new hit. The first release time is retained, so early release/repress cannot forge continuity. A broken link scores MISS once. A timed hit re-anchors even after a broken link; after an automatically missed point, the following timed checkpoint can become a new anchor. Auto expiry never generates an anchor. Key repeat prevention lives in Input; both keydown and keyup timestamps reach Game.
 
 Pause removes held history. Resume re-anchors resolved ribbon points at frozen song time only when their physical key has been re-held; absent keys cannot claim continuity. Ribbon lines and checkpoint labels are display-only and respect the same speed transform as TAP notes.
 
 ## Difficulty, survival, and records
 
-Revision 3 maps EASY to former NORMAL, NORMAL to former HARD, HARD to former EXPERT. New EXPERT adds further offbeat fills and ribbons. EASY/NORMAL chord cap is two; HARD/EXPERT cap is two at four keys and three at six keys. Validation thresholds for generated same-lane spacing are 160ms for EASY/NORMAL and 80ms for HARD/EXPERT, accommodating the new 172 BPM material.
+Revision 3 maps EASY to former NORMAL, NORMAL to former HARD, HARD to former EXPERT. New EXPERT adds further offbeat fills and ribbons. Revision 4 caps every difficulty and lane mode at two-note chords; isolated ribbon windows exclude competing notes, so mandatory holds cannot add a third simultaneous input. All 80 charts advance to revision 4 to separate the changed judgement rules, even when notes are unchanged. Validation thresholds for generated same-lane spacing are 160ms for EASY/NORMAL and 80ms for HARD/EXPERT, accommodating the new 172 BPM material.
 
 Health starts at 100 and clamps to 0–100. Immutable HEALTH_RULES map EASY/NORMAL/HARD/EXPERT to MISS −8/−10/−12/−15; PERFECT heals +2 and GOOD heals +1 on every difficulty. Game snapshots the chart difficulty rule, defaulting to NORMAL for legacy charts. Each update rounds to tenths to avoid floating-point drift; only the HUD rounds to an integer. STANDARD latches failed/failedAt at zero; further note processing stops. FREE PLAY does not latch failure and can recover. Only completed nonfailed runs are offered to records.
 
@@ -98,3 +98,11 @@ Mascot elements are fixed layout frames. mountCharacterSprite installs one aria-
 ## Result sprite containing block
 
 Every Mascot frame must establish the containing block of its absolute sprite child. Mobile result frames use position:relative with inset:auto, explicit 140×140 dimensions, and normal document flow between the heading and score card. Never change them to position:static: that anchors the child to the larger result section and stretches the sheet. Desktop result placement remains absolute; both variants retain overflow clipping.
+
+Compact combo typography overrides the general narrow-screen sidebar typography through selector specificity, without `!important`. Keep the combo line within its 20px HUD row, with no wrapping; portrait uses 15px and short landscape uses 12px. General desktop/sidebar typography remains separate.
+
+## Source-aware ribbon connections (revision 4)
+
+Input passes source/kind/fromLane metadata for scoring and emits a separate source-release callback even when another source still holds that lane. Aggregate lane releases retain their existing contract. TouchInput assigns a new gesture identity on every pointerdown (pointer IDs alone can be reused). Only an in-bounds lane transfer preserves the gesture connection. Game owns anchor source/kind and terminal touch-break state: touch checkpoints require the same gesture, an actual slide from the prior lane, and no intervening lift/cancel/exit. Keyboard connections retain first-release history and 80ms grace; switching input kinds cannot substitute for an existing anchor.
+
+A timed MISS may re-anchor the subsequent segment; expired notes never anchor. Resume explicitly rebinds the anchor to a same-kind source held on that lane during count-in. Input settings alone never determine judgement kind; actual event sources do. All catalog boards use chart revision 4, preserving the existing six-part record key and old stored/backup records without migration or deletion.

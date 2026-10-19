@@ -27,7 +27,7 @@ The browser logic page `/tests/` shares pure suites. `/tests/browser.html` uses 
 1. Select all ten songs and four difficulties in both modes. Check metadata, eight charts per song, and scrollable track list.
 2. Start a new song; observe download/decode status, then count-in. Retry/change difficulty: reuse current buffer. Change song: load its saved file. Test missing/corrupt files and retry; confirm no runtime synthesis.
 3. Compare new instrument palettes and song sections by listening; check clipping, audible balance, loading latency, and memory on the actual device.
-4. Verify D/F/J/K and S/D/F/J/K/L, repeat prevention, two/three-key chords, judgement, health, terminal failure, Free Play recovery, and full results.
+4. Verify D/F/J/K and S/D/F/J/K/L, repeat prevention, two-key chords, judgement, health, terminal failure, Free Play recovery, and full results.
 5. Start/pause/cancel during count-in. Confirm no leaked source or SFX. Resume a near-target note without timing drift.
 6. For an EXPERT ribbon: hold through a transition, overlap keys, release just under/over 80ms early, deliberately break, recover at the next point, miss the start, pause while holding, and re-hold the indicated anchor during countdown. Verify each checkpoint scores once and no frame-rate-based health loss exists.
 7. Change speed using slider and number input at 0.5, 2, 5, and 10. Refresh to verify persistence. Check ribbon geometry and target crossings at all speeds.
@@ -81,3 +81,13 @@ Inspect all expressions at menu thumbnail, selection card, desktop play/result, 
 ## Result-frame browser regression
 
 Open `/tests/result-layout.html` over HTTP. This fixture loads the production result section and CSS into 320×568, 390×844, 620×800, and 844×390 frames and uses the real Mascot renderer. It checks both characters and clear/fail states, square frames, sprite containment, mobile title/card separation, and hiding. Animation is frozen for deterministic bounds. A test file being present is not evidence that the browser test was executed. Also inspect the real game result screen with animation on an iPhone.
+
+## Compact combo typography regression
+
+Open `/tests/mobile-hud.html` over HTTP to check production play markup/CSS at 320×568, 390×844, and 844×390. It checks 15px portrait / 12px short-landscape typography, the 20px combo row, panel containment, and one-to-five-digit values. This browser fixture must be run separately from Node checks. On a phone, inspect combo changes with both character choices and the character hidden.
+
+## Revision 4 input and chart regression
+
+Run npm test. Touch tests exercise the full simulated pointer-to-Input-to-Game path in 4/6 lanes: same-finger slides, alternate fingers, reused pointer IDs after lifting, cancellation, capture loss, highway exit, recovery, automatic MISS, health/combo changes, and resume gesture rebinding. Volume 3 tests cover source-aware keyboard grace, input-kind substitution, triple-chord rejection, and old/new record persistence. Library tests replay all 80 charts with both keyboard and source-aware touch inputs, validate the two-note cap and isolated ribbon windows, and retain onset/spacing/failure checks.
+
+On actual devices, repeat lift/re-touch within 80ms, different-finger handoff, cancellation, pause/re-hold, and two-finger 6-key chords. Simulations do not verify physical touch behavior. Existing browser access restrictions must not be bypassed.

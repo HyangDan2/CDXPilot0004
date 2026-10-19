@@ -55,9 +55,10 @@ const notes = [
 ];
 let game = new Game({ notes, offsetMs: 0, lanes: 4 }, 0, "free");
 const input = new Input(
-  (lane, slide) => game.hit(lane, time, { dragOnly: slide }),
+  (lane, slide, metadata) => game.hit(lane, time, { ...metadata, dragOnly: slide }),
   () => {},
   (lane) => game.release(lane, time),
+  (source, transferring) => game.releaseSource(source, time, transferring),
 );
 const touch = new TouchInput(
   surface,
@@ -164,7 +165,7 @@ fire("pointerdown", 21, 50);
 game.suspendInputs();
 input.clear();
 fire("pointerdown", 22, 50);
-game.resumeInputs(input.held, time);
+game.resumeInputs(input.held, time, input.sources);
 time = 2;
 fire("pointermove", 22, 200);
 assert.equal(
@@ -190,6 +191,55 @@ assert.equal(
 );
 input.clear();
 const guards = new Map();
+// Use the complete pointer -> Input -> Game path, including source releases.
+for (const lanes of [4, 6]) {
+  const x = lane => ((lane + 0.5) * 600) / lanes;
+  const start = () => {
+    input.setMode(lanes);
+    game = new Game({ notes: notes.slice(0, 3), offsetMs: 0, lanes, difficulty: "expert" });
+    time = 1;
+    fire("pointerdown", 40, x(0));
+  };
+  for (const ending of ["pointerup", "pointercancel", "lostpointercapture", "outside", "other-finger"]) {
+    start();
+    time = 1.99;
+    if (ending === "outside") fire("pointermove", 40, -1);
+    else if (ending !== "other-finger") fire(ending, 40, x(0));
+    time = 2;
+    if (ending === "outside") fire("pointermove", 40, x(1));
+    else fire("pointerdown", ending === "other-finger" ? 41 : 40, x(1));
+    assert.equal(game.counts.MISS, 1, `${lanes} lanes: ${ending} breaks the link even within 80ms`);
+    assert.equal(game.health, 85);
+    assert.equal(game.combo, 0);
+    assert.equal(game.score, 1000);
+    time = 3;
+    fire("pointermove", ending === "other-finger" ? 41 : 40, x(2));
+    assert.equal(game.counts.PERFECT, 2, 'A failed timed checkpoint can re-anchor');
+    game.update(4);
+    assert.equal(game.counts.MISS, 1, 'No duplicate expiry damage');
+  }
+  start();
+  time = 2;
+  fire("pointermove", 40, x(1));
+  time = 3;
+  fire("pointermove", 40, x(2));
+  assert.equal(game.score, 3000, 'Same-finger continuous slide succeeds');
+  start();
+  time = 1.2;
+  fire("pointerup", 40, x(0));
+  game.update(3.181);
+  assert.equal(game.counts.MISS, 2, 'Unplayed checkpoints expire individually');
+  assert.equal(game.health, 70);
+  start();
+  game.suspendInputs();
+  input.clear();
+  fire("pointerdown", 42, x(0));
+  game.resumeInputs(input.held, time, input.sources);
+  time = 2;
+  fire("pointermove", 42, x(1));
+  assert.equal(game.score, 2000, 'Resume explicitly binds the new gesture');
+}
+input.clear();
 let active = true,
   prevented = 0;
 const guardSurface = {

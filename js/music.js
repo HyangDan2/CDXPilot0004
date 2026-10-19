@@ -278,7 +278,8 @@ export function compose(track) {
   cues.sort((a, b) => a.time - b.time);
   return { events: events.sort((a, b) => a.time - b.time), cues };
 }
-export const CHART_VERSION = "3";
+// Revision 4 also separates records earned before source-aware ribbon judgement.
+export const CHART_VERSION = "4";
 export function makeChart(track, lanes, difficulty) {
   const { cues } = compose(track),
     notes = [];
@@ -306,16 +307,6 @@ export function makeChart(track, lanes, difficulty) {
       notes.push({
         time: Number(cue.time.toFixed(6)),
         lane: (lane + lanes / 2) % lanes,
-      });
-    if (
-      ["expert", "extreme"].includes(tier) &&
-      lanes === 6 &&
-      cue.beat % 8 === 0 &&
-      ["CHORUS", "SUPERNOVA"].includes(cue.section)
-    )
-      notes.push({
-        time: Number(cue.time.toFixed(6)),
-        lane: (lane + 2) % lanes,
       });
     previousLane = lane;
     index++;
