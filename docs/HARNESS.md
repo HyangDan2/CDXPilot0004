@@ -105,3 +105,9 @@ Run npm test (including tests/holds.js). Validate keyboard and touch starts, aut
 Library tests independently count active HOLD occupancy at every target, including between maintenance checkpoints. Every chart must require at most two simultaneous inputs, contain no slide notes, and complete perfect keyboard/touch replays. Chart version 5 isolates records; previous records remain stored. Older slide fixtures in touch/volume3/health tests exercise compatibility only.
 
 The browser audit now holds keys through END instead of issuing slide transitions. On physical phones and desktop, inspect vertical body visibility at 0.5–10x, intact/failed colors, one-hand HOLD plus second-finger TAP, and pause captions. Check menus, zoom guards, and mobile HUD are unchanged. Automated simulations do not establish browser rendering, physical gestures, or audio sync.
+
+## Sharing and favicon regression
+
+Run npm test. tests/sharing.js checks unique static metadata, title/description/image consistency, canonical Pages prefix, image PNG signature/1200×630 dimensions/size budget, relative icon paths, ICO sizes and Apple/PNG dimensions. pages-paths.js serves every branding image under both repository prefixes and checks HTTP 200 and MIME types.
+
+After publication, read the live HTML and fetch the absolute og:image URL and icons. Confirm no redirects to a login page or missing repository prefix. Then inspect previews in the intended social service and browser tab/home-screen icons. Do not send a message to another person without authorization. Services may retain cached previews; use their preview refresh tools or a new versioned image when needed. HTTP/metadata checks are distinct from actual social-card acceptance.

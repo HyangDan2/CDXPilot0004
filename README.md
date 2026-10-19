@@ -127,3 +127,9 @@ Character sprites use revised padded sheets plus a fixed, clipped frame with a 1
 ### Recovering an enlarged mobile page
 
 START and RESUME check VisualViewport scale before and after audio preparation/activation. If the page is already enlarged or reduced, a recovery dialog asks you to pinch back to the default size or reset browser page zoom. Zoom gestures are temporarily enabled while scale is abnormal. Returning to normal closes the message and refreshes layout; press START/RESUME again. A zoom change during play pauses the run. The app cannot force browser/OS zoom to reset; browsers without VisualViewport cannot provide this scale check.
+
+## Link previews and icons
+
+The static HTML includes Open Graph and large-card metadata for the public URL https://hyangdan2.github.io/CDXPilot0004/. The 1200×630 sharing card features LUMI and NOVA in a neon cosmic scene. Local SVG/PNG/ICO favicons and an Apple touch icon use the neon star/music-note symbol. See assets/branding/README.md for provenance and replacement instructions. No server or runtime image generation is required.
+
+If the public repository/domain changes, update canonical, og:url, og:image, and twitter:image in index.html and the expected public URL in tests/sharing.js. Relative game/icon paths remain portable. Social services and browsers may cache previous previews/icons; source tests and an HTTP 200 do not guarantee that a third-party preview has refreshed.

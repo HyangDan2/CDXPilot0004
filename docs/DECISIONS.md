@@ -98,3 +98,7 @@ Already-zoomed pages cannot be reliably reset by script. Gate entry/resume, allo
 ## Stationary HOLDs replace catalog slides (2026-10-19)
 
 Revision 5 replaces all EXPERT slides with one-lane HOLDs to remove required horizontal gestures. Keep original checkpoint times/count, add one companion TAP at musical onsets, and enforce two-input sustained occupancy. Source ownership prevents a second finger or key from masking an early release. A break is permanent for that group, including across pause; intact groups alone may rebind during resume. Maintenance/end checkpoints score automatically on audio time; exact END release succeeds without a release timing judgement. Old slide fixtures remain for compatibility regression, but no catalog slides or production slide scoring remain. All 80 chart versions advance to separate scores; audio and non-EXPERT patterns remain unchanged.
+
+## Sharing cards and site icons (2026-10-19)
+
+Add static Open Graph/large-card metadata rather than runtime DOM injection. Use one versioned 1200×630 opaque PNG with LUMI/NOVA and English title copy. Use a separate simple star/music-note SVG mark for small tabs, with PNG/ICO and opaque Apple touch fallbacks. Public canonical/image URLs include the verified CDXPilot0004 Pages prefix; relative icons preserve local and alternate-prefix serving. Artwork is generated once during authoring and stored locally.

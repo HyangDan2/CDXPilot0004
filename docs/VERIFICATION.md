@@ -120,3 +120,11 @@ Regenerated all 80 charts as revision 5 to separate scores without removing prev
 Actual browser rendering, physical mobile HOLD interaction, and deployed Pages behavior remain unverified under the existing browser access restriction. The browser audit page was updated for HOLD scheduling but was not executed. No physical audio-sync or edge-navigation prevention claim is made; stationary notes remove the required sideways gesture but cannot disable system navigation.
 
 Final revision audit against the prior commit confirmed exactly 20 EXPERT chart note arrays changed, 144 HOLD groups retained their previous checkpoint times, and all 60 non-EXPERT note arrays plus audio paths remained identical. Re-ran the full suite after keyboard companion-input coverage; all checks passed, including 140 exact-case assets/pages under both repository prefixes. Main/browser-audit syntax and whitespace checks passed. No outstanding automated failures remain.
+
+## Sharing previews and icons — 2026-10-19
+
+Added static description/canonical/Open Graph/large-card metadata, a local 1200×630 LUMI/NOVA neon sharing card, SVG/PNG/multi-size ICO favicons, and a 180px Apple icon. Visually inspected generated character/title artwork and the final icon export. The first ImageMagick SVG rasterization omitted strokes and was replaced with verified Sharp/librsvg raster exports before generating ICO sizes. Original character sheets are unchanged; prompts/provenance are recorded in assets/branding.
+
+Passed the full npm test suite, including metadata consistency, public Pages prefix, PNG dimensions/signature/size budget, icon dimensions/formats, and HTTP 200 plus branding MIME checks under both repository prefixes (146 pages/assets). Whitespace checks passed. The existing public Pages root returned HTTP 200 before this change was pushed. No automated failures remain.
+
+Actual social-service preview refresh and browser tab/home-screen rendering remain unverified. No messages were sent to any recipient. HTTP/source checks do not establish social-card rendering, and platform caches may retain the previous preview after publication. The public metadata URLs must be updated if the repository/domain changes.

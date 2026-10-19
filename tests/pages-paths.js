@@ -6,6 +6,8 @@ import { TRACKS } from "../js/music.js";
 import { CHARACTERS } from "../js/characters.js";
 const root = new URL("../", import.meta.url);
 const paths = new Set(["index.html", "assets/tracks.json", ".nojekyll"]);
+for (const file of await readdir(new URL("assets/branding/", root)))
+  if (/\.(png|svg|ico)$/.test(file)) paths.add("assets/branding/" + file);
 for (const character of CHARACTERS)
   paths.add(character.sheet.replace(/^\.\//, ""));
 async function scan(dir) {
@@ -98,12 +100,18 @@ for (const prefix of ["/CDXPilot0004", "/renamed-project"]) {
     const redirect = await request(url.slice(0, -1));
     assert.equal(redirect.status, 301);
     assert.equal(redirect.headers.location, prefix + "/");
-    for (const path of paths)
+    for (const path of paths) {
+      const response = await request(new URL(path, url));
       assert.equal(
-        (await request(new URL(path, url))).status,
+        response.status,
         200,
         prefix + "/" + path,
       );
+      if (path.startsWith("assets/branding/")) {
+        const type = { png: "image/png", svg: "image/svg+xml", ico: "image/x-icon" }[path.split(".").at(-1)];
+        assert.equal(response.headers["content-type"], type, "Branding asset MIME type");
+      }
+    }
     assert.equal(
       (await request(new URL("/assets/tracks.json", url))).status,
       404,

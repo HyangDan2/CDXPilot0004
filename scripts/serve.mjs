@@ -9,6 +9,7 @@ const prefix = basePath === "/" ? "" : basePath;
 const types = {
   ".png": "image/png",
   ".svg": "image/svg+xml",
+  ".ico": "image/x-icon",
   ".html": "text/html",
   ".js": "text/javascript",
   ".css": "text/css",
