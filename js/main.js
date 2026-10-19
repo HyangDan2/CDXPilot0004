@@ -1,5 +1,6 @@
 import { CHARACTERS, characterById } from "./characters.js";
 import { TouchInput, PlayGestureGuard, inputEnvironment } from "./touch.js";
+import { isPageZoomed, isMobileViewport, MobileZoomGuard, ViewportGate } from "./viewport.js";
 import { HighScores, scoreKey } from "./highscores.js";
 import { Countdown } from "./countdown.js";
 import { SoundEffects } from "./sfx.js";
@@ -101,6 +102,25 @@ const playGestures = new PlayGestureGuard(
     !document.querySelector("dialog[open]"),
 );
 const coarsePointer = matchMedia("(any-pointer: coarse)");
+const primaryCoarsePointer = matchMedia("(pointer: coarse)");
+const mobileViewport = () => isMobileViewport({
+  touchPoints: navigator.maxTouchPoints || 0,
+  coarse: primaryCoarsePointer.matches,
+  width: window.innerWidth,
+  height: window.innerHeight,
+});
+const zoomBlocked = () => mobileViewport() && isPageZoomed(window.visualViewport);
+const viewportGate = new ViewportGate(zoomBlocked, () => {
+  if (!$("zoom-recovery").open) $("zoom-recovery").showModal();
+}, () => {
+  if ($("zoom-recovery").open) $("zoom-recovery").close();
+});
+const mobileZoomGuard = new MobileZoomGuard(document, () => mobileViewport() && !zoomBlocked());
+function ensureNormalZoom() {
+  clearFocus();
+  updateInputEnvironment();
+  return viewportGate.allow();
+}
 function updateInputEnvironment() {
   const previous = touchEnabled;
   const environment = inputEnvironment(settings.inputMode, {
@@ -113,10 +133,20 @@ function updateInputEnvironment() {
   document.body.classList.toggle("touch-controls", touchEnabled);
   document.body.classList.toggle("compact-play", environment.compact);
   const viewport = window.visualViewport;
-  document.documentElement.style.setProperty(
-    "--play-height",
-    (viewport?.height || window.innerHeight) + "px",
-  );
+  const blocked = zoomBlocked();
+  document.documentElement.classList.toggle("mobile-zoom-locked", mobileViewport() && !blocked);
+  document.documentElement.classList.toggle("mobile-viewport", mobileViewport());
+  // Preserve the last normal play height while zoom recovery is pending.
+  if (!blocked) {
+    document.documentElement.style.setProperty(
+      "--play-height",
+      (viewport?.height || window.innerHeight) + "px",
+    );
+    if ($("zoom-recovery").open) $("zoom-recovery").close();
+  } else if (["playing", "countdown"].includes(state)) {
+    pause();
+    viewportGate.allow();
+  }
   if (previous !== touchEnabled) {
     pause();
     input.clear();
@@ -136,6 +166,7 @@ window.addEventListener("resize", () => {
 });
 window.visualViewport?.addEventListener("resize", updateInputEnvironment);
 coarsePointer.addEventListener("change", updateInputEnvironment);
+primaryCoarsePointer.addEventListener("change", updateInputEnvironment);
 function screen(id) {
   document.body.classList.toggle("in-play", id === "play");
   updateInputEnvironment();
@@ -268,6 +299,7 @@ async function refreshSelection() {
 async function start() {
   if (pendingRecord) savePending("PLAYER");
   if (busy || !chart) return;
+  if (!ensureNormalZoom()) return;
   const selectedChart = chart,
     selectedTrack = currentTrack();
   busy = true;
@@ -287,6 +319,13 @@ async function start() {
     await audio.prepare(selectedChart, (message) => {
       $("status").textContent = message;
     });
+    // Zoom may have changed while the audio was loading.
+    if (!ensureNormalZoom()) {
+      state = "menu";
+      screen("menu");
+      $("status").textContent = "Restore page zoom, then press START again.";
+      return;
+    }
     applySettings();
     game = new Game(selectedChart, settings.offset, settings.playMode);
     run = {
@@ -396,9 +435,11 @@ function pause() {
 }
 async function resume() {
   if (state !== "paused" || busy) return;
+  if (!ensureNormalZoom()) return;
   busy = true;
   try {
     await audio.activate();
+    if (!ensureNormalZoom()) return;
     $("paused").close();
     beginCountdown(countdownIsResume);
     clearFocus();

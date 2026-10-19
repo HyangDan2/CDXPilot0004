@@ -1516,3 +1516,20 @@ body.compact-play.in-play {
     animation: none !important;
   }
 }
+
+/* Prevent page zoom on mobile while preserving vertical menus/dialog scrolling. */
+html.mobile-zoom-locked,
+html.mobile-zoom-locked * {
+  touch-action: pan-y;
+}
+html.mobile-zoom-locked .compact-play.in-play #play,
+html.mobile-zoom-locked .compact-play.in-play #play *,
+html.mobile-zoom-locked input[type="range"] {
+  touch-action: none;
+}
+/* Avoid focus-induced enlargement of small form fields on mobile Safari. */
+html.mobile-viewport input,
+html.mobile-viewport select,
+html.mobile-viewport textarea {
+  font-size: 16px;
+}

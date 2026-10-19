@@ -60,3 +60,7 @@
 - Register local skins in characters.js with the shared nine-cell expression order. Document generated asset prompts/provenance.
 - Keep characterId separate from visibility; selection must not re-enable hidden characters or alter gameplay/records.
 - Synchronize menu/play/result views and preserve reduced motion and mobile HUD sizing.
+
+## Mobile viewport contract
+- Suppress mobile page zoom across screens while preserving menu/dialog vertical scrolling and game pointer input. Do not globally cancel touchstart or pointer events.
+- Gate start/resume on normal VisualViewport scale before and after async preparation. Pause on zoom during play; never auto-resume after recovery. Keep zoom recovery gestures available and never claim a guaranteed programmatic browser/OS zoom reset.

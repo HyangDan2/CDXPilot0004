@@ -108,7 +108,7 @@ On touch-capable compact viewports (width up to 900 px or height up to 600 px), 
 
 Run `node tests/touch.js` for simulated input and capability checks. Real iOS Safari/Android Chrome multi-touch, audio latency, safe areas, and browser chrome changes still require device acceptance; automated pointer tests are not physical-device verification.
 
-During compact mobile play, CSS touch-action and scoped gesture handlers suppress pinch, double-tap/double-click zoom, and touch scrolling. These handlers are inactive outside play or while a dialog is open. Browser/OS accessibility zoom may override page restrictions and requires real-device verification.
+On mobile, CSS touch-action and gesture fallbacks suppress page pinch and double-tap zoom across menus, settings, results, and play. Single-finger vertical menu/dialog scrolling remains available; play keeps its separate multi-touch input and scroll guard. Form fields use at least 16px text to avoid focus enlargement. Desktop mouse environments retain their existing behavior. Browser/OS accessibility zoom may override page restrictions.
 
 Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and ribbon checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Charts, timing windows, scores, and existing records remain unchanged; older records may have been earned under the previous survival rules.
 
@@ -123,3 +123,7 @@ SHOW CHARACTER remains independent: choosing a character does not override a hid
 NOVA is an original generated transparent 3×3 sprite sheet. Generation provenance, prompt, and cell order are documented in assets/characters/README.md and assets/characters/nova-prompt.md. All images are bundled locally; no image generation or network service is used during play.
 
 Character sprites use revised padded sheets plus a fixed, clipped frame with a 10% inner gutter. Only the sprite moves during reactions, keeping animation and shadows away from labels. Original images remain in assets/characters as references. See padding-prompts.md and padding-verification.json there for edit provenance and measured cell margins.
+
+### Recovering an enlarged mobile page
+
+START and RESUME check VisualViewport scale before and after audio preparation/activation. If the page is already enlarged or reduced, a recovery dialog asks you to pinch back to the default size or reset browser page zoom. Zoom gestures are temporarily enabled while scale is abnormal. Returning to normal closes the message and refreshes layout; press START/RESUME again. A zoom change during play pauses the run. The app cannot force browser/OS zoom to reset; browsers without VisualViewport cannot provide this scale check.
