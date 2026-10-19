@@ -128,3 +128,7 @@ Added static description/canonical/Open Graph/large-card metadata, a local 1200�
 Passed the full npm test suite, including metadata consistency, public Pages prefix, PNG dimensions/signature/size budget, icon dimensions/formats, and HTTP 200 plus branding MIME checks under both repository prefixes (146 pages/assets). Whitespace checks passed. The existing public Pages root returned HTTP 200 before this change was pushed. No automated failures remain.
 
 Actual social-service preview refresh and browser tab/home-screen rendering remain unverified. No messages were sent to any recipient. HTTP/source checks do not establish social-card rendering, and platform caches may retain the previous preview after publication. The public metadata URLs must be updated if the repository/domain changes.
+
+## Sharing card anatomy correction — 2026-10-19
+
+Replaced the active social card URL with share-card-v2.png, retaining v1. The first edited draft had six NOVA digits and was rejected. Visually inspected the targeted correction and counted five visible digits on each foreground hand. Resized to 1200×630 and updated both social image tags. Sharing metadata/dimension tests, both Pages-prefix HTTP asset tests, and whitespace checks passed. Anatomy was visually reviewed, not automatically inferred by the tests. Social-service cache refresh remains unverified.
