@@ -6,7 +6,7 @@ main.js composes UI, audio, Game, Input, Renderer, countdown, SFX, calibration, 
 
 | Module | Responsibility |
 | --- | --- |
-| music | Ten deterministic 120-second score definitions, section boundaries, note cues, revision-5 chart generator |
+| music | Twenty deterministic 120-second score definitions, section boundaries, note cues, revision-6 chart generator |
 | synth | Authoring-only OfflineAudioContext instrument graph, windowed rendering, final soft limiting/fade |
 | audio | Live AudioContext, one decoded buffer cache, transport, gains and analyser |
 | game | Mutable notes, health/failure, score/combo, held/released sources, HOLD lifecycle (legacy ribbon compatibility) |
@@ -23,7 +23,7 @@ Game alone changes gameplay state. Renderer and mascot consume feedback; they ne
 
 ## Audio authoring and rendering
 
-Catalog and JSON charts are generated with scripts/generate-library.mjs. This optional authoring step is not a runtime build. Ten score definitions have distinct roots/motifs/chords and the five added tracks have style-specific instruments, drum embellishments, and section boundaries. All charts share one soundtrack per track. Every target corresponds to a score cue; harder charts select finer cues. Rendering and chart generation never use random wall-clock timing.
+Catalog and JSON charts are generated with scripts/generate-library.mjs. This optional authoring step is not a runtime build. Twenty score definitions have distinct roots/motifs/chords and the five added tracks have style-specific instruments, drum embellishments, and section boundaries. All charts share one soundtrack per track. Every target corresponds to a score cue; harder charts select finer cues. Rendering and chart generation never use random wall-clock timing.
 
 synth.js schedules local oscillator/noise nodes in a 32 kHz stereo OfflineAudioContext. Formant filters, bell overtones, descending brass filters, distorted guitar harmonics, bass, drums, pads, pan, and a delay bus provide the instrument palette. Event gains are enveloped; rendered samples pass through tanh soft limiting and a three-second tail fade. Preparation yields between scheduling chunks and reports progress. Actual render performance is browser-dependent.
 
@@ -43,21 +43,19 @@ Pause/blur cancels scheduled music and SFX, stores position, clears physical hel
 
 Note position uses `line - (target - songTime) / (1.8 / speed) * line`. Speed is clamped/quantized to 0.5–10 by quarter steps. It does not change source playbackRate, judgement windows, chart time, or ranking category.
 
-## EXPERT same-lane HOLDs (revision 5)
+## Same-lane HOLDs and challenge collection (revision 6)
 
-Catalog notes use {time, lane, type: "hold", group, step}. One group has at least two chronologically ordered checkpoints on one lane. Game owns holdGroups and their points, started/broken/suspended flags, original source, and input kind. Only the start is a press target; nearestNote excludes later HOLD checkpoints. Game.update awards maintenance/end PERFECTs at audio-clock target times if the group started successfully and remains intact. Otherwise each checkpoint is MISS. Each point counts once toward maximum score, health, and combo.
+Game owns each group's started/broken/suspended state and original source. Only the start is a press target. Intact maintenance/end targets automatically earn PERFECT at audio time. failHold delegates one unresolved point to judge; a HOLD MISS marks every other unresolved point done/forfeited atomically, emits one MISS, applies one health loss, and resets combo. Already earned points remain. All targets remain in the accuracy denominator. Completed group state removes both body and checkpoints from Renderer. Duplicate release callbacks are idempotent; unrelated TAPs retain independent judgement. STANDARD terminal failure freezes other notes, while the failed group itself is fully resolved.
 
-Source release settles due targets before latching the break, so exact END release succeeds and a delayed frame cannot lose already-earned checkpoints. Release/cancel/lane movement breaks the remaining HOLD regardless of another source holding the lane. Repress cannot recover or score later checkpoints. Keyboard and touch HOLDs have no release grace. Standard failure freezes later targets; Free Play continues processing at zero health.
+Release settles due checkpoints before failing the group, so exact END release succeeds. Pause suspends continuity without penalty. Resume rebinds the same input kind; missing re-hold fails once immediately. Repress cannot recover a failed group.
 
-Pause settles due targets before suspending holds. Resume rebinds an intact group's same-kind source held on its lane during count-in; a missing re-hold latches failure, and an already broken group never recovers. Renderer reads state for a vertical body, HOLD/KEEP/END labels, active glow, and failed red segments. It never advances score.
+music.js owns twenty deterministic 120-second scores. Original ten note patterns remain unchanged; all charts use version 6 to isolate changed scoring. Challenge tracks set challenge:true, add seeded lane selection and difficulty-specific offbeats, and generate variable-length EXPERT holds. Their chart holdTier:"hard" permits HARD holds; lower tiers and legacy HARD remain TAP-only. The PRNG is scoped to generation, never runtime. Occupancy validation permits one HOLD plus one off-lane TAP with the existing 180ms boundary isolation. Generated same-lane spacing remains at least 160ms for EASY/NORMAL and 80ms for HARD/EXPERT. Saved local MP3s are the only catalog playback source.
 
-The generator converts previous slide windows into fixed-lane HOLDs with the same three checkpoint times and adds musical-cue TAPs on another lane at the later checkpoints. Validation counts a HOLD as one input even between checkpoint timestamps: one companion TAP is allowed, two are rejected; same-lane TAPs and overlapping sustained groups are rejected with a 180ms boundary margin. All 80 charts use revision 5, separating records from the prior rules without deleting old rows. Audio files and non-EXPERT note patterns are unchanged.
-
-Legacy drag parsing/scoring remains only for older regression fixtures. No catalog chart generates slides, and production TouchInput does not enable slide scoring.
+Legacy drag support remains only for regression fixtures. No catalog chart generates slides. The persistent EXPERT HOLDS help paragraph is removed; countdown re-hold cues remain functional.
 
 ## Difficulty, survival, and records
 
-Revision 3 maps EASY to former NORMAL, NORMAL to former HARD, HARD to former EXPERT. New EXPERT adds further offbeat fills and HOLDs. Revision 4 caps every difficulty and lane mode at two-note chords; revision-5 HOLD occupancy permits only one off-lane companion TAP, so mandatory holds cannot add a third simultaneous input. All 80 charts now advance to revision 5 to separate HOLD judgement, even when TAP notes are unchanged. Validation thresholds for generated same-lane spacing are 160ms for EASY/NORMAL and 80ms for HARD/EXPERT, accommodating the new 172 BPM material.
+Revision 3 maps EASY to former NORMAL, NORMAL to former HARD, HARD to former EXPERT. New EXPERT adds further offbeat fills and HOLDs. Revision 4 caps every difficulty and lane mode at two-note chords; revision-5 HOLD occupancy permits only one off-lane companion TAP, so mandatory holds cannot add a third simultaneous input. All 160 charts now advance to revision 6 to separate HOLD judgement, even when TAP notes are unchanged. Validation thresholds for generated same-lane spacing are 160ms for EASY/NORMAL and 80ms for HARD/EXPERT, accommodating the challenge collection up to 190 BPM.
 
 Health starts at 100 and clamps to 0–100. Immutable HEALTH_RULES map EASY/NORMAL/HARD/EXPERT to MISS −8/−10/−12/−15; PERFECT heals +2 and GOOD heals +1 on every difficulty. Game snapshots the chart difficulty rule, defaulting to NORMAL for legacy charts. Each update rounds to tenths to avoid floating-point drift; only the HUD rounds to an integer. STANDARD latches failed/failedAt at zero; further note processing stops. FREE PLAY does not latch failure and can recover. Only completed nonfailed runs are offered to records.
 
@@ -79,7 +77,7 @@ HighScores owns backup schema version 1 (`format: particle-beat-records`, `versi
 
 Input aggregates sources by identity (`key:<code>`, `pointer:<id>`), exposing one held set and issuing a lane hit only on its first source and a release only on its last. clearHooks allow adapters to drop capture/pointer state on pause, mode change, and restart. Keyboard remains usable with touch. TouchInput owns pointer capture, canvas coordinate mapping, per-pointer lane transitions, and cancellation. It never scores directly.
 
-Game.hit accepts an optional `dragOnly` flag for slide transitions. It still expires notes and maintains hold history, but cannot judge a TAP from movement. Ordinary presses retain previous semantics. In revision 5 production, cross-lane movement releases the original source and breaks its HOLD; no slide press is issued. TAPs and HOLD starts still require a timed press; only started HOLD maintenance/end targets are automatic.
+Game.hit accepts an optional `dragOnly` flag for slide transitions. It still expires notes and maintains hold history, but cannot judge a TAP from movement. Ordinary presses retain previous semantics. In production, cross-lane movement releases the original source and breaks its HOLD; no slide press is issued. TAPs and HOLD starts still require a timed press; only started HOLD maintenance/end targets are automatic.
 
 Settings owns inputMode (auto/touch/keyboard). inputEnvironment is pure: AUTO examines touch points/coarse pointers, while compact layout also uses viewport width/height. Manual KEYBOARD disables lane touch without forcing a tall desktop layout on a phone. Main manages environment classes and visualViewport height; the compact grid exists only during play. Menus remain scrollable, safe-area insets are respected, and rotation pauses before remapping active input. Renderer continues sizing from canvas client dimensions and computing the judgement line from that size.
 

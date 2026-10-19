@@ -339,8 +339,6 @@ async function start() {
         Date.now().toString(36) + Math.random().toString(36),
     };
     input.setMode(selectedChart.lanes);
-    document.querySelector(".hold-help").hidden =
-      selectedChart.difficulty !== "expert";
     renderer.reset();
     mascot.reset();
     $("paused").close();
@@ -497,6 +495,7 @@ function finish() {
     ...Object.entries(game.counts).map(([name, count]) => {
       const span = document.createElement("span");
       span.textContent = `${name}  ${count}`;
+      if (name === "MISS") span.title = "One MISS per failed TAP or HOLD group. Forfeited HOLD points still reduce accuracy.";
       return span;
     }),
   );

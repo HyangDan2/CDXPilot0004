@@ -90,4 +90,4 @@ const ribbon = new Game(
 ribbon.update(4);
 assert.equal(ribbon.health, 55);
 assert.equal(ribbon.counts.MISS, 3);
-console.log("PASS EXPERT ribbon misses apply per-checkpoint damage");
+console.log("PASS legacy drag fixture retains per-checkpoint damage");

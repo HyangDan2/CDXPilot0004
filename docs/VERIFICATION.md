@@ -142,3 +142,20 @@ The v2 digit count was insufficient: NOVA's fingers were distributed radially ar
 Enlarged menu frames from 80/56px to 128/96px (desktop/mobile), desktop play up to 240px, result frames to 260/210/200px, and compact HUD maximum from 120px to 180px where available space permits. The sprite inset is 6% rather than 10%. Mobile play retains 75:25 layout and a protected combo row. Desktop results now use grid flow; mobile menu information uses a separate right column so the larger selector does not squeeze a third column.
 
 Passed character logic tests, exact-case repository-subpath HTTP tests (148 pages/assets), ES-module syntax checks for both updated browser layout fixtures, and whitespace checks. No gameplay/state/asset changes were made. The browser fixtures were updated but not executed due to the existing browser access restriction. Actual device sizing, animation clipping, and CSS geometry remain unverified; follow the larger-character acceptance checklist.
+
+## 2026-10-19 — Revision 6 challenge collection and HOLD termination
+
+Implemented twenty 120-second tracks / 160 versioned charts, seeded challenge patterns, HARD HOLD opt-in for the ten new songs, and one-penalty immediate HOLD termination. Removed the EXPERT HOLDS play paragraph. Existing successful HOLD scoring, recovery values, two-input occupancy, and record backups remain intact.
+
+Checks actually run:
+- `node scripts/generate-library.mjs`: generated all 160 charts.
+- `npm test` using bundled modern Node: passed the complete suite, including all-chart keyboard/touch perfect replays, miss replays, onset/spacing/occupancy constraints, seeded variation, original versus challenge density, pause/source cancellation, immediate disappearance, one MISS/HP event, forfeiture accuracy, independent TAPs, record partitions, and static paths under both repository prefixes.
+- Authoring-only `scripts/render-audio.mjs`: rendered each of the ten new tracks with node-web-audio-api; wrote 120-second WAV masters and local MP3 deployment copies.
+- `node scripts/verify-audio.mjs`: all twenty deployed MP3s decoded to exactly 120 seconds; finite signals, stereo differences, headroom and every ten-second segment passed. Alignment with masters at 4s and 114s had zero-sample lag. See assets/music/rendered-v3/verification.json.
+- `git diff --check` and main.js syntax check passed.
+
+An initial full-suite run reached the static asset test before the last new MP3 was rendered and failed on that missing file. After all rendering completed, the full suite passed. A newly added exact floating-point accuracy assertion was changed to a numerical tolerance; gameplay accuracy was unchanged.
+
+Four-key average targets per track (original / challenge): EASY 309.9 / 438.4; NORMAL 481.5 / 700.9; HARD 602.9 / 849.5; EXPERT 753.7 / 932.9. Challenge density is approximately 24–46% higher, exceeding the initial 15–25% starting target in lower tiers. This is a structural difficulty measurement, not human playability acceptance.
+
+Unverified: browser UI, physical touch/keyboard play, listening balance, perceived genre differences, and device audio sync. Existing browser-access restrictions were not bypassed. No deployment performed. Physical listening and playtesting should guide later density/balance tuning.

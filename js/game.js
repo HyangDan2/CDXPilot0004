@@ -49,11 +49,21 @@ export class Game {
   get complete() {
     return this.notes.every((n) => n.done);
   }
+  failHold(hold, time) {
+    if (this.failed || hold.points.every(point => point.done)) return;
+    return this.judge(hold.points.find(point => !point.done), "MISS", time);
+  }
   judge(note, result, time) {
     if (this.failed || !note || note.done || !result) return;
     note.done = true;
-    if (note.type === "hold" && note.step === 0 && result === "MISS")
-      this.holdGroups.get(note.group).broken = true;
+    if (note.type === "hold" && result === "MISS") {
+      const hold = this.holdGroups.get(note.group);
+      hold.broken = true;
+      // Forfeit remaining targets without additional judgement or health events.
+      for (const point of hold.points) {
+        if (!point.done) { point.done = true; point.forfeited = true; }
+      }
+    }
     this.counts[result]++;
     this.score += CONFIG.points[result];
     this.combo = result === "MISS" ? 0 : this.combo + 1;
@@ -84,7 +94,7 @@ export class Game {
     this.update(audioTime);
     for (const hold of this.holdGroups.values())
       if (hold.started && !hold.suspended && hold.points[0].lane === lane && !hold.points.at(-1).done)
-        hold.broken = true;
+        this.failHold(hold, audioTime);
     if (this.heldSince.has(lane)) {
       this.heldSince.delete(lane);
       this.releasedAt.set(lane, audioTime);
@@ -102,7 +112,7 @@ export class Game {
     this.update(audioTime);
     for (const hold of this.holdGroups.values())
       if (hold.started && !hold.suspended && hold.source === source && !hold.points.at(-1).done)
-        hold.broken = true;
+        this.failHold(hold, audioTime);
     // A second source holding the lane must not conceal the original source's release.
     for (const points of this.dragGroups.values())
       for (const point of points)
@@ -127,7 +137,7 @@ export class Game {
       const lane = hold.points[0].lane;
       const entry = sources && [...sources].find(([source, value]) =>
         value === lane && source.startsWith("pointer:") === (hold.kind === "touch"));
-      if (!held.has(lane) || (sources && !entry)) hold.broken = true;
+      if (!held.has(lane) || (sources && !entry)) this.failHold(hold, audioTime);
       else if (entry) hold.source = entry[0];
     }
     for (const points of this.dragGroups.values())

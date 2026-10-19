@@ -1,6 +1,6 @@
 # Particle Beat — Volume 03
 
-A buildless desktop rhythm game with ten original two-minute Web Audio compositions, 80 versioned charts, 4/6 keys, four difficulty tiers, EXPERT same-lane HOLD notes, local named records, and a reactive cosmic stage with selectable LUMI and NOVA.
+A buildless desktop rhythm game with twenty original two-minute Web Audio compositions, 160 versioned charts, 4/6 keys, four difficulty tiers, EXPERT same-lane HOLD notes, local named records, and a reactive cosmic stage with selectable LUMI and NOVA.
 
 ## Run
 
@@ -26,18 +26,28 @@ Every composition lasts 120 seconds. Audio is pre-rendered during authoring from
 | Chrome Heart | Millennium dance pop | 104 |
 | Comet Riot | Synth guitar rock | 156 |
 | Rainfall Circuit | Piano drum and bass | 172 |
+| Neon Sprint | Electro pop | 150 |
+| Prism Circuit | Arcade synth | 156 |
+| Moonlit Drive | Melodic dance | 160 |
+| Gravity Bloom | Future bass | 164 |
+| Chrome Hearts | Electro groove | 168 |
+| Starlight Breaker | Breakbeat | 172 |
+| Aurora Overload | Uplifting trance | 176 |
+| Comet Collision | Drum and bass | 180 |
+| Hypernova Protocol | Hard dance | 184 |
+| Event Horizon | Cosmic finale | 190 |
 
-The five new tracks use distinct instruments and arrangements. Selection prefetches a saved MP3; Start decodes it and begins the count-in. Gameplay never synthesizes the soundtrack. Only the current decoded song is cached; retries and difficulty changes reuse it. Failed loads show a retry message. Ten deployment MP3s total approximately 24 MB. WAV masters and the separate authoring procedure are documented in assets/music/README.md.
+The challenge collection adds ten faster arrangements with seeded pattern variation. Selection prefetches a saved MP3; Start decodes it and begins the count-in. Gameplay never synthesizes the soundtrack. Only the current decoded song is cached; retries and difficulty changes reuse it. Failed loads show a retry message. Twenty deployment MP3s total approximately 48 MB. WAV masters and the separate authoring procedure are documented in assets/music/README.md.
 
 ## Controls and difficulty
 
 4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. Health starts at 100 and is capped at 100. PERFECT heals +2 and GOOD heals +1 on every difficulty. MISS damage is EASY −8, NORMAL −10, HARD −12, EXPERT −15. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
 
-Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and HOLD notes. All difficulties have at most two-note chords in both 4-key and 6-key modes. Chart revision 5 separates HOLD scores from all previous slide records. Previous records remain stored and exportable.
+Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and HOLD notes. All difficulties have at most two-note chords in both 4-key and 6-key modes. Chart revision 6 separates single-penalty HOLD scores from earlier records. Previous records remain stored and exportable.
 
-### EXPERT HOLD notes
+### HOLD rules
 
-Press the HOLD start on time and keep the same key or finger on the same lane until END. The start uses normal PERFECT/GOOD/MISS timing. Later checkpoints automatically score PERFECT at their audio-clock targets while the hold is intact. END does not require a timed release; release at or after END. Moving to another lane, lifting, cancellation, or replacing the original input source permanently breaks that HOLD. Remaining checkpoints each score MISS at their target; repressing cannot repair them. A missed start also fails the remaining checkpoints. Every checkpoint contributes once to maximum score and health.
+Press the HOLD start on time and keep the same key or finger on the same lane until END. The start uses normal PERFECT/GOOD/MISS timing. Later checkpoints automatically score PERFECT at their audio-clock targets while the hold is intact. END does not require a timed release; release at or after END. Moving to another lane, lifting, cancellation, or replacing the original input source permanently breaks that HOLD. Failure immediately removes the entire HOLD, counts one MISS and one HP penalty, and resets combo. Unresolved targets are forfeited without more penalties; earned points remain. Every checkpoint remains in the maximum-score denominator. Repressing cannot repair a failed HOLD.
 
 HOLDs may accompany one TAP on another lane, allowing two simultaneous inputs in both 4/6-key modes. No overlapping HOLDs, same-lane TAPs, or two simultaneous companion TAPs are permitted. On pause, intact HOLDs are suspended without damage. Re-hold the indicated lane/key during the resume countdown; missing that re-hold breaks the HOLD. A HOLD already broken before pause stays broken. EASY/NORMAL/HARD remain TAP-only.
 
@@ -70,7 +80,7 @@ node scripts/generate-library.mjs
 npm test
 ```
 
-Generation writes ten catalog entries and 80 JSON charts; saved audio is generated separately using tools/render-audio.html or scripts/render-audio.mjs (see assets/music/README.md). A HOLD checkpoint uses `{time, lane, type: "hold", group, step}` with contiguous steps, strictly increasing times, and one fixed lane per group. Only EXPERT allows HOLDs. A HOLD consumes one input throughout its interval; allow at most one off-lane TAP at each timestamp, with no other sustained group or same-lane TAP within the interval plus a 180ms margin. All charts carry a version.
+Generation writes twenty catalog entries and 160 JSON charts; saved audio is generated separately using tools/render-audio.html or scripts/render-audio.mjs (see assets/music/README.md). A HOLD checkpoint uses `{time, lane, type: "hold", group, step}` with contiguous steps, strictly increasing times, and one fixed lane per group. EXPERT allows HOLDs; challenge HARD charts declare holdTier: "hard" to enable HOLDs. A HOLD consumes one input throughout its interval; allow at most one off-lane TAP at each timestamp, with no other sustained group or same-lane TAP within the interval plus a 180ms margin. All charts carry a version.
 
 Browser logic checks: `/tests/`. Real-time audio/input/render audit: `/tests/browser.html`. The latter uses synthetic input in Free Play; it cannot verify physical keyboard rollover or perceived audio latency. See docs/VERIFICATION.md for what was actually executed.
 
@@ -94,7 +104,7 @@ Reproduce a project subpath locally:
 BASE_PATH=/CDXPilot0004 PORT=8766 node scripts/serve.mjs
 ```
 
-Open `http://127.0.0.1:8766/CDXPilot0004/`. `node tests/pages-paths.js` checks exact filename case and HTTP availability under both the current name and an alternative name, including ten MP3s and eighty charts. It is a static asset/HTTP check, not browser gameplay verification. After publication, verify the real site, audio activation, refresh, settings, and backup import/export in the target browser.
+Open `http://127.0.0.1:8766/CDXPilot0004/`. `node tests/pages-paths.js` checks exact filename case and HTTP availability under both the current name and an alternative name, including twenty MP3s and 160 charts. It is a static asset/HTTP check, not browser gameplay verification. After publication, verify the real site, audio activation, refresh, settings, and backup import/export in the target browser.
 
 ## Mobile and touch controls
 
@@ -110,7 +120,7 @@ Run `node tests/touch.js` for simulated input and capability checks. Real iOS Sa
 
 On mobile, CSS touch-action and gesture fallbacks suppress page pinch and double-tap zoom across menus, settings, results, and play. Single-finger vertical menu/dialog scrolling remains available; play keeps its separate multi-touch input and scroll guard. Form fields use at least 16px text to avoid focus enlargement. Desktop mouse environments retain their existing behavior. Browser/OS accessibility zoom may override page restrictions.
 
-Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and HOLD checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Older records remain stored under their original chart identities; revision 5 HOLD records use separate boards.
+Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each TAP applies its own health change; a failed HOLD applies one penalty for the entire group. Successful HOLD checkpoints retain recovery. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Older records remain stored under their original chart identities; revision 6 HOLD records use separate boards.
 
 The mobile 75:25 split uses the available area after safe-area padding. The judgement line moves upward with the shorter highway, away from the system navigation edge. Short landscape screens reduce HUD text and character size. Character visibility settings still apply. This layout does not disable OS back gestures; it separates the lane input area from the bottom edge.
 
@@ -133,3 +143,7 @@ START and RESUME check VisualViewport scale before and after audio preparation/a
 The static HTML includes Open Graph and large-card metadata for the public URL https://hyangdan2.github.io/CDXPilot0004/. The 1200×630 sharing card features LUMI and NOVA in a neon cosmic scene. Local SVG/PNG/ICO favicons and an Apple touch icon use the neon star/music-note symbol. See assets/branding/README.md for provenance and replacement instructions. No server or runtime image generation is required.
 
 If the public repository/domain changes, update canonical, og:url, og:image, and twitter:image in index.html and the expected public URL in tests/sharing.js. Relative game/icon paths remain portable. Social services and browsers may cache previous previews/icons; source tests and an HTTP 200 do not guarantee that a third-party preview has refreshed.
+
+## Challenge collection (revision 6)
+
+The second ten tracks use faster tempos, seeded lane selection, additional musical offbeats, and varied EXPERT HOLD lengths. HARD also supports HOLDs on these tracks; original tracks retain EXPERT-only HOLDs. Generated patterns are stored in JSON and never reshuffled during play or retry. Every sustained window still requires at most two fingers. The seed, lane mode, and difficulty determine each pattern; spacing filters reject unsafe repeated lanes. A failed HOLD counts as one MISS even when several checkpoint points are forfeited, so judgement totals may be lower than the maximum-score target count. The persistent EXPERT HOLDS help paragraph has been removed from the play screen.

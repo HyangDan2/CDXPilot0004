@@ -1164,14 +1164,10 @@ button:disabled:hover {
   font-size: 12px;
   overflow-wrap: anywhere;
 }
-.record-panel p,
-.hold-help {
+.record-panel p {
   font-size: 10px;
   color: #9eb0ce;
   line-height: 1.7;
-}
-.hold-help {
-  margin: 8px 0;
 }
 #record-message {
   color: #9df4eb;
@@ -1278,8 +1274,7 @@ body.compact-play.in-play {
 .compact-play.in-play .play-top small,
 .compact-play.in-play #audio-mode,
 .compact-play.in-play #pause span,
-.compact-play.in-play .transport-info,
-.compact-play.in-play .hold-help {
+.compact-play.in-play .transport-info {
   display: none;
 }
 .compact-play.in-play .progress {

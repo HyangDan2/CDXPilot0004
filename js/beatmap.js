@@ -54,13 +54,13 @@ export function validateBeatmap(data) {
         throw new Error("Unknown note type.");
       if (note.type === "drag" || note.type === "hold") {
         if (
-          data.difficulty !== "expert" ||
+          (data.difficulty !== "expert" && !(note.type === "hold" && data.difficulty === "hard" && data.holdTier === "hard")) ||
           typeof note.group !== "string" ||
           !note.group ||
           !Number.isInteger(note.step) ||
           note.step < 0
         )
-          throw new Error("Invalid EXPERT sustained-note metadata.");
+          throw new Error("Invalid sustained-note difficulty or metadata.");
         const copy = {
           time: note.time,
           lane: note.lane,

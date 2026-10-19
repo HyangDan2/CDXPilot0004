@@ -348,5 +348,405 @@
     "artist": "Particle Beat Synth Lab",
     "audio": "./assets/music/rendered-v3/rainfall-circuit.mp3",
     "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "neon-sprint",
+    "title": "Neon Sprint",
+    "bpm": 150,
+    "root": 62,
+    "style": "electro",
+    "color": "#7be9ff",
+    "genre": "ELECTRO POP",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      0,
+      4,
+      7,
+      11,
+      12,
+      9,
+      7,
+      4
+    ],
+    "chords": [
+      0,
+      -5,
+      2,
+      -3
+    ],
+    "seed": 211,
+    "tone": 0,
+    "challenge": true,
+    "sections": [
+      8,
+      30,
+      56,
+      72,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/neon-sprint.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "prism-circuit",
+    "title": "Prism Circuit",
+    "bpm": 156,
+    "root": 55,
+    "style": "electro",
+    "color": "#bd9aff",
+    "genre": "ARCADE SYNTH",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      7,
+      0,
+      12,
+      4,
+      9,
+      7,
+      16,
+      11
+    ],
+    "chords": [
+      0,
+      3,
+      -2,
+      -5
+    ],
+    "seed": 230,
+    "tone": 1,
+    "challenge": true,
+    "sections": [
+      10,
+      32,
+      58,
+      74,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/prism-circuit.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "moonlit-drive",
+    "title": "Moonlit Drive",
+    "bpm": 160,
+    "root": 59,
+    "style": "dream",
+    "color": "#ff8ad5",
+    "genre": "MELODIC DANCE",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      12,
+      11,
+      7,
+      4,
+      2,
+      7,
+      9,
+      4
+    ],
+    "chords": [
+      0,
+      -7,
+      3,
+      -2
+    ],
+    "seed": 249,
+    "tone": 2,
+    "challenge": true,
+    "sections": [
+      12,
+      34,
+      60,
+      76,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/moonlit-drive.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "gravity-bloom",
+    "title": "Gravity Bloom",
+    "bpm": 164,
+    "root": 53,
+    "style": "dream",
+    "color": "#7be9ff",
+    "genre": "FUTURE BASS",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      0,
+      7,
+      14,
+      10,
+      5,
+      12,
+      7,
+      3
+    ],
+    "chords": [
+      0,
+      -5,
+      2,
+      -3
+    ],
+    "seed": 268,
+    "tone": 3,
+    "challenge": true,
+    "sections": [
+      8,
+      36,
+      56,
+      78,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/gravity-bloom.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "chrome-hearts",
+    "title": "Chrome Hearts",
+    "bpm": 168,
+    "root": 57,
+    "style": "dance",
+    "color": "#bd9aff",
+    "genre": "ELECTRO GROOVE",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      0,
+      3,
+      10,
+      7,
+      12,
+      5,
+      3,
+      7
+    ],
+    "chords": [
+      0,
+      3,
+      -2,
+      -5
+    ],
+    "seed": 287,
+    "tone": 4,
+    "challenge": true,
+    "sections": [
+      10,
+      30,
+      58,
+      72,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/chrome-hearts.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "starlight-breaker",
+    "title": "Starlight Breaker",
+    "bpm": 172,
+    "root": 60,
+    "style": "dnb",
+    "color": "#ff8ad5",
+    "genre": "BREAKBEAT",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      12,
+      3,
+      7,
+      15,
+      10,
+      5,
+      14,
+      7
+    ],
+    "chords": [
+      0,
+      -7,
+      3,
+      -2
+    ],
+    "seed": 306,
+    "tone": 5,
+    "challenge": true,
+    "sections": [
+      12,
+      32,
+      60,
+      74,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/starlight-breaker.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "aurora-overload",
+    "title": "Aurora Overload",
+    "bpm": 176,
+    "root": 54,
+    "style": "trance",
+    "color": "#7be9ff",
+    "genre": "UPLIFTING TRANCE",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      0,
+      7,
+      12,
+      19,
+      15,
+      10,
+      7,
+      3
+    ],
+    "chords": [
+      0,
+      -5,
+      2,
+      -3
+    ],
+    "seed": 325,
+    "tone": 6,
+    "challenge": true,
+    "sections": [
+      8,
+      34,
+      56,
+      76,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/aurora-overload.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "comet-collision",
+    "title": "Comet Collision",
+    "bpm": 180,
+    "root": 58,
+    "style": "dnb",
+    "color": "#bd9aff",
+    "genre": "DRUM AND BASS",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      7,
+      14,
+      10,
+      3,
+      12,
+      5,
+      0,
+      7
+    ],
+    "chords": [
+      0,
+      3,
+      -2,
+      -5
+    ],
+    "seed": 344,
+    "tone": 7,
+    "challenge": true,
+    "sections": [
+      10,
+      36,
+      58,
+      78,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/comet-collision.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "hypernova-protocol",
+    "title": "Hypernova Protocol",
+    "bpm": 184,
+    "root": 51,
+    "style": "rock",
+    "color": "#ff8ad5",
+    "genre": "HARD DANCE",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      0,
+      12,
+      7,
+      3,
+      15,
+      10,
+      5,
+      7
+    ],
+    "chords": [
+      0,
+      -7,
+      3,
+      -2
+    ],
+    "seed": 363,
+    "tone": 8,
+    "challenge": true,
+    "sections": [
+      12,
+      30,
+      60,
+      72,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/hypernova-protocol.mp3",
+    "synthesis": "web-audio-v3"
+  },
+  {
+    "id": "event-horizon",
+    "title": "Event Horizon",
+    "bpm": 190,
+    "root": 56,
+    "style": "dance",
+    "color": "#7be9ff",
+    "genre": "COSMIC FINALE",
+    "description": "Challenge collection: evolving rhythms and sustained phrases.",
+    "motif": [
+      12,
+      0,
+      7,
+      10,
+      15,
+      3,
+      14,
+      5
+    ],
+    "chords": [
+      0,
+      -5,
+      2,
+      -3
+    ],
+    "seed": 382,
+    "tone": 9,
+    "challenge": true,
+    "sections": [
+      8,
+      32,
+      56,
+      74,
+      108
+    ],
+    "duration": 120,
+    "artist": "Particle Beat Synth Lab",
+    "audio": "./assets/music/rendered-v3/event-horizon.mp3",
+    "synthesis": "web-audio-v3"
   }
 ]

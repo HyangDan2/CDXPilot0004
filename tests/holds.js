@@ -6,7 +6,7 @@ import { validateBeatmap } from "../js/beatmap.js";
 import { HighScores, scoreKey } from "../js/highscores.js";
 const chart = {
   id: "hold", trackId: "test", title: "Hold test", artist: "Test", bpm: 120,
-  offsetMs: 0, duration: 10, lanes: 4, difficulty: "expert", version: "5",
+  offsetMs: 0, duration: 10, lanes: 4, difficulty: "expert", version: "6",
   notes: [1, 2, 3].map((time, step) => ({ time, lane: 0, type: "hold", group: "h", step })),
 };
 validateBeatmap(chart);
@@ -27,8 +27,12 @@ for (const kind of ["keyboard", "touch"]) {
   broken.release(0, 1.999);
   broken.hit(0, 2, options);
   broken.update(3);
-  assert.deepEqual(broken.counts, { PERFECT: 1, GOOD: 0, MISS: 2 });
-  assert.equal(broken.health, 70);
+  assert.deepEqual(broken.counts, { PERFECT: 1, GOOD: 0, MISS: 1 });
+  assert.equal(broken.health, 85);
+  assert(broken.complete, "Failed body disappears immediately");
+  assert.equal(broken.notes.filter(n => n.forfeited).length, 1);
+  assert.equal(broken.events.filter(e => e.result === "MISS").length, 1);
+  assert(Math.abs(broken.accuracy - 100 / 3) < 1e-9, "Forfeited points stay in the denominator");
   assert.equal(broken.combo, 0);
   assert.equal(broken.score, 1000, "Repress cannot score maintenance checkpoints");
   const lateFrame = new Game(chart);
@@ -54,7 +58,7 @@ for (const kind of ["keyboard", "touch"]) {
   noRehold.resumeInputs(new Set(), 1.5, new Map());
   noRehold.hit(0, 1.6, options);
   noRehold.update(3);
-  assert.equal(noRehold.counts.MISS, 2, "Missing the resume re-hold permanently breaks the HOLD");
+  assert.equal(noRehold.counts.MISS, 1, "Missing the resume re-hold permanently breaks the HOLD");
 }
 const good = new Game(chart, 100);
 assert.equal(good.hit(0, 1.18), "GOOD");
@@ -64,17 +68,17 @@ const missed = new Game(chart);
 missed.update(1.181);
 missed.hit(0, 2);
 missed.update(3);
-assert.equal(missed.counts.MISS, 3, "Missed start cannot be recovered");
+assert.equal(missed.counts.MISS, 1, "Missed start cannot be recovered");
 const free = new Game(chart, 0, "free");
 free.health = 10;
 free.update(4);
-assert.equal(free.counts.MISS, 3);
+assert.equal(free.counts.MISS, 1);
 assert.equal(free.failed, false);
 const failed = new Game(chart);
 failed.health = 10;
 failed.update(4);
 assert.equal(failed.counts.MISS, 1);
-assert.equal(failed.notes.filter(n => !n.done).length, 2, "Terminal failure freezes future checkpoints");
+assert.equal(failed.notes.filter(n => !n.done).length, 0, "Failed HOLD is removed as one terminal event");
 
 // Validate sustained occupancy between checkpoint times, not just simultaneous targets.
 for (const lanes of [4, 6]) {
@@ -86,6 +90,8 @@ for (const lanes of [4, 6]) {
   ]) assert.throws(() => validateBeatmap({ ...chart, lanes, notes: [...chart.notes, ...extras] }));
 }
 assert.throws(() => validateBeatmap({ ...chart, difficulty: "hard" }));
+validateBeatmap({ ...chart, difficulty: "hard", holdTier: "hard" });
+assert.throws(() => validateBeatmap({ ...chart, difficulty: "normal", holdTier: "hard" }));
 assert.throws(() => validateBeatmap({ ...chart, notes: chart.notes.map((n, i) => ({ ...n, lane: i })) }));
 
 // Full touch adapter path: one contact holds while a second taps another lane.
@@ -140,7 +146,7 @@ for (const lanes of [4, 6]) {
     fire(ending, 1, ending === "pointermove" ? 1 : 0);
     assert(input.held.has(0), "Replacement finger still holds the aggregate lane");
     game.update(3);
-    assert.equal(game.counts.MISS, 2, "A second source cannot hide original finger release");
+    assert.equal(game.counts.MISS, 1, "A second source cannot hide original finger release");
   }
   touch.dispose(); input.dispose();
   assert.equal(captures.size, 0);
@@ -149,9 +155,26 @@ globalThis.window = oldWindow;
 const data = new Map();
 const storage = { getItem: k => data.get(k) ?? null, setItem: (k,v) => data.set(k,v) };
 const records = new HighScores(storage);
-const oldKey = scoreKey({ ...chart, version: "4" }, "standard"), newKey = scoreKey(chart, "standard");
+const oldKey = scoreKey({ ...chart, version: "5" }, "standard"), newKey = scoreKey(chart, "standard");
 records.save({id:"old", key:oldKey, score:3000, accuracy:100, combo:3, date:"2026-10-19T00:00:00.000Z"}, "OLD");
 const reload = new HighScores(storage);
 assert.equal(reload.table(oldKey).length, 1);
-assert.equal(reload.table(newKey).length, 0, "Revision 5 does not mix old slide scores");
+assert.equal(reload.table(newKey).length, 0, "Revision 6 does not mix previous HOLD scores");
 console.log("PASS HOLD: keyboard/touch sustain, second-finger TAP, release/cancel/slide loss, no recovery, pause, offsets, occupancy, survival and record separation");
+
+const independent = new Game({...chart, notes: [...chart.notes, {time: 4, lane: 1}]});
+independent.hit(0, 1);
+independent.release(0, 1.2);
+assert.equal(independent.health, 85);
+assert.equal(independent.counts.MISS, 1);
+assert(independent.notes.filter(n => n.type === "hold").every(n => n.done));
+assert(!independent.complete, "Unrelated TAP remains playable");
+independent.hit(1, 4);
+assert.equal(independent.score, 2000);
+assert.equal(independent.health, 87);
+const terminal = new Game({...chart, notes: [...chart.notes, {time: 4, lane: 1}]});
+terminal.health = 10;
+terminal.update(10);
+assert(terminal.failed);
+assert(!terminal.notes.at(-1).done, "Terminal HOLD loss freezes unrelated future TAPs");
+console.log("PASS single HOLD penalty, immediate disappearance, independent TAP and terminal freeze");

@@ -2,7 +2,7 @@
 
 ## Scope and language
 - Write source, comments, UI, documentation, and test output in English.
-- Current scope: ten two-minute Web Audio tracks, 80 revisioned charts, 4/6 keys, four difficulties including EXPERT, survival/free play, audio-clock countdowns, result SFX, Lumi reactions, 0.5–10× scroll speed, named local leaderboards, EXPERT same-lane HOLD notes, calibration, and audio-reactive cosmic effects. Deployment is not authorized.
+- Current scope: twenty two-minute Web Audio tracks, 160 revisioned charts, 4/6 keys, four difficulties including EXPERT, survival/free play, audio-clock countdowns, result SFX, Lumi reactions, 0.5–10× scroll speed, named local leaderboards, EXPERT same-lane HOLD notes, calibration, and audio-reactive cosmic effects. Deployment is not authorized.
 - Use buildless HTML, CSS, vanilla JavaScript ES modules, Canvas 2D, and Web Audio.
 - No frameworks, game engines, CDN dependencies, backend, database, accounts, Python runtime, webcam, or music-generation API.
 
@@ -40,7 +40,7 @@
 - All difficulties support at most two-note chords in both 4-key and 6-key modes. Generated same-lane spacing floors are 80ms for HARD/EXPERT and 160ms for EASY/NORMAL.
 
 ## Ribbons, records, and synthesis
-- Only EXPERT may contain HOLD checkpoints. Validate contiguous order, increasing times, and one fixed lane. A HOLD counts as one occupied input throughout its duration; allow only one off-lane companion TAP, no overlapping HOLDs, and no same-lane TAPs.
+- EXPERT may contain HOLD checkpoints; challenge-collection HARD charts may also contain them when holdTier is "hard". Validate contiguous order, increasing times, and one fixed lane. A HOLD counts as one occupied input throughout its duration; allow only one off-lane companion TAP, no overlapping HOLDs, and no same-lane TAPs.
 - Track the original HOLD source. Any early release/cancel/lane exit permanently breaks the group; no re-touch recovery or release grace. Automatic checkpoints sample audio time. Intact holds may rebind during resume countdown; already broken holds must remain broken.
 - Count every TAP and HOLD checkpoint once in maximum score. Preserve Free Play recovery and terminal STANDARD freeze.
 - Version charts and fingerprint notes for leaderboards. Never mix modes or chart revisions. Tie scores keep earlier rows ahead.
@@ -64,3 +64,7 @@
 ## Mobile viewport contract
 - Suppress mobile page zoom across screens while preserving menu/dialog vertical scrolling and game pointer input. Do not globally cancel touchstart or pointer events.
 - Gate start/resume on normal VisualViewport scale before and after async preparation. Pause on zoom during play; never auto-resume after recovery. Keep zoom recovery gestures available and never claim a guaranteed programmatic browser/OS zoom reset.
+
+## Revision 6 challenge and HOLD failure contract
+
+The catalog has twenty 120-second tracks and 160 charts. Original tracks retain EXPERT-only HOLDs; new challenge HARD charts explicitly declare holdTier:"hard". Generation uses seeded random lane/pattern choices with onset, spacing, and sustained two-input occupancy validation. Replay never randomizes notes. A failed HOLD immediately resolves its entire group with one MISS/event/HP loss; remaining points are forfeited without extra damage and remain in maximum score. Preserve earned points, separate companion TAPs, pause exemptions, no re-touch recovery, and old record partitions. Verify missing starts, early source release/cancel, duplicate callbacks, missing resume re-hold, exact END release, STANDARD and Free Play. The play screen has no EXPERT HOLDS help paragraph.

@@ -140,6 +140,366 @@ export const TRACKS = [
     style: "dnb",
     sections: [16, 40, 64, 80, 112],
   },
+  {
+  "id": "neon-sprint",
+  "title": "Neon Sprint",
+  "bpm": 150,
+  "root": 62,
+  "style": "electro",
+  "color": "#7be9ff",
+  "genre": "ELECTRO POP",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    0,
+    4,
+    7,
+    11,
+    12,
+    9,
+    7,
+    4
+  ],
+  "chords": [
+    0,
+    -5,
+    2,
+    -3
+  ],
+  "seed": 211,
+  "tone": 0,
+  "challenge": true,
+  "sections": [
+    8,
+    30,
+    56,
+    72,
+    108
+  ]
+},
+  {
+  "id": "prism-circuit",
+  "title": "Prism Circuit",
+  "bpm": 156,
+  "root": 55,
+  "style": "electro",
+  "color": "#bd9aff",
+  "genre": "ARCADE SYNTH",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    7,
+    0,
+    12,
+    4,
+    9,
+    7,
+    16,
+    11
+  ],
+  "chords": [
+    0,
+    3,
+    -2,
+    -5
+  ],
+  "seed": 230,
+  "tone": 1,
+  "challenge": true,
+  "sections": [
+    10,
+    32,
+    58,
+    74,
+    108
+  ]
+},
+  {
+  "id": "moonlit-drive",
+  "title": "Moonlit Drive",
+  "bpm": 160,
+  "root": 59,
+  "style": "dream",
+  "color": "#ff8ad5",
+  "genre": "MELODIC DANCE",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    12,
+    11,
+    7,
+    4,
+    2,
+    7,
+    9,
+    4
+  ],
+  "chords": [
+    0,
+    -7,
+    3,
+    -2
+  ],
+  "seed": 249,
+  "tone": 2,
+  "challenge": true,
+  "sections": [
+    12,
+    34,
+    60,
+    76,
+    108
+  ]
+},
+  {
+  "id": "gravity-bloom",
+  "title": "Gravity Bloom",
+  "bpm": 164,
+  "root": 53,
+  "style": "dream",
+  "color": "#7be9ff",
+  "genre": "FUTURE BASS",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    0,
+    7,
+    14,
+    10,
+    5,
+    12,
+    7,
+    3
+  ],
+  "chords": [
+    0,
+    -5,
+    2,
+    -3
+  ],
+  "seed": 268,
+  "tone": 3,
+  "challenge": true,
+  "sections": [
+    8,
+    36,
+    56,
+    78,
+    108
+  ]
+},
+  {
+  "id": "chrome-hearts",
+  "title": "Chrome Hearts",
+  "bpm": 168,
+  "root": 57,
+  "style": "dance",
+  "color": "#bd9aff",
+  "genre": "ELECTRO GROOVE",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    0,
+    3,
+    10,
+    7,
+    12,
+    5,
+    3,
+    7
+  ],
+  "chords": [
+    0,
+    3,
+    -2,
+    -5
+  ],
+  "seed": 287,
+  "tone": 4,
+  "challenge": true,
+  "sections": [
+    10,
+    30,
+    58,
+    72,
+    108
+  ]
+},
+  {
+  "id": "starlight-breaker",
+  "title": "Starlight Breaker",
+  "bpm": 172,
+  "root": 60,
+  "style": "dnb",
+  "color": "#ff8ad5",
+  "genre": "BREAKBEAT",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    12,
+    3,
+    7,
+    15,
+    10,
+    5,
+    14,
+    7
+  ],
+  "chords": [
+    0,
+    -7,
+    3,
+    -2
+  ],
+  "seed": 306,
+  "tone": 5,
+  "challenge": true,
+  "sections": [
+    12,
+    32,
+    60,
+    74,
+    108
+  ]
+},
+  {
+  "id": "aurora-overload",
+  "title": "Aurora Overload",
+  "bpm": 176,
+  "root": 54,
+  "style": "trance",
+  "color": "#7be9ff",
+  "genre": "UPLIFTING TRANCE",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    0,
+    7,
+    12,
+    19,
+    15,
+    10,
+    7,
+    3
+  ],
+  "chords": [
+    0,
+    -5,
+    2,
+    -3
+  ],
+  "seed": 325,
+  "tone": 6,
+  "challenge": true,
+  "sections": [
+    8,
+    34,
+    56,
+    76,
+    108
+  ]
+},
+  {
+  "id": "comet-collision",
+  "title": "Comet Collision",
+  "bpm": 180,
+  "root": 58,
+  "style": "dnb",
+  "color": "#bd9aff",
+  "genre": "DRUM AND BASS",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    7,
+    14,
+    10,
+    3,
+    12,
+    5,
+    0,
+    7
+  ],
+  "chords": [
+    0,
+    3,
+    -2,
+    -5
+  ],
+  "seed": 344,
+  "tone": 7,
+  "challenge": true,
+  "sections": [
+    10,
+    36,
+    58,
+    78,
+    108
+  ]
+},
+  {
+  "id": "hypernova-protocol",
+  "title": "Hypernova Protocol",
+  "bpm": 184,
+  "root": 51,
+  "style": "rock",
+  "color": "#ff8ad5",
+  "genre": "HARD DANCE",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    0,
+    12,
+    7,
+    3,
+    15,
+    10,
+    5,
+    7
+  ],
+  "chords": [
+    0,
+    -7,
+    3,
+    -2
+  ],
+  "seed": 363,
+  "tone": 8,
+  "challenge": true,
+  "sections": [
+    12,
+    30,
+    60,
+    72,
+    108
+  ]
+},
+  {
+  "id": "event-horizon",
+  "title": "Event Horizon",
+  "bpm": 190,
+  "root": 56,
+  "style": "dance",
+  "color": "#7be9ff",
+  "genre": "COSMIC FINALE",
+  "description": "Challenge collection: evolving rhythms and sustained phrases.",
+  "motif": [
+    12,
+    0,
+    7,
+    10,
+    15,
+    3,
+    14,
+    5
+  ],
+  "chords": [
+    0,
+    -5,
+    2,
+    -3
+  ],
+  "seed": 382,
+  "tone": 9,
+  "challenge": true,
+  "sections": [
+    8,
+    32,
+    56,
+    74,
+    108
+  ]
+},
 ].map((track) => ({
   ...track,
   duration: 120,
@@ -278,8 +638,12 @@ export function compose(track) {
   cues.sort((a, b) => a.time - b.time);
   return { events: events.sort((a, b) => a.time - b.time), cues };
 }
-// Revision 5 separates sustained HOLD scoring from the previous slide rules.
-export const CHART_VERSION = "5";
+// Revision 6 isolates one-penalty HOLD failures and the challenge collection.
+export const CHART_VERSION = "6";
+function seededRandom(seed) {
+  let state = seed >>> 0;
+  return () => ((state = (Math.imul(state, 1664525) + 1013904223) >>> 0) / 4294967296);
+}
 export function makeChart(track, lanes, difficulty) {
   const { cues } = compose(track),
     notes = [];
@@ -289,44 +653,57 @@ export function makeChart(track, lanes, difficulty) {
     hard: "expert",
     expert: "extreme",
   }[difficulty];
+  const random = seededRandom(track.seed + lanes * 101 + difficulty.length * 997);
+  const lastAt = new Map();
   let index = 0,
     previousLane = -1;
   for (const cue of cues) {
-    if (cue.extreme && tier !== "extreme") continue;
-    if (cue.expert && !["expert", "extreme"].includes(tier)) continue;
+    if (cue.extreme && tier !== "extreme" && !(track.challenge && tier === "expert" && cue.beat % 2 < 1)) continue;
+    if (cue.expert && !["expert", "extreme"].includes(tier) && !(track.challenge && tier === "hard" && cue.beat % 2 < 1)) continue;
     if (
       tier === "normal" &&
       cue.beat % 1 !== 0 &&
-      !(cue.section === "SUPERNOVA" && cue.beat % 2 === 0.5)
+      !((cue.section === "SUPERNOVA" || (track.challenge && cue.section === "CHORUS")) && cue.beat % 2 === 0.5)
     )
       continue;
     let lane = (index + Math.floor(index / lanes) + track.seed) % lanes;
     if (lane === previousLane) lane = (lane + 1) % lanes;
+    if (track.challenge) {
+      const minimum = ["easy", "normal"].includes(difficulty) ? 0.16 : 0.08;
+      const available = Array.from({length: lanes}, (_, i) => i).filter(i => cue.time - (lastAt.get(i) ?? -Infinity) >= minimum + 0.000001);
+      if (!available.length) continue;
+      lane = available[Math.floor(random() * available.length)];
+    }
     notes.push({ time: Number(cue.time.toFixed(6)), lane });
-    if (cue.beat % (tier === "normal" ? 8 : 4) === 0 && cue.section !== "DRIFT")
-      notes.push({
-        time: Number(cue.time.toFixed(6)),
-        lane: (lane + lanes / 2) % lanes,
-      });
+    lastAt.set(lane, cue.time);
+    const companion = (lane + lanes / 2) % lanes;
+    const minimum = ["easy", "normal"].includes(difficulty) ? 0.16 : 0.08;
+    if (cue.beat % (tier === "normal" ? 8 : 4) === 0 && cue.section !== "DRIFT" &&
+        (!track.challenge || cue.time - (lastAt.get(companion) ?? -Infinity) >= minimum + 0.000001)) {
+      notes.push({ time: Number(cue.time.toFixed(6)), lane: companion });
+      lastAt.set(companion, cue.time);
+    }
     previousLane = lane;
     index++;
   }
   // One fixed-lane HOLD plus single off-lane TAPs: at most two required fingers.
-  if (difficulty === "expert") {
+  if (difficulty === "expert" || (track.challenge && difficulty === "hard")) {
     let group = 0;
-    for (const startBeat of [32, 64, 96, 128, 160, 192, 224, 256, 288]) {
+    const starts = track.challenge ? Array.from({length: 14}, (_, i) => 24 + i * 24) : [32, 64, 96, 128, 160, 192, 224, 256, 288];
+    for (const startBeat of starts) {
+      const length = track.challenge ? (difficulty === "hard" ? 2 : 2 + Math.floor(random() * 3)) : 2;
       const selected = cues.filter(
         (c) =>
-          c.beat >= startBeat && c.beat <= startBeat + 2 && c.beat % 1 === 0,
+          c.beat >= startBeat && c.beat <= startBeat + length && c.beat % 1 === 0,
       );
-      if (selected.length !== 3 || selected.at(-1).time > 114) continue;
+      if (selected.length !== length + 1 || selected.at(-1).time > 114) continue;
       const start = selected[0].time,
         end = selected.at(-1).time;
       for (let i = notes.length - 1; i >= 0; i--)
         if (notes[i].time >= start - 0.18 && notes[i].time <= end + 0.18)
           notes.splice(i, 1);
       const left = group % (lanes - 2),
-        holdLane = group % 2 ? left + 2 : left;
+        holdLane = track.challenge ? Math.floor(random() * lanes) : group % 2 ? left + 2 : left;
       selected.forEach((cue, step) =>
         notes.push({
           time: Number(cue.time.toFixed(6)),
@@ -348,6 +725,7 @@ export function makeChart(track, lanes, difficulty) {
     id: track.id + "-" + lanes + "-" + difficulty,
     trackId: track.id,
     version: CHART_VERSION,
+    ...(track.challenge ? { holdTier: "hard" } : {}),
     title: track.title,
     artist: track.artist,
     bpm: track.bpm,

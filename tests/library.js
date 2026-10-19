@@ -32,7 +32,7 @@ for (const track of TRACKS) {
       assert(
         chart.duration === 120 &&
           chart.audio === track.audio &&
-          chart.version === "5",
+          chart.version === "6",
         "Web Audio content contract",
       );
       const game = new Game(chart, 0, "free"),
@@ -97,7 +97,7 @@ for (const track of TRACKS) {
       }
       assert(touchGame.complete && touchGame.accuracy === 100, `Touch full replay ${chart.id}`);
       missed.update(120);
-      assert(missed.counts.MISS === chart.notes.length, "Complete miss replay");
+      assert(missed.complete && missed.counts.MISS === chart.notes.filter(n => n.type !== "hold" || n.step === 0).length, "Complete miss replay");
       const failed = new Game(chart);
       failed.update(120);
       assert(
@@ -107,10 +107,10 @@ for (const track of TRACKS) {
         "Standard terminal freeze",
       );
       assert(
-        difficulty === "expert"
+        (difficulty === "expert" || (track.challenge && difficulty === "hard"))
           ? game.holdGroups.size >= 5
           : game.holdGroups.size === 0,
-        "EXPERT-only holds",
+        "Tier-specific holds",
       );
       totals[`${lanes}-${difficulty}`] = chart.notes.length;
       count++;
@@ -126,7 +126,13 @@ for (const track of TRACKS) {
   }
   report.push({ track: track.title, notes: totals });
 }
-assert(TRACKS.length === 10 && count === 80, "Ten tracks and eighty charts");
+assert(TRACKS.length === 20 && count === 160, "Twenty tracks and 160 charts");
+for (const difficulty of ["easy", "normal", "hard", "expert"]) {
+  const average = tracks => tracks.reduce((sum, track) => sum + makeChart(track, 4, difficulty).notes.length, 0) / tracks.length;
+  assert(average(TRACKS.slice(10)) > average(TRACKS.slice(0, 10)), "Challenge collection is denser at every tier");
+}
+const seeded = TRACKS[10];
+assert(JSON.stringify(makeChart(seeded, 4, "expert").notes) !== JSON.stringify(makeChart({...seeded, seed: seeded.seed + 1}, 4, "expert").notes), "Different authoring seeds vary patterns");
 for (const speed of [0.5, 1, 2, 5, 10])
   assert(noteY(10, 10, 400, speed) === 400, "Speed-independent target");
 console.log(

@@ -118,7 +118,7 @@ for (const prefix of ["/CDXPilot0004", "/renamed-project"]) {
       "Root paths must not accidentally pass",
     );
     console.log(
-      `PASS ${prefix}/: ${paths.size} exact-case pages/assets, 10 MP3s, 80 charts, trailing-slash redirect`,
+      `PASS ${prefix}/: ${paths.size} exact-case pages/assets, 20 MP3s, 160 charts, trailing-slash redirect`,
     );
   } finally {
     child.kill();

@@ -106,3 +106,7 @@ Add static Open Graph/large-card metadata rather than runtime DOM injection. Use
 ## Increase character visibility (2026-10-19)
 
 Enlarge character frames across menu/play/results and reduce the isolated sprite inset from 10% to 6%. Keep existing atlas assets, expression mapping, selection persistence, and mobile 75:25 allocation. Replace desktop result absolute placement with grid flow before enlarging it, and size mobile HUD characters from available safe-area-adjusted space instead of a fixed 120px cap. The frame still clips animations; no transform scales artwork outside its layout box.
+
+## 2026-10-19 — Challenge collection and single-penalty HOLDs
+
+Use revision 6 for all 160 charts to isolate changed HOLD scoring without deleting prior records. A failure terminates one group immediately; forfeiture preserves the accuracy denominator without repeated health penalties. Successful maintenance scoring stays unchanged. Challenge HARD charts opt in using holdTier; legacy HARD and lower tiers cannot contain HOLDs. Seeded generation provides variation while saved JSON preserves reproducibility and fair local record comparisons. New audio is authored with the existing windowed Web Audio renderer and saved as local MP3; runtime synthesis remains prohibited. Remove persistent EXPERT HOLDS play help at the user's request.

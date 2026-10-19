@@ -1,6 +1,6 @@
 # Saved Soundtracks
 
-The active catalog uses `rendered-v3/<track-id>.mp3`. All ten songs are original deterministic Web Audio arrangements from js/music.js and js/synth.js. Playback downloads and decodes these assets; it never renders a song. Historical WAVs in this directory are retained but unused.
+The active catalog uses `rendered-v3/<track-id>.mp3`. All twenty songs are original deterministic Web Audio arrangements from js/music.js and js/synth.js. Playback downloads and decodes these assets; it never renders a song. Historical WAVs in this directory are retained but unused.
 
 ## Masters and deployment
 
