@@ -119,3 +119,7 @@ The result-layout browser fixture now covers 1280px desktop as well as phone/tab
 ## Revision 6 challenge and HOLD failure contract
 
 The catalog has twenty 120-second tracks and 160 charts. Original tracks retain EXPERT-only HOLDs; new challenge HARD charts explicitly declare holdTier:"hard". Generation uses seeded random lane/pattern choices with onset, spacing, and sustained two-input occupancy validation. Replay never randomizes notes. A failed HOLD immediately resolves its entire group with one MISS/event/HP loss; remaining points are forfeited without extra damage and remain in maximum score. Preserve earned points, separate companion TAPs, pause exemptions, no re-touch recovery, and old record partitions. Verify missing starts, early source release/cancel, duplicate callbacks, missing resume re-hold, exact END release, STANDARD and Free Play. The play screen has no EXPERT HOLDS help paragraph.
+
+## Release cache identity
+
+The HTML entry and changed revision-6 gameplay modules use the explicit query version 6.1; CSS uses the same release identity. Bump affected URLs when removing DOM elements or changing linked module contracts so cached prior scripts cannot reference removed markup. tests/startup-contract.js checks this static contract and required visibility elements; it does not execute browser startup. Previously open tabs must reload to obtain new HTML.

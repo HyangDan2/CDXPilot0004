@@ -5,15 +5,15 @@ import { HighScores, scoreKey } from "./highscores.js";
 import { Countdown } from "./countdown.js";
 import { SoundEffects } from "./sfx.js";
 import { Mascot, mountCharacterSprite } from "./mascot.js";
-import { loadBeatmap } from "./beatmap.js";
+import { loadBeatmap } from "./beatmap.js?v=6.1";
 import { AudioEngine } from "./audio.js";
-import { Game } from "./game.js";
+import { Game } from "./game.js?v=6.1";
 import { Input } from "./input.js";
 import { Renderer } from "./renderer.js";
 import { MODES } from "./config.js";
 import { loadSettings, saveSettings } from "./settings.js";
 import { Calibration } from "./calibration.js";
-import { sectionAt } from "./music.js";
+import { sectionAt } from "./music.js?v=6.1";
 const $ = (id) => document.getElementById(id),
   settings = loadSettings();
 const audio = new AudioEngine(),

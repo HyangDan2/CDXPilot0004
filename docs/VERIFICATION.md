@@ -159,3 +159,7 @@ An initial full-suite run reached the static asset test before the last new MP3 
 Four-key average targets per track (original / challenge): EASY 309.9 / 438.4; NORMAL 481.5 / 700.9; HARD 602.9 / 849.5; EXPERT 753.7 / 932.9. Challenge density is approximately 24–46% higher, exceeding the initial 15–25% starting target in lower tiers. This is a structural difficulty measurement, not human playability acceptance.
 
 Unverified: browser UI, physical touch/keyboard play, listening balance, perceived genre differences, and device audio sync. Existing browser-access restrictions were not bypassed. No deployment performed. Physical listening and playtesting should guide later density/balance tuning.
+
+## Startup cache correction
+
+The public HTML and main.js were fetched over HTTP and both matched the removed-help implementation. Current visibility targets exist. The reported null.hidden startup error is consistent with a cached earlier main.js accessing the removed .hold-help; the affected browser cache/stack was not available, so this cause remains an inference. Added versioned entry/CSS and changed gameplay module URLs plus a static startup regression check. No browser execution or physical-device acceptance is claimed.

@@ -122,3 +122,7 @@ index.html owns description, canonical, Open Graph and large-card metadata in it
 ## Larger character presentation
 
 Menu frames are 128px desktop / 96px mobile, with a wider selector slot and a two-column mobile track strip. Desktop play uses a square frame up to 240px (170px at intermediate widths), constrained to its sidebar. Compact play retains the 75:25 split and 20px combo row: character size is bounded by sidebar width, 180px, and the safe-area-adjusted quarter-height minus HUD padding/border/combo space. A 6% sprite gutter enlarges visible artwork while preserving clipped frame ownership, small reaction transforms, hidden preferences, and reduced motion. Result frames remain in grid flow, preventing larger characters from overlaying titles or scores.
+
+## Release cache identity
+
+The HTML entry and changed revision-6 gameplay modules use the explicit query version 6.1; CSS uses the same release identity. Bump affected URLs when removing DOM elements or changing linked module contracts so cached prior scripts cannot reference removed markup. tests/startup-contract.js checks this static contract and required visibility elements; it does not execute browser startup. Previously open tabs must reload to obtain new HTML.
