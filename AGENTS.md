@@ -68,3 +68,7 @@
 ## Revision 6 challenge and HOLD failure contract
 
 The catalog has twenty 120-second tracks and 160 charts. Original tracks retain EXPERT-only HOLDs; new challenge HARD charts explicitly declare holdTier:"hard". Generation uses seeded random lane/pattern choices with onset, spacing, and sustained two-input occupancy validation. Replay never randomizes notes. A failed HOLD immediately resolves its entire group with one MISS/event/HP loss; remaining points are forfeited without extra damage and remain in maximum score. Preserve earned points, separate companion TAPs, pause exemptions, no re-touch recovery, and old record partitions. Verify missing starts, early source release/cancel, duplicate callbacks, missing resume re-hold, exact END release, STANDARD and Free Play. The play screen has no EXPERT HOLDS help paragraph.
+
+## Signal collections
+
+SIGNAL 1 groups original tracks and SIGNAL 2 groups challenge:true tracks. Preserve chart IDs/versions and score keys when changing grouping. Persist active signal and independent remembered tracks with settings; migrate legacy track selection and validate against catalog membership. Revalidate the release-versioned catalog and fail visibly for incomplete content. Maintain keyboard tab navigation and mobile list scrolling.

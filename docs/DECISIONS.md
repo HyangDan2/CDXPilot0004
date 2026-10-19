@@ -110,3 +110,7 @@ Enlarge character frames across menu/play/results and reduce the isolated sprite
 ## 2026-10-19 — Challenge collection and single-penalty HOLDs
 
 Use revision 6 for all 160 charts to isolate changed HOLD scoring without deleting prior records. A failure terminates one group immediately; forfeiture preserves the accuracy denominator without repeated health penalties. Successful maintenance scoring stays unchanged. Challenge HARD charts opt in using holdTier; legacy HARD and lower tiers cannot contain HOLDs. Seeded generation provides variation while saved JSON preserves reproducibility and fair local record comparisons. New audio is authored with the existing windowed Web Audio renderer and saved as local MP3; runtime synthesis remains prohibited. Remove persistent EXPERT HOLDS play help at the user's request.
+
+## 2026-10-19 — Two Signal collections
+
+Group the existing catalog using challenge metadata rather than changing track IDs or chart revisions. Store group selection and per-group last track in the existing preferences key; infer the group from legacy saved tracks. Keep leaderboard identity unchanged. Use release-versioned entry/catalog/changed modules with catalog revalidation and explicit completeness checking to avoid silently retaining a cached ten-track catalog. The live catalog fetched during investigation contained 20 tracks and the renderer had no ten-item cap. Browser cache or scroll confusion remains a possible cause, not a confirmed device diagnosis.

@@ -147,3 +147,9 @@ If the public repository/domain changes, update canonical, og:url, og:image, and
 ## Challenge collection (revision 6)
 
 The second ten tracks use faster tempos, seeded lane selection, additional musical offbeats, and varied EXPERT HOLD lengths. HARD also supports HOLDs on these tracks; original tracks retain EXPERT-only HOLDs. Generated patterns are stored in JSON and never reshuffled during play or retry. Every sustained window still requires at most two fingers. The seed, lane mode, and difficulty determine each pattern; spacing filters reject unsafe repeated lanes. A failed HOLD counts as one MISS even when several checkpoint points are forfeited, so judgement totals may be lower than the maximum-score target count. The persistent EXPERT HOLDS help paragraph has been removed from the play screen.
+
+## Signal collections
+
+TRACK SELECT has two keyboard-accessible tabs: SIGNAL 1 / ORIGINAL contains the first ten tracks; SIGNAL 2 / CHALLENGE contains the ten faster tracks. Each tab shows its track count and retains an independently remembered song. The active signal and both songs persist with existing settings. Legacy preferences infer the signal from the saved track. Key mode, difficulty, speed, character, play mode, chart versions, and local records are unchanged. Arrow keys, Home, and End switch the tabs. Both tabs stay in one row on mobile; the song list scrolls vertically.
+
+The catalog is fetched with a release query and cache revalidation. An incomplete ten-track catalog produces an explicit reload message instead of silently hiding SIGNAL 2. Previously open pages must reload to obtain the updated entry script.

@@ -126,3 +126,9 @@ Menu frames are 128px desktop / 96px mobile, with a wider selector slot and a tw
 ## Release cache identity
 
 The HTML entry and changed revision-6 gameplay modules use the explicit query version 6.1; CSS uses the same release identity. Bump affected URLs when removing DOM elements or changing linked module contracts so cached prior scripts cannot reference removed markup. tests/startup-contract.js checks this static contract and required visibility elements; it does not execute browser startup. Previously open tabs must reload to obtain new HTML.
+
+## Signal selection and catalog freshness
+
+signals.js owns catalog membership, restoration, selection snapshots, and catalog loading. challenge:true identifies SIGNAL 2; other tracks belong to SIGNAL 1. Membership does not depend on list indices and is never part of scoreKey. settings.js persists a validated nullable signal and signalTracks map alongside the existing track field. Null signal migrates from the legacy track. Catalog reconciliation rejects cross-group/unknown remembered IDs and falls back to each group's first song. main.js assigns only the selection snapshot, retains all unrelated preferences, and uses the existing loadSequence guard against stale chart fetches.
+
+The HTML entry/CSS, settings/signals modules, catalog URL, and chart request URLs use release 6.2. Previously changed gameplay modules retain 6.1 because their code is unchanged. loadCatalog requests cache:no-cache and checks the expected 20 unique tracks with ten per signal; incomplete catalogs fail visibly. This is an explicit current-release content contract and must change when expanding the catalog. No record keys, chart metadata, note data, or audio URLs change for grouping.

@@ -13,6 +13,8 @@ export const DEFAULTS = Object.freeze({
   difficulty: "normal",
   quality: "high",
   track: "neon-galaxy",
+  signal: null,
+  signalTracks: Object.freeze({}),
 });
 export function sanitizeSettings(data = {}) {
   const number = (key, low, high) =>
@@ -38,6 +40,10 @@ export function sanitizeSettings(data = {}) {
     quality: ["low", "medium", "high"].includes(data.quality)
       ? data.quality
       : "high",
+    signal: ["signal-1", "signal-2"].includes(data.signal) ? data.signal : null,
+    signalTracks: Object.fromEntries(["signal-1", "signal-2"].filter(key =>
+      typeof data.signalTracks?.[key] === "string" && data.signalTracks[key].length <= 80
+    ).map(key => [key, data.signalTracks[key]])),
     track: typeof data.track === "string" ? data.track : DEFAULTS.track,
   };
 }

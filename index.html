@@ -30,7 +30,7 @@
     <link rel="icon" type="image/png" href="assets/branding/favicon-32.png" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="assets/branding/favicon.svg" sizes="any" />
     <link rel="apple-touch-icon" href="assets/branding/apple-touch-icon.png" sizes="180x180" />
-    <link rel="stylesheet" href="css/style.css?v=6.1" />
+    <link rel="stylesheet" href="css/style.css?v=6.2" />
   </head>
   <body>
     <canvas id="cosmos" aria-hidden="true"></canvas>
@@ -378,7 +378,11 @@
           </div>
           <button aria-label="Close track selection">×</button>
         </div>
-        <div id="track-list"></div>
+        <div class="signal-tabs" role="tablist" aria-label="Track collection">
+          <button type="button" id="signal-1" role="tab" aria-controls="track-list" aria-selected="true">SIGNAL 1<span>ORIGINAL</span><small>10 TRACKS</small></button>
+          <button type="button" id="signal-2" role="tab" aria-controls="track-list" aria-selected="false" tabindex="-1">SIGNAL 2<span>CHALLENGE</span><small>10 TRACKS</small></button>
+        </div>
+        <div id="track-list" role="tabpanel" aria-labelledby="signal-1"></div>
         <p>
           Twenty original Web Audio tracks. Two minutes each. Eight charts per
           track.
@@ -436,6 +440,6 @@
       <form method="dialog"><button>CLOSE</button></form>
     </dialog>
     <div id="status" role="status" aria-live="polite">Loading demo…</div>
-    <script type="module" src="js/main.js?v=6.1"></script>
+    <script type="module" src="js/main.js?v=6.2"></script>
   </body>
 </html>

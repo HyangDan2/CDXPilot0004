@@ -123,3 +123,9 @@ The catalog has twenty 120-second tracks and 160 charts. Original tracks retain 
 ## Release cache identity
 
 The HTML entry and changed revision-6 gameplay modules use the explicit query version 6.1; CSS uses the same release identity. Bump affected URLs when removing DOM elements or changing linked module contracts so cached prior scripts cannot reference removed markup. tests/startup-contract.js checks this static contract and required visibility elements; it does not execute browser startup. Previously open tabs must reload to obtain new HTML.
+
+## Signal regression
+
+Run npm test, including tests/signals.js. It verifies ten members per group, legacy saved-track migration, independent remembered tracks, reload, unknown/cross-group IDs, storage failure, preserved settings and board identity, release URL/revalidation, and rejection of stale ten-track catalogs. Static path checks cover every song and chart under both repository prefixes. Tests do not execute actual browser tab navigation or establish phone layout.
+
+On desktop and phone, open TRACK SELECT, switch SIGNAL 1/2, choose a different song in each, reload, and verify active and remembered selection. Exercise arrow/Home/End keys, rapid switching during chart loads, menu/result entry points, scroll to the tenth song, and landscape. Verify 4/6 keys, difficulty, speed, character, and local records remain unchanged. Confirm both tab labels/counts fit one row and the list retains single-finger scrolling. A fresh load must request the release-versioned catalog rather than silently accept an old ten-track list.

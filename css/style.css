@@ -1557,3 +1557,10 @@ html.mobile-viewport select,
 html.mobile-viewport textarea {
   font-size: 16px;
 }
+
+/* Two equal tabs remain visible above the independently scrollable track list. */
+.signal-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+.signal-tabs button { min-width: 0; margin: 0; padding: 12px 8px; font-size: 14px; letter-spacing: 1px; }
+.signal-tabs span, .signal-tabs small { display: block; margin-top: 5px; font-size: 10px; letter-spacing: 1px; }
+.signal-tabs button[aria-selected="true"] { border-color: #7be9ff; background: #173149; color: #b7f5ff; }
+.signal-tabs button:focus-visible { outline: 2px solid #ff8ad5; outline-offset: 2px; }

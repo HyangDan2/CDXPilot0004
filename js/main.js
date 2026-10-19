@@ -1,3 +1,4 @@
+import { SIGNALS, signalTracks, restoreSignalSelection, rememberSignalTrack, loadCatalog } from "./signals.js?v=6.2";
 import { CHARACTERS, characterById } from "./characters.js";
 import { TouchInput, PlayGestureGuard, inputEnvironment } from "./touch.js";
 import { isPageZoomed, isMobileViewport, MobileZoomGuard, ViewportGate } from "./viewport.js";
@@ -11,7 +12,7 @@ import { Game } from "./game.js?v=6.1";
 import { Input } from "./input.js";
 import { Renderer } from "./renderer.js";
 import { MODES } from "./config.js";
-import { loadSettings, saveSettings } from "./settings.js";
+import { loadSettings, saveSettings } from "./settings.js?v=6.2";
 import { Calibration } from "./calibration.js";
 import { sectionAt } from "./music.js?v=6.1";
 const $ = (id) => document.getElementById(id),
@@ -228,8 +229,17 @@ function applySettings() {
   $("volume-value").value = `${settings.volume}%`;
 }
 function renderTracks() {
+  for (const signal of SIGNALS) {
+    const tab = $(signal);
+    const active = settings.signal === signal;
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
+    tab.disabled = busy;
+    tab.querySelector("small").textContent = `${signalTracks(tracks, signal).length} TRACKS`;
+  }
+  $("track-list").setAttribute("aria-labelledby", settings.signal);
   $("track-list").replaceChildren(
-    ...tracks.map((track, i) => {
+    ...signalTracks(tracks, settings.signal).map((track, i) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "track-option";
@@ -246,7 +256,8 @@ function renderTracks() {
       button.querySelector(".track-time").textContent =
         `${track.bpm} BPM / ${formatTime(track.duration)}`;
       button.onclick = () => {
-        settings.track = track.id;
+        if (busy) return;
+        Object.assign(settings, rememberSignalTrack(settings, track));
         refreshSelection();
       };
       return button;
@@ -257,7 +268,7 @@ async function refreshSelection() {
   const sequence = ++loadSequence,
     track = currentTrack();
   if (!track) return;
-  settings.track = track.id;
+  Object.assign(settings, rememberSignalTrack(settings, track));
   saveSettings(settings);
   $("start").disabled = true;
   chart = null;
@@ -272,7 +283,7 @@ async function refreshSelection() {
   renderTracks();
   try {
     const loaded = await loadBeatmap(
-      `./assets/beatmaps/library/${track.id}-${settings.lanes}-${settings.difficulty}.json`,
+      `./assets/beatmaps/library/${track.id}-${settings.lanes}-${settings.difficulty}.json?v=6.2`,
     );
     if (sequence !== loadSequence) return;
     audio.prefetch(loaded).catch(() => {});
@@ -829,11 +840,26 @@ document.addEventListener("visibilitychange", () => {
     calibration.stop();
   }
 });
+function selectSignal(signal) {
+  if (busy || !tracks.length) return;
+  Object.assign(settings, restoreSignalSelection(settings, tracks, signal));
+  $("track-list").scrollTop = 0;
+  refreshSelection();
+}
+for (const [index, signal] of SIGNALS.entries()) {
+  $(signal).onclick = () => selectSignal(signal);
+  $(signal).onkeydown = event => {
+    let next;
+    if (["ArrowLeft", "ArrowRight"].includes(event.key)) next = SIGNALS[1 - index];
+    if (event.key === "Home") next = SIGNALS[0];
+    if (event.key === "End") next = SIGNALS[1];
+    if (next && !busy) { event.preventDefault(); selectSignal(next); $(next).focus(); }
+  };
+}
 applySettings();
 try {
-  const response = await fetch("./assets/tracks.json");
-  if (!response.ok) throw new Error("Unable to load the track library.");
-  tracks = await response.json();
+  tracks = await loadCatalog();
+  Object.assign(settings, restoreSignalSelection(settings, tracks));
   await refreshSelection();
 } catch (error) {
   $("status").textContent = error.message;

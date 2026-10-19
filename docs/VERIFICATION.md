@@ -163,3 +163,11 @@ Unverified: browser UI, physical touch/keyboard play, listening balance, perceiv
 ## Startup cache correction
 
 The public HTML and main.js were fetched over HTTP and both matched the removed-help implementation. Current visibility targets exist. The reported null.hidden startup error is consistent with a cached earlier main.js accessing the removed .hold-help; the affected browser cache/stack was not available, so this cause remains an inference. Added versioned entry/CSS and changed gameplay module URLs plus a static startup regression check. No browser execution or physical-device acceptance is claimed.
+
+## 2026-10-19 — SIGNAL 1 / SIGNAL 2
+
+Read-only HTTP inspection of the published assets/tracks.json returned all 20 expected IDs. Source inspection found no ten-item slice/limit, but found an unversioned catalog fetch and a scrollable single list. The affected device cache was not inspected; stale data versus list-discovery confusion cannot be conclusively distinguished. Added two explicitly counted groups, release-versioned/revalidated catalog loading, and rejection of an incomplete catalog.
+
+Tests: tests/signals.js and startup-contract.js passed; Pages path checks passed under /CDXPilot0004/ and /renamed-project/ for all 20 MP3s and 160 charts; sharing checks passed. Selection tests cover migration, save/reload, invalid values, unavailable storage, unchanged unrelated settings and score identity. Browser/mobile tab layout and physical interactions remain unverified; existing browser restrictions were not bypassed. No music, chart revision, or gameplay scoring changed.
+
+The complete `npm test` suite also passed using bundled modern Node, including all 160 chart replays and existing gameplay, settings, records, touch, health, and character regressions. `git diff --check` passed.
