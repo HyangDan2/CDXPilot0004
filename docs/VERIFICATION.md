@@ -132,3 +132,7 @@ Actual social-service preview refresh and browser tab/home-screen rendering rema
 ## Sharing card anatomy correction — 2026-10-19
 
 Replaced the active social card URL with share-card-v2.png, retaining v1. The first edited draft had six NOVA digits and was rejected. Visually inspected the targeted correction and counted five visible digits on each foreground hand. Resized to 1200×630 and updated both social image tags. Sharing metadata/dimension tests, both Pages-prefix HTTP asset tests, and whitespace checks passed. Anatomy was visually reviewed, not automatically inferred by the tests. Social-service cache refresh remains unverified.
+
+## NOVA hand anatomy redraw — 2026-10-19
+
+The v2 digit count was insufficient: NOVA's fingers were distributed radially around the palm. Redrew the hand and wrist as an upright open-palm wave in v3. Visually checked four top-edge fingers, one side thumb, and a wrist below; preserved LUMI and the composition. Both sharing tags now point to share-card-v3.png. Sharing metadata/dimension checks, both repository-prefix asset checks, and whitespace checks passed. Actual social-cache refresh remains unverified.

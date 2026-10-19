@@ -23,3 +23,7 @@ Run npm test after changes. Actual social previews and browser icon caches may r
 ## Version 2 anatomy correction
 
 share-card-v2.png is the active 1200×630 card. It corrects the foreground hands to five visible digits each. Version 1 remains archived. The first edit produced six digits on NOVA and was rejected; a targeted second edit removed the extra horizontal-left digit. Both foreground hands were visually counted before export. Open Graph and large-card URLs now use v2 to distinguish the corrected asset in caches.
+
+## Version 3 NOVA hand redraw
+
+share-card-v3.png supersedes v2. The previous five-digit hand still had incorrect radial anatomy. NOVA's foreground hand and cuff were redrawn as an upright open-palm wave, with four fingers along the top knuckle edge, a separate side thumb, and the wrist entering below. The output was visually reviewed before export. Older cards remain archived; both sharing tags reference v3.
