@@ -6,14 +6,14 @@ main.js composes UI, audio, Game, Input, Renderer, countdown, SFX, calibration, 
 
 | Module | Responsibility |
 | --- | --- |
-| music | Ten deterministic 120-second score definitions, section boundaries, note cues, revision-4 chart generator |
+| music | Ten deterministic 120-second score definitions, section boundaries, note cues, revision-5 chart generator |
 | synth | Authoring-only OfflineAudioContext instrument graph, windowed rendering, final soft limiting/fade |
 | audio | Live AudioContext, one decoded buffer cache, transport, gains and analyser |
-| game | Mutable notes, health/failure, score/combo, held/released key history, ribbon continuity |
+| game | Mutable notes, health/failure, score/combo, held/released sources, HOLD lifecycle (legacy ribbon compatibility) |
 | input | Mode-specific key bindings, repeat prevention, down/up callbacks, held physical keys |
 | judgement | Pure nearest eligible point and timing classification |
-| beatmap | Validate/copy/sort chart and ribbon topology, reject overlaps |
-| renderer / particles | Read-only note/ribbon rendering, bounded reactive effects |
+| beatmap | Validate/copy/sort chart and HOLD topology, enforce sustained occupancy |
+| renderer / particles | Read-only note/HOLD rendering, bounded reactive effects |
 | highscores | Board identity, row validation, names, stable ranking, persistence |
 | settings | Validated local preferences and unavailable-storage fallback |
 | countdown / sfx | Audio-clock deadline model and cancellable tone voices |
@@ -39,21 +39,25 @@ States: menu, preparing, countdown, playing, paused, results. Initial count-in i
 
 Targets are note.time + offsetMs / 1000. Judgement time subtracts the player input offset; positive correction compensates late input. Expiry uses the same corrected time and runs before hits. PERFECT <=50ms, GOOD <=120ms, MISS <=180ms, with 1e-9s boundary tolerance. Nearest unresolved same-lane point wins, ties use chart order. Empty input has no penalty.
 
-Pause/blur cancels scheduled music and SFX, stores position, clears physical held keys, and suspends game input continuity. Resume asks the player to re-hold an active ribbon anchor during countdown. At GO, Game.resumeInputs installs the physical held set without judging notes. Retry constructs a fresh Game and clears effects. Results are guarded against duplicate transitions/sounds.
+Pause/blur cancels scheduled music and SFX, stores position, clears physical held keys, and suspends game input continuity. Resume asks the player to re-hold an intact active HOLD during countdown. At GO, Game.resumeInputs installs the physical held set without judging notes. Retry constructs a fresh Game and clears effects. Results are guarded against duplicate transitions/sounds.
 
 Note position uses `line - (target - songTime) / (1.8 / speed) * line`. Speed is clamped/quantized to 0.5–10 by quarter steps. It does not change source playbackRate, judgement windows, chart time, or ranking category.
 
-## EXPERT keyboard ribbons
+## EXPERT same-lane HOLDs (revision 5)
 
-Each flat checkpoint is `{time, lane, type: "drag", group, step}`. Flat notes preserve existing scoring: the maximum is the complete array length × 1000. A group has at least two checkpoints, contiguous steps from zero, increasing times, and adjacent lanes. Only EXPERT accepts groups. The generator inserts three-checkpoint paths in isolated windows and removes competing TAPs within a 180ms margin. The validator rejects overlaps instead of silently repairing them.
+Catalog notes use {time, lane, type: "hold", group, step}. One group has at least two chronologically ordered checkpoints on one lane. Game owns holdGroups and their points, started/broken/suspended flags, original source, and input kind. Only the start is a press target; nearestNote excludes later HOLD checkpoints. Game.update awards maintenance/end PERFECTs at audio-clock target times if the group started successfully and remains intact. Otherwise each checkpoint is MISS. Each point counts once toward maximum score, health, and combo.
 
-A keyboard hit anchors the current checkpoint. The next point requires the previous key to have remained held since that anchor, or its first release to be within 80ms of the new hit. The first release time is retained, so early release/repress cannot forge continuity. A broken link scores MISS once. A timed hit re-anchors even after a broken link; after an automatically missed point, the following timed checkpoint can become a new anchor. Auto expiry never generates an anchor. Key repeat prevention lives in Input; both keydown and keyup timestamps reach Game.
+Source release settles due targets before latching the break, so exact END release succeeds and a delayed frame cannot lose already-earned checkpoints. Release/cancel/lane movement breaks the remaining HOLD regardless of another source holding the lane. Repress cannot recover or score later checkpoints. Keyboard and touch HOLDs have no release grace. Standard failure freezes later targets; Free Play continues processing at zero health.
 
-Pause removes held history. Resume re-anchors resolved ribbon points at frozen song time only when their physical key has been re-held; absent keys cannot claim continuity. Ribbon lines and checkpoint labels are display-only and respect the same speed transform as TAP notes.
+Pause settles due targets before suspending holds. Resume rebinds an intact group's same-kind source held on its lane during count-in; a missing re-hold latches failure, and an already broken group never recovers. Renderer reads state for a vertical body, HOLD/KEEP/END labels, active glow, and failed red segments. It never advances score.
+
+The generator converts previous slide windows into fixed-lane HOLDs with the same three checkpoint times and adds musical-cue TAPs on another lane at the later checkpoints. Validation counts a HOLD as one input even between checkpoint timestamps: one companion TAP is allowed, two are rejected; same-lane TAPs and overlapping sustained groups are rejected with a 180ms boundary margin. All 80 charts use revision 5, separating records from the prior rules without deleting old rows. Audio files and non-EXPERT note patterns are unchanged.
+
+Legacy drag parsing/scoring remains only for older regression fixtures. No catalog chart generates slides, and production TouchInput does not enable slide scoring.
 
 ## Difficulty, survival, and records
 
-Revision 3 maps EASY to former NORMAL, NORMAL to former HARD, HARD to former EXPERT. New EXPERT adds further offbeat fills and ribbons. Revision 4 caps every difficulty and lane mode at two-note chords; isolated ribbon windows exclude competing notes, so mandatory holds cannot add a third simultaneous input. All 80 charts advance to revision 4 to separate the changed judgement rules, even when notes are unchanged. Validation thresholds for generated same-lane spacing are 160ms for EASY/NORMAL and 80ms for HARD/EXPERT, accommodating the new 172 BPM material.
+Revision 3 maps EASY to former NORMAL, NORMAL to former HARD, HARD to former EXPERT. New EXPERT adds further offbeat fills and HOLDs. Revision 4 caps every difficulty and lane mode at two-note chords; revision-5 HOLD occupancy permits only one off-lane companion TAP, so mandatory holds cannot add a third simultaneous input. All 80 charts now advance to revision 5 to separate HOLD judgement, even when TAP notes are unchanged. Validation thresholds for generated same-lane spacing are 160ms for EASY/NORMAL and 80ms for HARD/EXPERT, accommodating the new 172 BPM material.
 
 Health starts at 100 and clamps to 0–100. Immutable HEALTH_RULES map EASY/NORMAL/HARD/EXPERT to MISS −8/−10/−12/−15; PERFECT heals +2 and GOOD heals +1 on every difficulty. Game snapshots the chart difficulty rule, defaulting to NORMAL for legacy charts. Each update rounds to tenths to avoid floating-point drift; only the HUD rounds to an integer. STANDARD latches failed/failedAt at zero; further note processing stops. FREE PLAY does not latch failure and can recover. Only completed nonfailed runs are offered to records.
 
@@ -75,11 +79,11 @@ HighScores owns backup schema version 1 (`format: particle-beat-records`, `versi
 
 Input aggregates sources by identity (`key:<code>`, `pointer:<id>`), exposing one held set and issuing a lane hit only on its first source and a release only on its last. clearHooks allow adapters to drop capture/pointer state on pause, mode change, and restart. Keyboard remains usable with touch. TouchInput owns pointer capture, canvas coordinate mapping, per-pointer lane transitions, and cancellation. It never scores directly.
 
-Game.hit accepts an optional `dragOnly` flag for slide transitions. It still expires notes and maintains hold history, but cannot judge a TAP from movement. Ordinary presses retain previous semantics. Cross-lane movement releases the old source and presses the new source against the same audio clock; existing ribbon grace handles the handoff. No hold-to-autoplay or timing-window expansion is introduced.
+Game.hit accepts an optional `dragOnly` flag for slide transitions. It still expires notes and maintains hold history, but cannot judge a TAP from movement. Ordinary presses retain previous semantics. In revision 5 production, cross-lane movement releases the original source and breaks its HOLD; no slide press is issued. TAPs and HOLD starts still require a timed press; only started HOLD maintenance/end targets are automatic.
 
 Settings owns inputMode (auto/touch/keyboard). inputEnvironment is pure: AUTO examines touch points/coarse pointers, while compact layout also uses viewport width/height. Manual KEYBOARD disables lane touch without forcing a tall desktop layout on a phone. Main manages environment classes and visualViewport height; the compact grid exists only during play. Menus remain scrollable, safe-area insets are respected, and rotation pauses before remapping active input. Renderer continues sizing from canvas client dimensions and computing the judgement line from that size.
 
-TouchInput binds to game-canvas, with no numbered controls. Renderer reads the shared held set to light touched lanes. Horizontal boundary crossings produce EXPERT slide input; vertical movement within a lane produces none. PlayGestureGuard attaches non-passive gesture/double-click/touchmove prevention to the play section, gated by compact active play and absence of an open dialog. CSS touch-action:none prevents native gestures on the touch canvas and compact play area. A separate mobile-wide zoom guard now protects menus/dialogs/results while preserving vertical scrolling.
+TouchInput binds to game-canvas, with no numbered controls. Renderer reads the shared held set to light touched lanes. Horizontal boundary crossings break an active HOLD; vertical movement within a lane produces no input. PlayGestureGuard attaches non-passive gesture/double-click/touchmove prevention to the play section, gated by compact active play and absence of an open dialog. CSS touch-action:none prevents native gestures on the touch canvas and compact play area. A separate mobile-wide zoom guard now protects menus/dialogs/results while preserving vertical scrolling.
 
 ## Compact mobile 75:25 composition
 
@@ -101,7 +105,7 @@ Every Mascot frame must establish the containing block of its absolute sprite ch
 
 Compact combo typography overrides the general narrow-screen sidebar typography through selector specificity, without `!important`. Keep the combo line within its 20px HUD row, with no wrapping; portrait uses 15px and short landscape uses 12px. General desktop/sidebar typography remains separate.
 
-## Source-aware ribbon connections (revision 4)
+## Legacy source-aware ribbon connections (revision 4 fixtures only)
 
 Input passes source/kind/fromLane metadata for scoring and emits a separate source-release callback even when another source still holds that lane. Aggregate lane releases retain their existing contract. TouchInput assigns a new gesture identity on every pointerdown (pointer IDs alone can be reused). Only an in-bounds lane transfer preserves the gesture connection. Game owns anchor source/kind and terminal touch-break state: touch checkpoints require the same gesture, an actual slide from the prior lane, and no intervening lift/cancel/exit. Keyboard connections retain first-release history and 80ms grace; switching input kinds cannot substitute for an existing anchor.
 

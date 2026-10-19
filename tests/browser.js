@@ -79,7 +79,7 @@ function pause(manual = true) {
   pausedAt = audio.time;
   audio.pause();
   paused = true;
-  game.suspendInputs();
+  game.suspendInputs(audio.time);
   pausePerformance = performance.now();
   input.clear();
   controls();
@@ -92,14 +92,8 @@ async function resume() {
   await audio.activate();
   pauseCheck = Math.abs(audio.time - pausedAt) < 1e-9;
   pauseTotal += performance.now() - pausePerformance;
-  const anchor = [...game.dragGroups.values()]
-    .flatMap((points) =>
-      points.filter(
-        (point, i) =>
-          point.anchorAt != null && points[i + 1] && !points[i + 1].done,
-      ),
-    )
-    .at(-1);
+  const anchor = [...game.holdGroups.values()]
+    .find(hold => hold.started && !hold.broken && !hold.points.at(-1).done)?.points[0];
   if (anchor)
     document.body.dispatchEvent(
       new KeyboardEvent("keydown", {
@@ -248,10 +242,14 @@ function frame(now) {
         const note = game.notes[index++],
           code = MODES[chart.lanes].keys[note.lane];
         hitErrors.push((time - note.at) * 1000);
-        document.body.dispatchEvent(
+        if (note.type !== "hold" || note.step === 0) document.body.dispatchEvent(
           new KeyboardEvent("keydown", { code, bubbles: true }),
         );
-        if (note.type === "drag") {
+        if (note.type === "hold") {
+          game.update(time);
+          if (note === game.holdGroups.get(note.group).points.at(-1))
+            document.body.dispatchEvent(new KeyboardEvent("keyup", { code, bubbles: true }));
+        } else if (note.type === "drag") {
           const points = game.dragGroups.get(note.group),
             previous = points[note.step - 1];
           if (previous)

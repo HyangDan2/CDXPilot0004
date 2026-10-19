@@ -1140,12 +1140,12 @@ button:disabled:hover {
   overflow-wrap: anywhere;
 }
 .record-panel p,
-.drag-help {
+.hold-help {
   font-size: 10px;
   color: #9eb0ce;
   line-height: 1.7;
 }
-.drag-help {
+.hold-help {
   margin: 8px 0;
 }
 #record-message {
@@ -1254,7 +1254,7 @@ body.compact-play.in-play {
 .compact-play.in-play #audio-mode,
 .compact-play.in-play #pause span,
 .compact-play.in-play .transport-info,
-.compact-play.in-play .drag-help {
+.compact-play.in-play .hold-help {
   display: none;
 }
 .compact-play.in-play .progress {

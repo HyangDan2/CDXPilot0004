@@ -91,7 +91,18 @@ export class Renderer {
       ctx.fillRect(x + 7, line, laneWidth - 14, 3);
       ctx.shadowBlur = 0;
     }
-    // Ribbons connect timed checkpoints; resolved anchors clamp to the judgement line.
+    // HOLD bodies stay in one lane; a latched failure remains visibly red until END.
+    for (const hold of game.holdGroups.values()) {
+      const first = hold.points[0], last = hold.points.at(-1);
+      if (last.done) continue;
+      const head = Math.min(line, noteY(first.at, time, line, this.speed));
+      const tail = noteY(last.at, time, line, this.speed);
+      const top = Math.max(0, tail), bottom = Math.min(h, head);
+      if (bottom <= top) continue;
+      ctx.fillStyle = hold.broken ? "#ff456466" : hold.started ? "#8affefaa" : colors[first.lane] + "66";
+      ctx.fillRect((first.lane + 0.3) * laneWidth, top, laneWidth * 0.4, bottom - top);
+    }
+    // Legacy slide charts remain readable for regression fixtures only.
     for (const points of game.dragGroups.values()) {
       if (points.every((point) => point.done)) continue;
       ctx.save();
@@ -120,9 +131,17 @@ export class Renderer {
       ctx.shadowColor = colors[note.lane];
       ctx.shadowBlur = this.effects.quality === "low" ? 0 : 14;
       ctx.fillStyle = colors[note.lane];
+      if (note.type === "hold" && game.holdGroups.get(note.group).broken)
+        ctx.fillStyle = "#ff799b";
       ctx.fillRect(x, y - 6, laneWidth - 14, 12);
       ctx.shadowBlur = 0;
-      if (note.type === "drag") {
+      if (note.type === "hold") {
+        ctx.fillStyle = "#091521";
+        ctx.font = "bold 12px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(note.step === 0 ? "HOLD" : note === game.holdGroups.get(note.group).points.at(-1) ? "END" : "KEEP",
+          x + (laneWidth - 14) / 2, y + 4);
+      } else if (note.type === "drag") {
         ctx.fillStyle = "#091521";
         ctx.font = "bold 12px Arial";
         ctx.textAlign = "center";

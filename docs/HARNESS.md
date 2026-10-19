@@ -14,7 +14,7 @@ npm test
 
 - run.js: 12 pure judgement, scoring, correction, and validation cases.
 - runtime.js: mock transport lifecycle, legacy short signal, independent 4/6-key input.
-- library.js: all ten scores and 80 deterministic charts; exact 120-second metadata; musical cue mapping; mode/difficulty chord caps and spacing; isolated EXPERT ribbons; full perfect replays with held/released keys; Free Play miss replays; STANDARD terminal freeze; speed invariance through 10×.
+- library.js: all ten scores and 80 deterministic charts; exact 120-second metadata; musical cue mapping; mode/difficulty chord caps and spacing; EXPERT HOLDs plus companion TAPs and sustained two-input occupancy; full perfect keyboard/touch replays; Free Play miss replays; STANDARD terminal freeze; speed invariance through 10×.
 - expansion.js: ten survival/countdown/mascot/SFX cases.
 - volume3.js: nine ribbon continuity/recovery/pause/validation and high-score/tie/name/storage/speed cases.
 - saved-audio.js: selection prefetch, decoded cache across modes, HTTP/decode failures, duration mismatch, retry, and PCM WAV encoding.
@@ -29,7 +29,7 @@ The browser logic page `/tests/` shares pure suites. `/tests/browser.html` uses 
 3. Compare new instrument palettes and song sections by listening; check clipping, audible balance, loading latency, and memory on the actual device.
 4. Verify D/F/J/K and S/D/F/J/K/L, repeat prevention, two-key chords, judgement, health, terminal failure, Free Play recovery, and full results.
 5. Start/pause/cancel during count-in. Confirm no leaked source or SFX. Resume a near-target note without timing drift.
-6. For an EXPERT ribbon: hold through a transition, overlap keys, release just under/over 80ms early, deliberately break, recover at the next point, miss the start, pause while holding, and re-hold the indicated anchor during countdown. Verify each checkpoint scores once and no frame-rate-based health loss exists.
+6. For an EXPERT HOLD: press the start on time, keep the original key/finger held through KEEP and END, and play companion TAPs with another key/finger. Verify no release timing is required after END. Release early, cancel touch, move lanes, replace the original finger, and re-touch: all remaining checkpoints must MISS once. Pause intact/broken HOLDs separately; intact groups require re-hold during count-in, and broken groups must remain broken.
 7. Change speed using slider and number input at 0.5, 2, 5, and 10. Refresh to verify persistence. Check ribbon geometry and target crossings at all speeds.
 8. Complete a first-place run: enter a name, save, reload. Repeat with Skip and Escape. Tie the record: no new-record prompt and old tie remains first. Verify ten-entry limit, mode/revision separation, and no failed-run records.
 9. Test storage failure/corruption: session results remain usable, names render as text, and persistence warnings are visible.
@@ -54,13 +54,13 @@ Run `node scripts/verify-audio.mjs` with FFmpeg installed after audio regenerati
 
 `node tests/touch.js` covers AUTO/TOUCH/KEYBOARD selection, portrait/landscape capability decisions, four/six simultaneous pointers, timed ribbon slides, repeated moves, TAP isolation, shared keyboard/touch ownership, cancellation, leaving bounds, mode clear, and disposal. These tests simulate pointer events; they do not measure browser layout or touch hardware.
 
-On actual iOS Safari and Android Chrome, check 360×640 and 390×844 portrait plus short landscape viewports: after START, no scroll should be required to see notes, the judgement line, touch lanes, health, or pause. Check notches/home indicator/browser toolbar expansion, six-lane lane boundaries, two-finger chords, expert slides in both directions, missed/early handoffs, hold/re-hold across pause, rotation, backgrounding, and touch audio activation. Test AUTO on a touch laptop and KEYBOARD override, then confirm a regular desktop retains its layout. Verify settings scroll and file import still work. Record real device/browser findings separately from simulations.
+On actual iOS Safari and Android Chrome, check 360×640 and 390×844 portrait plus short landscape viewports: after START, no scroll should be required to see notes, the judgement line, touch lanes, health, or pause. Check notches/home indicator/browser toolbar expansion, six-lane lane boundaries, two-finger chords, stationary HOLDs, early release and companion TAPs, hold/re-hold across pause, rotation, backgrounding, and touch audio activation. Test AUTO on a touch laptop and KEYBOARD override, then confirm a regular desktop retains its layout. Verify settings scroll and file import still work. Record real device/browser findings separately from simulations.
 
 ## Lane touch and survival balance regression
 
 Run `node tests/health-balance.js` for difficulty-specific recovery/damage, GOOD recovery, repeated-input immunity, fractional accumulation, failure thresholds, sparse misses among PERFECTs, chord losses, EXPERT checkpoint losses, caps, and Free Play recovery. `tests/touch.js` also checks upper/lower canvas coordinates and scoped gesture cancellation/disposal.
 
-On physical devices, verify tapping the top, middle, and judgement-line portions of each lane, vertical motion without repeated hits, sideways EXPERT slides, pinch and double-tap suppression during play, and single-finger vertical scrolling in menus/settings. Check that removing buttons expands the canvas and keeps the line visible. Browser/OS accessibility zoom is outside page control. Do not report a gesture callback simulation as verified prevention on iOS or Android.
+On physical devices, verify tapping the top, middle, and judgement-line portions of each lane, vertical motion without repeated hits, stationary EXPERT HOLDs with off-lane TAPs, pinch and double-tap suppression during play, and single-finger vertical scrolling in menus/settings. Check that removing buttons expands the canvas and keeps the line visible. Browser/OS accessibility zoom is outside page control. Do not report a gesture callback simulation as verified prevention on iOS or Android.
 
 ## Mobile 75:25 HUD acceptance
 
@@ -86,7 +86,7 @@ Open `/tests/result-layout.html` over HTTP. This fixture loads the production re
 
 Open `/tests/mobile-hud.html` over HTTP to check production play markup/CSS at 320×568, 390×844, and 844×390. It checks 15px portrait / 12px short-landscape typography, the 20px combo row, panel containment, and one-to-five-digit values. This browser fixture must be run separately from Node checks. On a phone, inspect combo changes with both character choices and the character hidden.
 
-## Revision 4 input and chart regression
+## Legacy revision 4 input regression
 
 Run npm test. Touch tests exercise the full simulated pointer-to-Input-to-Game path in 4/6 lanes: same-finger slides, alternate fingers, reused pointer IDs after lifting, cancellation, capture loss, highway exit, recovery, automatic MISS, health/combo changes, and resume gesture rebinding. Volume 3 tests cover source-aware keyboard grace, input-kind substitution, triple-chord rejection, and old/new record persistence. Library tests replay all 80 charts with both keyboard and source-aware touch inputs, validate the two-note cap and isolated ribbon windows, and retain onset/spacing/failure checks.
 
@@ -97,3 +97,11 @@ On actual devices, repeat lift/re-touch within 80ms, different-finger handoff, c
 The npm test suite includes tests/viewport.js: scale detection (including keyboard-height changes and missing API), phone/tablet versus desktop capabilities, cancellable zoom events, single-finger scrolling, game multi-touch isolation, listener disposal, recovery without automatic start, and a simulated asynchronous entry recheck. These are mocked event/gate checks, not browser gesture acceptance.
 
 On iOS Safari and Android Chrome, attempt pinch/double-tap in menu, track list, settings, result, and name entry. Verify vertical list/dialog scrolling, sliders, buttons, record entry, and 4/6-lane multi-touch/ribbons. Enter with a pre-zoomed page (or a browser override): START/RESUME must show recovery without music/countdown; pinch back, then explicitly retry. Repeat a scale change during loading, countdown, and play; check pause and same-position resume. Rotate a tablet; test browser toolbars and software keyboard without false zoom alarms. Check desktop zoom/scroll remains unchanged. Never bypass browser access restrictions to perform these checks.
+
+## Revision 5 HOLD regression
+
+Run npm test (including tests/holds.js). Validate keyboard and touch starts, automatic maintenance/end points, companion TAPs in both lane modes, release before/at/after END, duplicate scoring, no repress recovery, original-source identity despite another finger holding the lane, pointer cancellation/capture loss/lane exit, offset corrections, missed start, and STANDARD/Free Play. Verify pause settles due points, intact re-hold can resume, missing re-hold breaks the group, and broken HOLDs never recover via pause.
+
+Library tests independently count active HOLD occupancy at every target, including between maintenance checkpoints. Every chart must require at most two simultaneous inputs, contain no slide notes, and complete perfect keyboard/touch replays. Chart version 5 isolates records; previous records remain stored. Older slide fixtures in touch/volume3/health tests exercise compatibility only.
+
+The browser audit now holds keys through END instead of issuing slide transitions. On physical phones and desktop, inspect vertical body visibility at 0.5–10x, intact/failed colors, one-hand HOLD plus second-finger TAP, and pause captions. Check menus, zoom guards, and mobile HUD are unchanged. Automated simulations do not establish browser rendering, physical gestures, or audio sync.

@@ -1,6 +1,6 @@
 # Particle Beat — Volume 03
 
-A buildless desktop rhythm game with ten original two-minute Web Audio compositions, 80 versioned charts, 4/6 keys, four difficulty tiers, EXPERT keyboard ribbons, local named records, and a reactive cosmic stage with selectable LUMI and NOVA.
+A buildless desktop rhythm game with ten original two-minute Web Audio compositions, 80 versioned charts, 4/6 keys, four difficulty tiers, EXPERT same-lane HOLD notes, local named records, and a reactive cosmic stage with selectable LUMI and NOVA.
 
 ## Run
 
@@ -33,19 +33,19 @@ The five new tracks use distinct instruments and arrangements. Selection prefetc
 
 4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. Health starts at 100 and is capped at 100. PERFECT heals +2 and GOOD heals +1 on every difficulty. MISS damage is EASY −8, NORMAL −10, HARD −12, EXPERT −15. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
 
-Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and keyboard ribbons. All difficulties have at most two-note chords in both 4-key and 6-key modes. Chart revision 4 separates records earned under the new touch rules and chord limits from earlier data. Previous records remain stored and exportable.
+Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and HOLD notes. All difficulties have at most two-note chords in both 4-key and 6-key modes. Chart revision 5 separates HOLD scores from all previous slide records. Previous records remain stored and exportable.
 
-### EXPERT ribbons
+### EXPERT HOLD notes
 
-A connected neon ribbon joins HOLD, directional checkpoints, and END. Press the first key on time and keep it held. Press the adjacent key at the next checkpoint, then release the previous key. Short overlaps are allowed. Releasing the previous key up to 80ms before the next hit is allowed; an earlier release breaks that link even if you re-press just before the checkpoint. Every checkpoint scores once, using the same judgement/health rules as TAP notes. A missed checkpoint can be followed by a successful recovery; a timed input re-anchors the chain.
+Press the HOLD start on time and keep the same key or finger on the same lane until END. The start uses normal PERFECT/GOOD/MISS timing. Later checkpoints automatically score PERFECT at their audio-clock targets while the hold is intact. END does not require a timed release; release at or after END. Moving to another lane, lifting, cancellation, or replacing the original input source permanently breaks that HOLD. Remaining checkpoints each score MISS at their target; repressing cannot repair them. A missed start also fails the remaining checkpoints. Every checkpoint contributes once to maximum score and health.
 
-There are no competing TAPs inside generated ribbon windows. On pause, held-key state is cleared. Re-hold the indicated anchor key during the resume countdown to reconnect. Countdown input cannot score. Release the last key after END. EASY/NORMAL/HARD contain only TAP notes.
+HOLDs may accompany one TAP on another lane, allowing two simultaneous inputs in both 4/6-key modes. No overlapping HOLDs, same-lane TAPs, or two simultaneous companion TAPs are permitted. On pause, intact HOLDs are suspended without damage. Re-hold the indicated lane/key during the resume countdown; missing that re-hold breaks the HOLD. A HOLD already broken before pause stays broken. EASY/NORMAL/HARD remain TAP-only.
 
 ### Speed and scoring
 
 Scroll speed ranges from 0.5× to 10× in 0.25 steps, using either slider or numeric entry. It changes approach time only; music tempo, windows, and scores are unchanged. At 10× the visible approach is approximately 180ms. Settings apply speed immediately while paused and persist locally.
 
-PERFECT <=50ms: 1000 points. GOOD <=120ms: 500. MISS <=180ms: zero and combo reset. Unplayed points expire after 180ms. The nearest unresolved same-lane point is selected; empty inputs have no penalty. Accuracy is score / (all TAPs and ribbon checkpoints × 1000). Grades are S >=95%, A >=90%, B >=80%, C >=70%, otherwise D. Failed runs receive no completion grade.
+PERFECT <=50ms: 1000 points. GOOD <=120ms: 500. MISS <=180ms: zero and combo reset. Unplayed points expire after 180ms. The nearest unresolved same-lane point is selected; empty inputs have no penalty. Accuracy is score / (all TAPs and HOLD checkpoints × 1000). Grades are S >=95%, A >=90%, B >=80%, C >=70%, otherwise D. Failed runs receive no completion grade.
 
 ## High scores
 
@@ -70,7 +70,7 @@ node scripts/generate-library.mjs
 npm test
 ```
 
-Generation writes ten catalog entries and 80 JSON charts; saved audio is generated separately using tools/render-audio.html or scripts/render-audio.mjs (see assets/music/README.md). A drag checkpoint uses `{time, lane, type: "drag", group, step}` with contiguous steps, strictly increasing times, and adjacent lanes. Only EXPERT allows this type. Keep competing notes outside each ribbon window plus 180ms margin. All charts carry a version.
+Generation writes ten catalog entries and 80 JSON charts; saved audio is generated separately using tools/render-audio.html or scripts/render-audio.mjs (see assets/music/README.md). A HOLD checkpoint uses `{time, lane, type: "hold", group, step}` with contiguous steps, strictly increasing times, and one fixed lane per group. Only EXPERT allows HOLDs. A HOLD consumes one input throughout its interval; allow at most one off-lane TAP at each timestamp, with no other sustained group or same-lane TAP within the interval plus a 180ms margin. All charts carry a version.
 
 Browser logic checks: `/tests/`. Real-time audio/input/render audit: `/tests/browser.html`. The latter uses synthetic input in Free Play; it cannot verify physical keyboard rollover or perceived audio latency. See docs/VERIFICATION.md for what was actually executed.
 
@@ -102,7 +102,7 @@ SETTINGS → INPUT MODE offers AUTO (default), TOUCH, and KEYBOARD. AUTO enables
 
 Tap anywhere inside the relevant lane as its note reaches the judgement line; you do not need to touch the moving note. Numbered buttons are hidden in touch mode. Vertical movement within a lane does not create another hit. Four-key and six-key layouts support independent simultaneous pointers. Two fingers on the same lane count as one held lane, and releasing one cannot release another finger or keyboard source. Pointer cancellation and capture loss release the associated source.
 
-For EXPERT ribbons, hold the starting lane, slide into its neighboring lane at the next checkpoint, and lift after END. Crossing a boundary is one input, not automatic play: moving too early or too late does not wait for a note. Sliding never scores ordinary TAP notes; lift and tap those. Touch connections require the same uninterrupted finger gesture: lifting, cancellation, leaving the highway, or using another finger breaks the next link. Touch has no release grace; only keyboard transitions retain 80 ms grace. A failed timed checkpoint can start a new connection. Hold the indicated lane again during a resume countdown. Leaving the canvas releases that hold.
+For EXPERT HOLD notes, keep the original finger on the starting lane until END. Use a second finger for companion TAPs in other lanes. Sliding to another lane or leaving the canvas breaks the HOLD; returning or switching fingers cannot repair it. Re-hold an intact HOLD during the resume countdown. There is no release grace for HOLDs on touch or keyboard.
 
 On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height 75:25 layout. The upper 75% contains the short title/pause bar, progress bar, and touch highway. The lower 25% shows health, score, accuracy, combo, and the reactive Lumi character. This lower information area does not accept lane input. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
 
@@ -110,7 +110,7 @@ Run `node tests/touch.js` for simulated input and capability checks. Real iOS Sa
 
 On mobile, CSS touch-action and gesture fallbacks suppress page pinch and double-tap zoom across menus, settings, results, and play. Single-finger vertical menu/dialog scrolling remains available; play keeps its separate multi-touch input and scroll guard. Form fields use at least 16px text to avoid focus enlargement. Desktop mouse environments retain their existing behavior. Browser/OS accessibility zoom may override page restrictions.
 
-Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and ribbon checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Charts, timing windows, scores, and existing records remain unchanged; older records may have been earned under the previous survival rules.
+Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each simultaneous note and HOLD checkpoint applies its own health change. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Older records remain stored under their original chart identities; revision 5 HOLD records use separate boards.
 
 The mobile 75:25 split uses the available area after safe-area padding. The judgement line moves upward with the shorter highway, away from the system navigation edge. Short landscape screens reduce HUD text and character size. Character visibility settings still apply. This layout does not disable OS back gestures; it separates the lane input area from the bottom edge.
 

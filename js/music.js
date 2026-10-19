@@ -278,8 +278,8 @@ export function compose(track) {
   cues.sort((a, b) => a.time - b.time);
   return { events: events.sort((a, b) => a.time - b.time), cues };
 }
-// Revision 4 also separates records earned before source-aware ribbon judgement.
-export const CHART_VERSION = "4";
+// Revision 5 separates sustained HOLD scoring from the previous slide rules.
+export const CHART_VERSION = "5";
 export function makeChart(track, lanes, difficulty) {
   const { cues } = compose(track),
     notes = [];
@@ -311,7 +311,7 @@ export function makeChart(track, lanes, difficulty) {
     previousLane = lane;
     index++;
   }
-  // Replace isolated melody windows with one adjacent-lane ribbon. No competing TAPs.
+  // One fixed-lane HOLD plus single off-lane TAPs: at most two required fingers.
   if (difficulty === "expert") {
     let group = 0;
     for (const startBeat of [32, 64, 96, 128, 160, 192, 224, 256, 288]) {
@@ -326,17 +326,21 @@ export function makeChart(track, lanes, difficulty) {
         if (notes[i].time >= start - 0.18 && notes[i].time <= end + 0.18)
           notes.splice(i, 1);
       const left = group % (lanes - 2),
-        path =
-          group % 2 ? [left + 2, left + 1, left] : [left, left + 1, left + 2];
+        holdLane = group % 2 ? left + 2 : left;
       selected.forEach((cue, step) =>
         notes.push({
           time: Number(cue.time.toFixed(6)),
-          lane: path[step],
-          type: "drag",
-          group: "ribbon-" + group,
+          lane: holdLane,
+          type: "hold",
+          group: "hold-" + group,
           step,
         }),
       );
+      // Use existing musical onsets; one companion TAP at each interior beat.
+      selected.slice(1).forEach((cue) => notes.push({
+        time: Number(cue.time.toFixed(6)),
+        lane: (holdLane + Math.floor(lanes / 2)) % lanes,
+      }));
       group++;
     }
   }

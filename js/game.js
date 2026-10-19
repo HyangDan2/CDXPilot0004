@@ -12,12 +12,18 @@ export class Game {
     this.heldSince = new Map();
     this.releasedAt = new Map();
     this.dragGroups = new Map();
+    this.holdGroups = new Map();
     this.notes = chart.notes.map((n) => ({
       ...n,
       at: n.time + chart.offsetMs / 1000,
       done: false,
     }));
     for (const note of this.notes) {
+      if (note.type === "hold") {
+        if (!this.holdGroups.has(note.group))
+          this.holdGroups.set(note.group, { points: [], started: false, broken: false, suspended: false });
+        this.holdGroups.get(note.group).points.push(note);
+      }
       if (note.type === "drag") {
         if (!this.dragGroups.has(note.group))
           this.dragGroups.set(note.group, []);
@@ -46,6 +52,8 @@ export class Game {
   judge(note, result, time) {
     if (this.failed || !note || note.done || !result) return;
     note.done = true;
+    if (note.type === "hold" && note.step === 0 && result === "MISS")
+      this.holdGroups.get(note.group).broken = true;
     this.counts[result]++;
     this.score += CONFIG.points[result];
     this.combo = result === "MISS" ? 0 : this.combo + 1;
@@ -72,6 +80,11 @@ export class Game {
     return result;
   }
   release(lane, audioTime) {
+    // Settle due checkpoints before releasing, including an exact END release.
+    this.update(audioTime);
+    for (const hold of this.holdGroups.values())
+      if (hold.started && !hold.suspended && hold.points[0].lane === lane && !hold.points.at(-1).done)
+        hold.broken = true;
     if (this.heldSince.has(lane)) {
       this.heldSince.delete(lane);
       this.releasedAt.set(lane, audioTime);
@@ -86,6 +99,10 @@ export class Game {
     }
   }
   releaseSource(source, audioTime, transferring = false) {
+    this.update(audioTime);
+    for (const hold of this.holdGroups.values())
+      if (hold.started && !hold.suspended && hold.source === source && !hold.points.at(-1).done)
+        hold.broken = true;
     // A second source holding the lane must not conceal the original source's release.
     for (const points of this.dragGroups.values())
       for (const point of points)
@@ -95,13 +112,24 @@ export class Game {
           } else if (point.releasedAt == null) point.releasedAt = audioTime;
         }
   }
-  suspendInputs() {
+  suspendInputs(audioTime = null) {
+    if (audioTime != null) this.update(audioTime);
+    for (const hold of this.holdGroups.values()) hold.suspended = true;
     this.heldSince.clear();
     this.releasedAt.clear();
   }
   resumeInputs(held, audioTime, sources = null) {
     this.suspendInputs();
     for (const lane of held) this.heldSince.set(lane, audioTime);
+    for (const hold of this.holdGroups.values()) {
+      hold.suspended = false;
+      if (!hold.started || hold.broken || hold.points.at(-1).done) continue;
+      const lane = hold.points[0].lane;
+      const entry = sources && [...sources].find(([source, value]) =>
+        value === lane && source.startsWith("pointer:") === (hold.kind === "touch"));
+      if (!held.has(lane) || (sources && !entry)) hold.broken = true;
+      else if (entry) hold.source = entry[0];
+    }
     for (const points of this.dragGroups.values())
       for (const point of points)
         if (point.anchorAt != null) {
@@ -132,6 +160,13 @@ export class Game {
     const note = nearestNote(this.notes, lane, time);
     if (dragOnly && note?.type !== "drag") return;
     let result = note && classify(time - note.at);
+    if (note?.type === "hold" && note.step === 0) {
+      const hold = this.holdGroups.get(note.group);
+      hold.started = result === "PERFECT" || result === "GOOD";
+      hold.broken = !hold.started;
+      hold.source = source;
+      hold.kind = kind;
+    }
     if (note?.type === "drag") {
       const previous = this.dragGroups.get(note.group)[note.step - 1];
       if (previous && previous.anchorAt != null) {
@@ -162,6 +197,12 @@ export class Game {
     const time = audioTime - this.inputOffset;
     for (const note of this.notes) {
       if (this.failed) break;
+      if (!note.done && note.type === "hold" && note.step > 0) {
+        const hold = this.holdGroups.get(note.group);
+        if (!hold.suspended && time >= note.at - 1e-9)
+          this.judge(note, hold.started && !hold.broken ? "PERFECT" : "MISS", note.at + this.inputOffset);
+        continue;
+      }
       if (!note.done && time - note.at > CONFIG.miss + 1e-9)
         this.judge(note, "MISS", audioTime);
     }

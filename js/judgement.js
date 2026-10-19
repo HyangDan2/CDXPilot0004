@@ -10,7 +10,7 @@ export function nearestNote(notes, lane, time) {
   let closest = null,
     distance = Infinity;
   for (const note of notes) {
-    if (note.done || note.lane !== lane) continue;
+    if (note.done || note.lane !== lane || (note.type === "hold" && note.step > 0)) continue;
     const delta = Math.abs(note.at - time);
     if (delta <= CONFIG.miss + 1e-9 && delta < distance) {
       closest = note;

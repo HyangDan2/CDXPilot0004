@@ -92,7 +92,7 @@ const touchInput = new TouchInput(
     touchEnabled &&
     ["playing", "countdown"].includes(state) &&
     !document.querySelector("dialog[open]"),
-  () => game?.dragGroups.size > 0,
+  () => false, // Stationary HOLDs never score a press from pointer movement.
 );
 const playGestures = new PlayGestureGuard(
   $("play"),
@@ -339,7 +339,7 @@ async function start() {
         Date.now().toString(36) + Math.random().toString(36),
     };
     input.setMode(selectedChart.lanes);
-    document.querySelector(".drag-help").hidden =
+    document.querySelector(".hold-help").hidden =
       selectedChart.difficulty !== "expert";
     renderer.reset();
     mascot.reset();
@@ -356,7 +356,7 @@ async function start() {
       : "SAVED AUDIO · ORIGINAL INSTRUMENTAL";
     $("game-canvas").setAttribute(
       "aria-label",
-      `${selectedChart.lanes} lanes. ${touchEnabled ? "Touch anywhere in a lane on time. Slide sideways for EXPERT ribbons." : "Use " + MODES[selectedChart.lanes].keys.map((k) => k.slice(3)).join(" ") + "."}`,
+      `${selectedChart.lanes} lanes. ${touchEnabled ? "Touch anywhere in a lane on time. Keep the same finger on an EXPERT HOLD lane until END." : "Use " + MODES[selectedChart.lanes].keys.map((k) => k.slice(3)).join(" ") + "."}`,
     );
     beginCountdown(false);
     clearFocus();
@@ -394,13 +394,8 @@ function beginCountdown(isResume) {
   $("countdown").hidden = false;
   $("countdown").classList.remove("go");
   if (isResume) {
-    const anchor = [...game.dragGroups.values()]
-      .flatMap((points) =>
-        points.filter(
-          (p, i) => p.anchorAt != null && points[i + 1] && !points[i + 1].done,
-        ),
-      )
-      .at(-1);
+    const anchor = [...game.holdGroups.values()]
+      .find((hold) => hold.started && !hold.broken && !hold.points.at(-1).done)?.points[0];
     if (anchor)
       $("countdown-caption").textContent =
         "RE-HOLD " +
@@ -420,6 +415,10 @@ function advanceCountdown() {
 }
 function pause() {
   if (!["playing", "countdown"].includes(state)) return;
+  if (state === "playing") {
+    game.update(audio.time);
+    if (game.failed) { finish(); return; }
+  }
   if (state === "countdown" && audio.context.currentTime < countdown.deadline) {
     // A cancelled lead-in restarts from the beginning; song position stays frozen.
     countdownIsResume = audio.position > 0;

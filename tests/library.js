@@ -7,7 +7,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 let count = 0,
-  ribbons = 0;
+  holds = 0;
 const report = [];
 for (const track of TRACKS) {
   const cues = new Set(compose(track).cues.map((c) => c.time.toFixed(6))),
@@ -32,7 +32,7 @@ for (const track of TRACKS) {
       assert(
         chart.duration === 120 &&
           chart.audio === track.audio &&
-          chart.version === "4",
+          chart.version === "5",
         "Web Audio content contract",
       );
       const game = new Game(chart, 0, "free"),
@@ -44,15 +44,11 @@ for (const track of TRACKS) {
         gap = Math.min(gap, note.time - (last.get(note.lane) ?? -Infinity));
         last.set(note.lane, note.time);
         groups.set(note.time, (groups.get(note.time) || 0) + 1);
-        if (note.type === "drag") {
-          ribbons += note.step === 0 ? 1 : 0;
-          game.hit(note.lane, note.time);
-          if (note.step > 0)
-            game.release(
-              game.dragGroups.get(note.group)[note.step - 1].lane,
-              note.time,
-            );
-          if (note.step === game.dragGroups.get(note.group).length - 1)
+        if (note.type === "hold") {
+          holds += note.step === 0 ? 1 : 0;
+          if (note.step === 0) game.hit(note.lane, note.time);
+          else game.update(note.time);
+          if (note === game.holdGroups.get(note.group).points.at(-1))
             game.release(note.lane, note.time);
         } else {
           game.hit(note.lane, note.time);
@@ -74,27 +70,28 @@ for (const track of TRACKS) {
           game.maximumCombo === chart.notes.length,
         `Full perfect replay ${chart.id}: ${game.score}`,
       );
+      // Count held lanes even between checkpoints, not only notes at the same timestamp.
+      for (const time of groups.keys()) {
+        const active = [...game.holdGroups.values()].filter(h => h.points[0].time <= time && h.points.at(-1).time >= time);
+        const taps = chart.notes.filter(n => n.time === time && n.type !== 'hold');
+        assert(active.length <= 1 && active.length + taps.length <= 2, 'Two-finger occupancy');
+        assert(!taps.some(n => active.some(h => h.points[0].lane === n.lane)), 'No same-lane hold TAP');
+      }
+      assert(!chart.notes.some(n => n.type === 'drag'), 'No catalog slide notes');
       const missed = new Game(chart, 0, "free");
       // Replay every chart with source-aware touch handoffs as well as keyboard holds.
       const touchGame = new Game(chart, 0, "free");
       for (const note of chart.notes) {
-        if (note.type === "drag") {
-          const source = `pointer:${note.group}`;
-          const previous = touchGame.dragGroups.get(note.group)[note.step - 1];
-          if (previous) {
-            touchGame.releaseSource(source, note.time, true);
-            touchGame.release(previous.lane, note.time);
-          }
-          touchGame.hit(note.lane, note.time, {
-            kind: "touch", source, dragOnly: note.step > 0,
-            fromLane: previous?.lane ?? null,
-          });
-          if (note.step === touchGame.dragGroups.get(note.group).length - 1) {
+        if (note.type === "hold") {
+          const source = 'pointer:' + note.group;
+          if (note.step === 0) touchGame.hit(note.lane, note.time, {kind: 'touch', source});
+          else touchGame.update(note.time);
+          if (note === touchGame.holdGroups.get(note.group).points.at(-1)) {
             touchGame.releaseSource(source, note.time);
             touchGame.release(note.lane, note.time);
           }
         } else {
-          touchGame.hit(note.lane, note.time, { kind: "touch", source: `pointer:tap-${note.lane}` });
+          touchGame.hit(note.lane, note.time, { kind: "touch", source: 'pointer:tap-' + note.lane });
           touchGame.release(note.lane, note.time);
         }
       }
@@ -111,9 +108,9 @@ for (const track of TRACKS) {
       );
       assert(
         difficulty === "expert"
-          ? game.dragGroups.size >= 5
-          : game.dragGroups.size === 0,
-        "EXPERT-only ribbons",
+          ? game.holdGroups.size >= 5
+          : game.holdGroups.size === 0,
+        "EXPERT-only holds",
       );
       totals[`${lanes}-${difficulty}`] = chart.notes.length;
       count++;
@@ -133,6 +130,6 @@ assert(TRACKS.length === 10 && count === 80, "Ten tracks and eighty charts");
 for (const speed of [0.5, 1, 2, 5, 10])
   assert(noteY(10, 10, 400, speed) === 400, "Speed-independent target");
 console.log(
-  `PASS ${count} deterministic charts, ${ribbons} ribbons, onset mapping, chord caps, spacing, and full replays`,
+  `PASS ${count} deterministic charts, ${holds} holds, onset mapping, chord caps, spacing, and full replays`,
 );
 console.log(JSON.stringify(report, null, 2));

@@ -2,7 +2,7 @@
 
 ## Scope and language
 - Write source, comments, UI, documentation, and test output in English.
-- Current scope: ten two-minute Web Audio tracks, 80 revisioned charts, 4/6 keys, four difficulties including EXPERT, survival/free play, audio-clock countdowns, result SFX, Lumi reactions, 0.5–10× scroll speed, named local leaderboards, EXPERT keyboard ribbons, calibration, and audio-reactive cosmic effects. Deployment is not authorized.
+- Current scope: ten two-minute Web Audio tracks, 80 revisioned charts, 4/6 keys, four difficulties including EXPERT, survival/free play, audio-clock countdowns, result SFX, Lumi reactions, 0.5–10× scroll speed, named local leaderboards, EXPERT same-lane HOLD notes, calibration, and audio-reactive cosmic effects. Deployment is not authorized.
 - Use buildless HTML, CSS, vanilla JavaScript ES modules, Canvas 2D, and Web Audio.
 - No frameworks, game engines, CDN dependencies, backend, database, accounts, Python runtime, webcam, or music-generation API.
 
@@ -40,9 +40,9 @@
 - All difficulties support at most two-note chords in both 4-key and 6-key modes. Generated same-lane spacing floors are 80ms for HARD/EXPERT and 160ms for EASY/NORMAL.
 
 ## Ribbons, records, and synthesis
-- Only EXPERT may contain drag checkpoints. Validate group order, adjacency, and isolation from competing notes.
-- Hold continuity is checked from the first release after an anchor. Early release/repress must not forge a connection. Re-hold explicitly after pause.
-- Count every TAP and drag checkpoint once in maximum score. Preserve Free Play recovery and terminal STANDARD freeze.
+- Only EXPERT may contain HOLD checkpoints. Validate contiguous order, increasing times, and one fixed lane. A HOLD counts as one occupied input throughout its duration; allow only one off-lane companion TAP, no overlapping HOLDs, and no same-lane TAPs.
+- Track the original HOLD source. Any early release/cancel/lane exit permanently breaks the group; no re-touch recovery or release grace. Automatic checkpoints sample audio time. Intact holds may rebind during resume countdown; already broken holds must remain broken.
+- Count every TAP and HOLD checkpoint once in maximum score. Preserve Free Play recovery and terminal STANDARD freeze.
 - Version charts and fingerprint notes for leaderboards. Never mix modes or chart revisions. Tie scores keep earlier rows ahead.
 - Save only completed runs; use per-run IDs to prevent duplicate saves. Names are bounded and rendered with textContent. Handle unavailable storage without blocking gameplay.
 - Production keeps one decoded song and one selected download. Authoring renders ten-second cores with four-second warm-up and provides progress. Never claim a mock graph test verifies actual sound, render speed, or browser memory.
@@ -50,8 +50,8 @@
 ## Touch contracts
 - Aggregate keyboard and pointer sources; release a lane only after its final source releases.
 - Pointer cancellation, capture loss, pause, and mode changes must clear held/captured state.
-- Slides may judge EXPERT drag checkpoints only, never TAP notes. Preserve the audio clock and ribbon grace.
-- Touch ribbons require one uninterrupted gesture and actual lane movement; no release grace. Keyboard ribbons retain 80ms grace. Track source releases independently from aggregated lane holds; explicitly rebind during resume count-in.
+- Movement must never judge TAP or HOLD starts. Production uses stationary HOLDs instead of slide notes.
+- Touch HOLDs require one uninterrupted stationary-lane gesture; keyboard HOLDs require the same key. Track source releases independently from aggregated lane holds; explicitly rebind intact holds during resume count-in.
 - AUTO uses capabilities, not user-agent model guesses. Respect explicit input mode while retaining keyboard support.
 - Compact play must fit the visual viewport and safe areas. Keep menus/settings scrollable and desktop layout unchanged.
 - Distinguish simulated multi-touch tests from real device/browser acceptance.

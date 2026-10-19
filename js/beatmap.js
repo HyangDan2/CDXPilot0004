@@ -50,9 +50,9 @@ export function validateBeatmap(data) {
       const key = note.time + ":" + note.lane;
       if (seen.has(key)) throw new Error("Duplicate note.");
       seen.add(key);
-      if (note.type != null && !["tap", "drag"].includes(note.type))
+      if (note.type != null && !["tap", "drag", "hold"].includes(note.type))
         throw new Error("Unknown note type.");
-      if (note.type === "drag") {
+      if (note.type === "drag" || note.type === "hold") {
         if (
           data.difficulty !== "expert" ||
           typeof note.group !== "string" ||
@@ -60,11 +60,11 @@ export function validateBeatmap(data) {
           !Number.isInteger(note.step) ||
           note.step < 0
         )
-          throw new Error("Invalid EXPERT drag metadata.");
+          throw new Error("Invalid EXPERT sustained-note metadata.");
         const copy = {
           time: note.time,
           lane: note.lane,
-          type: "drag",
+          type: note.type,
           group: note.group,
           step: note.step,
         };
@@ -84,25 +84,37 @@ export function validateBeatmap(data) {
   }
   for (const [id, points] of groups) {
     points.sort((a, b) => a.step - b.step);
+    const isHold = points[0].type === "hold";
     if (points.length < 2)
       throw new Error("A ribbon needs at least two checkpoints.");
     points.forEach((point, i) => {
       if (
-        point.step !== i ||
+        point.step !== i || point.type !== points[0].type ||
         (i > 0 &&
           (point.time <= points[i - 1].time ||
-            Math.abs(point.lane - points[i - 1].lane) !== 1))
+            (isHold ? point.lane !== points[0].lane : Math.abs(point.lane - points[i - 1].lane) !== 1)))
       )
         throw new Error("Invalid ribbon order or adjacency.");
     });
     const start = points[0].time,
       end = points.at(-1).time;
-    if (
+    if (!isHold &&
       notes.some(
         (n) => n.group !== id && n.time >= start - 0.18 && n.time <= end + 0.18,
       )
     )
       throw new Error("Competing notes overlap a ribbon.");
+    if (isHold) {
+      const taps = new Map();
+      for (const note of notes) {
+        if (note.group === id || note.time < start - 0.18 || note.time > end + 0.18) continue;
+        if (note.type === "hold" || note.type === "drag" || note.lane === points[0].lane)
+          throw new Error("A HOLD cannot overlap another sustained note or a same-lane TAP.");
+        const size = (taps.get(note.time) || 0) + 1;
+        if (size > 1) throw new Error("A HOLD permits only one simultaneous companion TAP.");
+        taps.set(note.time, size);
+      }
+    }
     if (intervals.some(([a, b]) => start <= b && end >= a))
       throw new Error("Overlapping ribbons.");
     intervals.push([start, end]);
