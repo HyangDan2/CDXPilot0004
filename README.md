@@ -1,155 +1,107 @@
-# Particle Beat — Volume 03
+# Particle Beat — Cosmic rhythm arcade
 
-A buildless desktop rhythm game with twenty original two-minute Web Audio compositions, 160 versioned charts, 4/6 keys, four difficulty tiers, EXPERT same-lane HOLD notes, local named records, and a reactive cosmic stage with selectable LUMI and NOVA.
+Particle Beat is a browser rhythm game: hit falling notes at the judgement line, sustain HOLD notes, and build your score while keeping your health above zero. Play twenty original two-minute tracks with four or six lanes, accompanied by reactive cosmic effects and your choice of LUMI or NOVA. It runs as a static HTML, Canvas 2D, and Web Audio game on desktop and touch-capable browsers.
 
-## Run
+**[Play Particle Beat](https://hyangdan2.github.io/CDXPilot0004/)** · [Player guide](docs/GAMEPLAY.md) · [Verification history](docs/VERIFICATION.md)
 
-```sh
-node scripts/serve.mjs
-```
+![LUMI and NOVA in neon cosmic promotional artwork for Particle Beat](assets/branding/share-card-v3.png)
 
-Open http://127.0.0.1:8765/. Node.js 22+ is recommended for the optional server. Any static HTTP server works; no install or build is required. Do not use file://. Runtime requires a browser with AudioContext. Bundled audio files load from the same static server. No external services, Python, accounts, or API keys are required. No deployment has been performed.
+_LUMI and NOVA, your reactive co-pilots. Promotional illustration; not a gameplay screenshot._
 
-## Collection
+The public address returned HTTP 200 on October 20, 2026; live gameplay was not verified in this documentation update.
 
-Every composition lasts 120 seconds. Audio is pre-rendered during authoring from oscillators, filters, noise, envelopes, stereo panning, delay, and distortion. There are no lyrics, real singers, borrowed melodies, or cloned voices. Each mode/difficulty shares the same soundtrack.
+## Features
 
-| Track | Style | BPM |
-| --- | --- | --- |
-| Neon Galaxy | Celestial synthwave | 124 |
-| Violet Drift | Orbital downtempo | 100 |
-| Solar Rush | Solar electro | 140 |
-| Deep Orbit | Deep space house | 112 |
-| Starlight Engine | Prismatic trance | 132 |
-| Pixel Sunrise | Formant electropop | 168 |
-| Velvet Satellite | Dream dance pop | 118 |
-| Chrome Heart | Millennium dance pop | 104 |
-| Comet Riot | Synth guitar rock | 156 |
-| Rainfall Circuit | Piano drum and bass | 172 |
-| Neon Sprint | Electro pop | 150 |
-| Prism Circuit | Arcade synth | 156 |
-| Moonlit Drive | Melodic dance | 160 |
-| Gravity Bloom | Future bass | 164 |
-| Chrome Hearts | Electro groove | 168 |
-| Starlight Breaker | Breakbeat | 172 |
-| Aurora Overload | Uplifting trance | 176 |
-| Comet Collision | Drum and bass | 180 |
-| Hypernova Protocol | Hard dance | 184 |
-| Event Horizon | Cosmic finale | 190 |
+- **Two collections, 160 charts:** SIGNAL 1 / ORIGINAL and SIGNAL 2 / CHALLENGE each contain ten tracks, with EASY, NORMAL, HARD, and EXPERT charts in both lane modes. Each collection remembers its selected song.
+- **TAPs and stationary HOLDs:** all charts require at most two simultaneous inputs. EXPERT adds sustained notes; SIGNAL 2 also includes them on HARD. Patterns stay the same on retries.
+- **Survival or practice:** STANDARD ends when health reaches zero. FREE PLAY continues through misses and allows health recovery until the song ends.
+- **Adjustable timing and presentation:** 0.5–10× scroll speed changes note travel without changing music tempo or judgement windows. Calibration, separate Master/Music/SFX volumes, reduced motion, and effect quality settings are available.
+- **Local records:** completed runs compete on named top-ten boards separated by track, lane mode, difficulty, play mode, and chart revision. Export/import backups let you move records between browser origins.
+- **Reactive co-pilots:** LUMI and NOVA respond to hits, misses, health, and results. Character choice and visibility are cosmetic preferences.
 
-The challenge collection adds ten faster arrangements with seeded pattern variation. Selection prefetches a saved MP3; Start decodes it and begins the count-in. Gameplay never synthesizes the soundtrack. Only the current decoded song is cached; retries and difficulty changes reuse it. Failed loads show a retry message. Twenty deployment MP3s total approximately 48 MB. WAV masters and the separate authoring procedure are documented in assets/music/README.md.
+## Controls
 
-## Controls and difficulty
+| Input | Action |
+| --- | --- |
+| **D F J K** | Hit lanes left to right in 4-key mode |
+| **S D F J K L** | Hit lanes left to right in 6-key mode |
+| **Escape** or on-screen pause/resume | Pause or resume a run |
+| Tap inside a lane | Hit that lane in touch mode; tapping the moving note itself is unnecessary |
+| Keep the original key/finger held in one lane | Maintain a HOLD through END |
+| **Space** in calibration | Tap along with the calibration clicks |
+| Arrow keys / Home / End on SIGNAL tabs | Switch track collections |
 
-4 keys: D F J K. 6 keys: S D F J K L. Escape pauses and resumes. Window blur/hidden state pauses automatically. STANDARD ends at zero health; FREE PLAY continues and can recover. Health starts at 100 and is capped at 100. PERFECT heals +2 and GOOD heals +1 on every difficulty. MISS damage is EASY −8, NORMAL −10, HARD −12, EXPERT −15. Start uses 3/2/1/GO; resume uses 2/1/GO, scheduled on the audio clock.
+SETTINGS → INPUT MODE offers AUTO, TOUCH, and KEYBOARD; physical keyboard input remains available in every mode. Touch layout supports portrait and landscape, with a compact highway above the score/character HUD. The HUD does not accept lane input. Moving a finger does not create a new TAP; leaving a HOLD's lane or lifting early breaks it permanently.
 
-Difficulty has shifted upward: EASY follows the former NORMAL density; NORMAL follows former HARD; HARD follows former EXPERT; EXPERT adds more sixteenth-note fills and HOLD notes. All difficulties have at most two-note chords in both 4-key and 6-key modes. Chart revision 6 separates single-penalty HOLD scores from earlier records. Previous records remain stored and exportable.
+## How to Play
 
-### HOLD rules
+1. Open **TRACK SELECT**, choose a SIGNAL and song, then select 4/6 keys and difficulty. Start with EASY; choose FREE PLAY in settings to practice without terminal failure.
+2. Press **START**. The selected saved MP3 loads and decodes before the 3/2/1/GO countdown. Hit notes as they reach the judgement line: PERFECT is within 50 ms and GOOD within 120 ms; misses reduce health and reset combo.
+3. For a HOLD, press its start on time and keep the same key or finger held until END. Later checkpoints score automatically. A failed HOLD causes one MISS and one health penalty; re-touching cannot repair it. Use your other input for companion TAPs.
+4. Finish the 120-second track to receive results, or reach zero health in STANDARD to fail. Use **RETRY** on results or **RESTART** from pause to begin again. Losing window focus pauses automatically.
 
-Press the HOLD start on time and keep the same key or finger on the same lane until END. The start uses normal PERFECT/GOOD/MISS timing. Later checkpoints automatically score PERFECT at their audio-clock targets while the hold is intact. END does not require a timed release; release at or after END. Moving to another lane, lifting, cancellation, or replacing the original input source permanently breaks that HOLD. Failure immediately removes the entire HOLD, counts one MISS and one HP penalty, and resets combo. Unresolved targets are forfeited without more penalties; earned points remain. Every checkpoint remains in the maximum-score denominator. Repressing cannot repair a failed HOLD.
+Resume uses a 2/1/GO countdown. Re-hold any intact active HOLD during that countdown. Only completed runs qualify for records; a new first-place score offers a name prompt. Settings and records persist locally, with session-only fallback when storage is unavailable. There are no accounts or online leaderboards. See the [player guide](docs/GAMEPLAY.md) for scoring, health values, backup limits, and mobile zoom recovery.
 
-HOLDs may accompany one TAP on another lane, allowing two simultaneous inputs in both 4/6-key modes. No overlapping HOLDs, same-lane TAPs, or two simultaneous companion TAPs are permitted. On pause, intact HOLDs are suspended without damage. Re-hold the indicated lane/key during the resume countdown; missing that re-hold breaks the HOLD. A HOLD already broken before pause stays broken. EASY/NORMAL/HARD remain TAP-only.
+## Getting Started
 
-### Speed and scoring
-
-Scroll speed ranges from 0.5× to 10× in 0.25 steps, using either slider or numeric entry. It changes approach time only; music tempo, windows, and scores are unchanged. At 10× the visible approach is approximately 180ms. Settings apply speed immediately while paused and persist locally.
-
-PERFECT <=50ms: 1000 points. GOOD <=120ms: 500. MISS <=180ms: zero and combo reset. Unplayed points expire after 180ms. The nearest unresolved same-lane point is selected; empty inputs have no penalty. Accuracy is score / (all TAPs and HOLD checkpoints × 1000). Grades are S >=95%, A >=90%, B >=80%, C >=70%, otherwise D. Failed runs receive no completion grade.
-
-## High scores
-
-Each track/key mode/difficulty/play mode/chart revision has a local top ten. The board key also fingerprints note data and chart offset, so changed charts cannot silently share old scores. Scroll speed is not a ranking category.
-
-Only completed runs qualify. A strictly new first-place score opens a name prompt, prefilled with the last name. Names are limited to 12 characters. Save, or Skip/Escape to use PLAYER. Other qualifying top-ten runs use the last name. Ties keep existing entries ahead and do not trigger a record prompt. Every run has an ID to prevent duplicate storage. Records show score, accuracy, maximum combo, and date; the menu and result screen expose the relevant board.
-
-Records live only in this browser's localStorage, are not shared between devices, and are not cheat-resistant. Storage failure keeps the record for the current session and displays a message. Invalid stored rows are filtered. No server or database is used.
-
-## Presentation and audio settings
-
-Master, Music, and SFX volume are independent. Result melodies vary by grade/failure. Local calibration offers twelve clicks; tap SPACE after two warm-up beats to estimate combined device/reaction delay. Positive input offset compensates late input and applies next run.
-
-The selected character's nine local expressions react to judgement, health, countdown, and outcome. Character visibility, reduced motion, and effect quality are supported. Audio analysis drives bass pulse, rotating galaxy, and treble stars. See assets/characters/README.md for the original asset and generation prompt. Mobile touch controls and a compact play layout are supported; see the touch controls section below.
-
-## Authoring and checks
-
-Edit `js/music.js` for compositions, cue placement, and lane patterns; `js/synth.js` owns instrument graphs. Regenerate JSON only:
+Use **Node.js 22+** for the documented local tooling and a browser with Web Audio (`AudioContext`), Canvas 2D, and ES module support. From the repository root:
 
 ```sh
-node scripts/generate-library.mjs
-npm test
+npm start
 ```
 
-Generation writes twenty catalog entries and 160 JSON charts; saved audio is generated separately using tools/render-audio.html or scripts/render-audio.mjs (see assets/music/README.md). A HOLD checkpoint uses `{time, lane, type: "hold", group, step}` with contiguous steps, strictly increasing times, and one fixed lane per group. EXPERT allows HOLDs; challenge HARD charts declare holdTier: "hard" to enable HOLDs. A HOLD consumes one input throughout its interval; allow at most one off-lane TAP at each timestamp, with no other sustained group or same-lane TAP within the interval plus a 180ms margin. All charts carry a version.
+Open **http://127.0.0.1:8765/**. The equivalent command is `node scripts/serve.mjs`. No dependency installation, API keys, external services, or build step is required. Use HTTP rather than opening `index.html` with `file://`.
 
-Browser logic checks: `/tests/`. Real-time audio/input/render audit: `/tests/browser.html`. The latter uses synthetic input in Free Play; it cannot verify physical keyboard rollover or perceived audio latency. See docs/VERIFICATION.md for what was actually executed.
-
-Contributor guide: AGENTS.md. Ownership and timing: docs/ARCHITECTURE.md. Test workflow: docs/HARNESS.md. Design history: docs/DECISIONS.md. All maintained files are in English.
-
-## Local record backups
-
-SETTINGS → LOCAL RECORDS → EXPORT RECORDS downloads a versioned JSON backup. IMPORT RECORDS merges a backup into this browser's boards. Each board keeps its top ten; duplicate run IDs are skipped, existing equal scores stay ahead, and malformed files are rejected before mutation. Files are limited to 2 MB and 2,000 records. Unknown chart revisions remain separate. Import does not alter your preferred player name or gameplay settings.
-
-Records are personal, not an online ranking. Clearing browser data removes them. Back up before moving from localhost to GitHub Pages, then import on the destination site. Storage is scoped to the browser origin (scheme, host, port), not the repository path: renaming a repository on the same GitHub Pages domain does not itself create a separate storage area. Other projects on that domain using the same storage key can share that area. If persistence fails, records remain in memory for the session and can still be exported.
-
-## GitHub Pages readiness
-
-The repository can remain named `CDXPilot0004`. The expected project address is `https://<account>.github.io/CDXPilot0004/`. No source code contains that repository name as a runtime base path. HTML/CSS/module references are relative, and audio URLs resolve against the module's project root. The root `.nojekyll` file marks this as a static site.
-
-When ready to publish, push the project files (including MP3s, charts, artwork, and `.nojekyll`) and open the repository's Settings → Pages. Choose **Deploy from a branch**, the intended branch, and **/(root)**, then Save. Do not select `/docs`, which contains documentation rather than the game. See [GitHub's publishing-source guide](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). This task has not enabled Pages or published the repository.
-
-Reproduce a project subpath locally:
+There is no separate production build or output directory: the repository's static files are the game. Any suitable static HTTP server can serve them. To preview hosting under a repository subpath:
 
 ```sh
 BASE_PATH=/CDXPilot0004 PORT=8766 node scripts/serve.mjs
 ```
 
-Open `http://127.0.0.1:8766/CDXPilot0004/`. `node tests/pages-paths.js` checks exact filename case and HTTP availability under both the current name and an alternative name, including twenty MP3s and 160 charts. It is a static asset/HTTP check, not browser gameplay verification. After publication, verify the real site, audio activation, refresh, settings, and backup import/export in the target browser.
+Open **http://127.0.0.1:8766/CDXPilot0004/**. The server binds to `127.0.0.1`; `PORT` and `BASE_PATH` are optional local-server settings.
 
-## Mobile and touch controls
+## Development
 
-SETTINGS → INPUT MODE offers AUTO (default), TOUCH, and KEYBOARD. AUTO enables lane touch when maxTouchPoints or a coarse pointer indicates touch capability. TOUCH forces lane touch on; KEYBOARD hides touch controls. Physical keyboard input remains available in every mode. This is capability detection, not a claim to identify the device model. The choice is saved locally.
+| Command | Purpose |
+| --- | --- |
+| `npm test` | Run logic, simulated input/audio, all-library replay, storage, metadata, and static HTTP path checks |
+| `node tests/library.js` | Validate all twenty scores and 160 charts, including timing, spacing, occupancy, and complete simulated replays |
+| `node tests/pages-paths.js` | Check exact-case assets and HTTP loading under two repository prefixes |
+| `npm run generate:library` | Regenerate the catalog and chart JSON after score/chart changes; does not render audio |
+| `node scripts/verify-audio.mjs` | With FFmpeg installed, analyze MP3s against WAV masters and write verification results |
+| `node scripts/verify-character-frames.mjs` | With FFmpeg installed, measure sprite-cell artwork margins |
 
-Tap anywhere inside the relevant lane as its note reaches the judgement line; you do not need to touch the moving note. Numbered buttons are hidden in touch mode. Vertical movement within a lane does not create another hit. Four-key and six-key layouts support independent simultaneous pointers. Two fingers on the same lane count as one held lane, and releasing one cannot release another finger or keyboard source. Pointer cancellation and capture loss release the associated source.
+`npm test` needs no browser installation or npm dependencies. Its HTTP checks start and close servers on ephemeral ports. Separately, serve the project and open `/tests/` for browser logic checks, `/tests/browser.html` for the real-time audio/render audit, and `/tests/result-layout.html` or `/tests/mobile-hud.html` for layout fixtures. Keep the audio audit visible. Synthetic input and mock audio graphs do not establish physical-device latency or listening quality.
 
-For EXPERT HOLD notes, keep the original finger on the starting lane until END. Use a second finger for companion TAPs in other lanes. Sliding to another lane or leaving the canvas breaks the HOLD; returning or switching fingers cannot repair it. Re-hold an intact HOLD during the resume countdown. There is no release grace for HOLDs on touch or keyboard.
+### Project structure
 
-On touch-capable compact viewports (width up to 900 px or height up to 600 px), play uses a viewport-height 75:25 layout. The upper 75% contains the short title/pause bar, progress bar, and touch highway. The lower 25% shows health, score, accuracy, combo, and the reactive Lumi character. This lower information area does not accept lane input. Decorative headings and long instructions are hidden during play. Safe-area padding and visual viewport height keep the judgement line above device UI. Menus, settings, and results remain scrollable. Rotation that changes width pauses touch play; resume after adjusting your grip. Desktop layout stays unchanged outside compact touch environments.
+| Path | Responsibility |
+| --- | --- |
+| `index.html`, `css/` | Screens, dialogs, desktop/mobile layout, and sharing metadata |
+| `js/` | Gameplay, audio transport, rendering, input, settings, records, and score definitions |
+| `assets/beatmaps/`, `assets/tracks.json` | Saved revisioned charts and catalog |
+| `assets/music/`, `assets/characters/`, `assets/branding/` | Local soundtracks, co-pilot sprites, and sharing/icon artwork |
+| `scripts/`, `tools/` | Static server, generation, optional audio authoring, and asset verification |
+| `tests/`, `docs/` | Automated checks, browser fixtures, contracts, and verification history |
 
-Run `node tests/touch.js` for simulated input and capability checks. Real iOS Safari/Android Chrome multi-touch, audio latency, safe areas, and browser chrome changes still require device acceptance; automated pointer tests are not physical-device verification.
+Audio time is authoritative; Game alone mutates scoring and health. Production plays saved MP3s and shares one soundtrack across all eight charts for each track. See [architecture](docs/ARCHITECTURE.md), the [harness](docs/HARNESS.md), and the [audio authoring procedure](assets/music/README.md) before changing these contracts. Optional audio authoring has additional dependencies; they are unnecessary for gameplay.
 
-On mobile, CSS touch-action and gesture fallbacks suppress page pinch and double-tap zoom across menus, settings, results, and play. Single-finger vertical menu/dialog scrolling remains available; play keeps its separate multi-touch input and scroll guard. Form fields use at least 16px text to avoid focus enlargement. Desktop mouse environments retain their existing behavior. Browser/OS accessibility zoom may override page restrictions.
+## Deployment
 
-Health uses decimal tenths internally (rounded after each update), with an integer HUD display. Without recovery, EASY/NORMAL/HARD/EXPERT fail after 13/10/9/7 misses respectively. Each TAP applies its own health change; a failed HOLD applies one penalty for the entire group. Successful HOLD checkpoints retain recovery. FREE PLAY continues at zero and still recovers on PERFECT and GOOD. Older records remain stored under their original chart identities; revision 6 HOLD records use separate boards.
+The repository is prepared for static GitHub Pages hosting at the play link above, with a root `.nojekyll` file. No checked-in CI or deployment workflow is present. The documented owner setup is **Settings → Pages → Deploy from a branch**, selecting the intended branch and **/(root)**, not `/docs`. With branch publishing configured, updates to that source are published by Pages; the repository's actual remote settings were not inspected here.
 
-The mobile 75:25 split uses the available area after safe-area padding. The judgement line moves upward with the shorter highway, away from the system navigation edge. Short landscape screens reduce HUD text and character size. Character visibility settings still apply. This layout does not disable OS back gestures; it separates the lane input area from the bottom edge.
+Publish the static entry point, CSS, JavaScript, catalog, all charts, local MP3s, character/branding assets, and `.nojekyll`. There is no generated `dist/` artifact. For a fork or renamed public site, update canonical/Open Graph/social image URLs in `index.html` and the expected URL in `tests/sharing.js`; runtime asset paths are relative. See [branding guidance](assets/branding/README.md).
 
-## Character selection
+Export local records before changing browser origin, then import them at the destination; storage is origin-scoped, not repository-path-scoped. Local HTTP checks do not prove successful deployment or live browser gameplay. This documentation update did not publish or change hosting settings.
 
-Click the character in the loaded-track strip on the main menu to open the co-pilot selector. Choose LUMI (cyan/lavender space DJ) or NOVA (silver hair, violet eyes, magenta star accents). The selection immediately updates menu, play, and result views and is saved in this browser. Settings → CHANGE CHARACTER provides the same selector while paused or on results. Selection never changes score, health, timing, or record identity.
+## Documentation and Limitations
 
-SHOW CHARACTER remains independent: choosing a character does not override a hidden-character preference. When hidden, the menu still offers a text selection button and settings access. Character previews in the selector remain visible so you can choose. Reduced-motion preferences disable the menu float and reaction bounce; the idle/blink expressions remain available. Mobile play retains the 75:25 split with the selected character in the lower quarter. The compact menu thumbnail appears below START, without adding content above it.
+- [Player guide](docs/GAMEPLAY.md): full track list, HOLD rules, scoring, settings, touch behavior, and record backups.
+- [Contributor rules](AGENTS.md), [architecture](docs/ARCHITECTURE.md), and [design decisions](docs/DECISIONS.md).
+- [Verification harness](docs/HARNESS.md) and [checks actually performed](docs/VERIFICATION.md).
+- [Music provenance and authoring](assets/music/README.md), [character provenance](assets/characters/README.md), and [branding provenance](assets/branding/README.md).
+- [MIT license](LICENSE).
 
-NOVA is an original generated transparent 3×3 sprite sheet. Generation provenance, prompt, and cell order are documented in assets/characters/README.md and assets/characters/nova-prompt.md. All images are bundled locally; no image generation or network service is used during play.
+The current scope is twenty 120-second songs and 160 revision-6 charts. It is a single-player game with keyboard/touch input; no gamepad support, multiplayer, accounts, or cloud saves are implemented. Local records can be edited by the device owner and are not cheat-resistant. Clearing browser data removes them unless backed up.
 
-Character sprites use revised padded sheets plus a fixed, clipped frame with a 10% inner gutter. Only the sprite moves during reactions, keeping animation and shadows away from labels. Original images remain in assets/characters as references. See padding-prompts.md and padding-verification.json there for edit provenance and measured cell margins.
-
-### Recovering an enlarged mobile page
-
-START and RESUME check VisualViewport scale before and after audio preparation/activation. If the page is already enlarged or reduced, a recovery dialog asks you to pinch back to the default size or reset browser page zoom. Zoom gestures are temporarily enabled while scale is abnormal. Returning to normal closes the message and refreshes layout; press START/RESUME again. A zoom change during play pauses the run. The app cannot force browser/OS zoom to reset; browsers without VisualViewport cannot provide this scale check.
-
-## Link previews and icons
-
-The static HTML includes Open Graph and large-card metadata for the public URL https://hyangdan2.github.io/CDXPilot0004/. The 1200×630 sharing card features LUMI and NOVA in a neon cosmic scene. Local SVG/PNG/ICO favicons and an Apple touch icon use the neon star/music-note symbol. See assets/branding/README.md for provenance and replacement instructions. No server or runtime image generation is required.
-
-If the public repository/domain changes, update canonical, og:url, og:image, and twitter:image in index.html and the expected public URL in tests/sharing.js. Relative game/icon paths remain portable. Social services and browsers may cache previous previews/icons; source tests and an HTTP 200 do not guarantee that a third-party preview has refreshed.
-
-## Challenge collection (revision 6)
-
-The second ten tracks use faster tempos, seeded lane selection, additional musical offbeats, and varied EXPERT HOLD lengths. HARD also supports HOLDs on these tracks; original tracks retain EXPERT-only HOLDs. Generated patterns are stored in JSON and never reshuffled during play or retry. Every sustained window still requires at most two fingers. The seed, lane mode, and difficulty determine each pattern; spacing filters reject unsafe repeated lanes. A failed HOLD counts as one MISS even when several checkpoint points are forfeited, so judgement totals may be lower than the maximum-score target count. The persistent EXPERT HOLDS help paragraph has been removed from the play screen.
-
-## Signal collections
-
-TRACK SELECT has two keyboard-accessible tabs: SIGNAL 1 / ORIGINAL contains the first ten tracks; SIGNAL 2 / CHALLENGE contains the ten faster tracks. Each tab shows its track count and retains an independently remembered song. The active signal and both songs persist with existing settings. Legacy preferences infer the signal from the saved track. Key mode, difficulty, speed, character, play mode, chart versions, and local records are unchanged. Arrow keys, Home, and End switch the tabs. Both tabs stay in one row on mobile; the song list scrolls vertically.
-
-The catalog is fetched with a release query and cache revalidation. An incomplete ten-track catalog produces an explicit reload message instead of silently hiding SIGNAL 2. Previously open pages must reload to obtain the updated entry script.
+Twenty deployment MP3s total approximately 48 MB; selection downloads one track and playback retains one decoded song. Artwork includes generated character sheets; provenance and crop limitations are documented above. Physical iOS Safari/Android Chrome acceptance, current browser layout fixtures, listening balance, and perceived audio synchronization remain unverified in this update. Browser/OS zoom overrides cannot be forcibly reset; zoom recovery detection requires VisualViewport. Automated checks are not a supported-browser certification.
