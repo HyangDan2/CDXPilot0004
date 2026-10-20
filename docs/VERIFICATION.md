@@ -189,3 +189,11 @@ The failure-result link was subsequently clicked at 844×390 and also reached th
 ### Release authorization
 
 The user subsequently explicitly authorized committing, pushing, and deploying this integration. Re-ran the full `npm test` suite successfully before committing. Existing GitHub `pages build and deployment` runs identify main as the publishing branch. Hosted acceptance will be checked after this release's Pages run completes.
+
+### Hosted acceptance — 2026-10-20
+
+Implementation commit 93cd867db0742f27413a2823d3e4a394600becd0 was pushed to main with explicit user authorization. GitHub Pages run https://github.com/HyangDan2/CDXPilot0004/actions/runs/39434698703 completed successfully. Live index.html, main.js?v=6.3, hub.js, and style.css?v=6.3 returned HTTP 200 and matched the local release content exactly.
+
+Actual in-app browser acceptance at https://hyangdan2.github.io/CDXPilot0004/: the menu Game Hub link activated with Enter, the pause link activated by click, and the failure-result link activated by click all reached https://hyangdan2.github.io/GameHub/ in the same tab. The hub displayed its three-game collection. Clicking Particle Beat on the hub reopened the production game; its DOM referenced entry/CSS version 6.3 and loaded Neon Galaxy / 4 KEYS / NORMAL. A real all-miss STANDARD run reached its expected failure result. Pause showed the unfinished-run warning. Browser Back from the hub returned to a usable menu. Hosted screenshots are in /tmp/particle-beat-hub/deployed-{menu,pause,results}.png.
+
+This completes the previously pending hosted navigation round trip. Remaining device/listening, successful-record UI, asynchronous interruption, and true Back/forward cache acceptance gaps listed above still apply. The follow-up documentation commit changes no runtime assets.
