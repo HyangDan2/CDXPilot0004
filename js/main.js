@@ -1,4 +1,5 @@
 import { SIGNALS, signalTracks, restoreSignalSelection, rememberSignalTrack, loadCatalog } from "./signals.js?v=6.2";
+import { connectHubLinks } from "./hub.js";
 import { CHARACTERS, characterById } from "./characters.js";
 import { TouchInput, PlayGestureGuard, inputEnvironment } from "./touch.js";
 import { isPageZoomed, isMobileViewport, MobileZoomGuard, ViewportGate } from "./viewport.js";
@@ -32,6 +33,7 @@ try {
 }
 const highScores = new HighScores(scoreStorage);
 let pendingRecord = null;
+let navigationSequence = 0;
 let countdownIsResume = false;
 let tracks = [],
   chart,
@@ -314,6 +316,7 @@ async function start() {
   const selectedChart = chart,
     selectedTrack = currentTrack();
   busy = true;
+  const entrySequence = navigationSequence;
   $("mode").disabled = true;
   $("difficulty").disabled = true;
   state = "preparing";
@@ -327,9 +330,11 @@ async function start() {
   $("retry").disabled = true;
   try {
     await audio.activate();
+    if (entrySequence !== navigationSequence) return;
     await audio.prepare(selectedChart, (message) => {
       $("status").textContent = message;
     });
+    if (entrySequence !== navigationSequence) return;
     // Zoom may have changed while the audio was loading.
     if (!ensureNormalZoom()) {
       state = "menu";
@@ -445,8 +450,10 @@ async function resume() {
   if (state !== "paused" || busy) return;
   if (!ensureNormalZoom()) return;
   busy = true;
+  const entrySequence = navigationSequence;
   try {
     await audio.activate();
+    if (entrySequence !== navigationSequence) return;
     if (!ensureNormalZoom()) return;
     $("paused").close();
     beginCountdown(countdownIsResume);
@@ -833,6 +840,22 @@ window.addEventListener("blur", () => {
   calibration.stop();
   sfx.stop();
 });
+function leavePage() {
+  navigationSequence++;
+  if (pendingRecord) savePending("PLAYER");
+  pause();
+  if (state === "preparing") {
+    state = "menu";
+    screen("menu");
+  }
+  audio.pause();
+  countdown.cancel();
+  input.clear();
+  calibration.stop();
+  sfx.stop();
+}
+connectHubLinks(document.querySelectorAll("[data-game-hub]"), leavePage);
+window.addEventListener("pagehide", leavePage);
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     input.clear();

@@ -30,7 +30,7 @@
     <link rel="icon" type="image/png" href="assets/branding/favicon-32.png" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="assets/branding/favicon.svg" sizes="any" />
     <link rel="apple-touch-icon" href="assets/branding/apple-touch-icon.png" sizes="180x180" />
-    <link rel="stylesheet" href="css/style.css?v=6.2" />
+    <link rel="stylesheet" href="css/style.css?v=6.3" />
   </head>
   <body>
     <canvas id="cosmos" aria-hidden="true"></canvas>
@@ -70,6 +70,7 @@
             <button id="start" class="primary" disabled>
               START GAME <span>↗</span></button
             ><button id="tracks-open">TRACK SELECT <span>≡</span></button>
+            <a class="hub-link" data-game-hub>Game Hub</a>
           </div>
           <div class="keyboard-help">
             <div id="menu-keys">
@@ -239,6 +240,7 @@
           <button id="retry" class="primary">PLAY AGAIN ↗</button
           ><button id="result-tracks">TRACK SELECT</button
           ><button id="main-menu">MAIN MENU</button>
+          <a class="hub-link" data-game-hub>Game Hub</a>
         </div>
       </section>
     </main>
@@ -397,6 +399,8 @@
       <button id="resume" class="primary">RESUME ↗</button
       ><button id="pause-settings">SETTINGS</button
       ><button id="pause-menu">MAIN MENU</button>
+      <p id="hub-exit-warning">Leaving for Game Hub discards this unfinished run. Settings and saved records stay in this browser.</p>
+      <a class="hub-link" data-game-hub aria-describedby="hub-exit-warning">Game Hub</a>
     </dialog>
     <dialog id="calibration">
       <div class="dialog-title">
@@ -440,6 +444,6 @@
       <form method="dialog"><button>CLOSE</button></form>
     </dialog>
     <div id="status" role="status" aria-live="polite">Loading demo…</div>
-    <script type="module" src="js/main.js?v=6.2"></script>
+    <script type="module" src="js/main.js?v=6.3"></script>
   </body>
 </html>

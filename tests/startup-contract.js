@@ -4,7 +4,7 @@ const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8"
 const html = read("index.html"), main = read("js/main.js");
 assert(!main.includes('querySelector(".hold-help")'), "Removed help must never be accessed during start");
 assert(!html.includes('class="hold-help"'), "Removed help stays absent");
-assert(html.includes('js/main.js?v=6.2'), "Changed markup loads a fresh entry module");
+assert(html.includes('js/main.js?v=6.3'), "Changed markup loads a fresh entry module");
 for (const module of ["game", "beatmap", "music"])
   assert(main.includes(`./${module}.js?v=6.1`), "Changed revision-6 module is cache separated: " + module);
 for (const id of ["menu", "play", "results", "countdown", "menu-mascot", "mascot", "result-mascot"])

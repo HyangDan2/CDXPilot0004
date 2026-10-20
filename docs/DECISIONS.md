@@ -114,3 +114,7 @@ Use revision 6 for all 160 charts to isolate changed HOLD scoring without deleti
 ## 2026-10-19 — Two Signal collections
 
 Group the existing catalog using challenge metadata rather than changing track IDs or chart revisions. Store group selection and per-group last track in the existing preferences key; infer the group from legacy saved tracks. Keep leaderboard identity unchanged. Use release-versioned entry/catalog/changed modules with catalog revalidation and explicit completeness checking to avoid silently retaining a cached ten-track catalog. The live catalog fetched during investigation contained 20 tracks and the renderer had no ten-item cap. Browser cache or scroll confusion remains a possible cause, not a confirmed device diagnosis.
+
+## 2026-10-20 — Return to Game Hub
+
+Add secondary English Game Hub anchors to the existing main menu, pause dialog, and clear/fail results. Keep one fixed destination in hub.js and native same-tab navigation. Use a visible pause-menu loss explanation instead of a second confirmation dialog; RESUME remains the primary action. Preserve normal record submission and use existing synchronous cleanup, including pagehide. Invalidate pending audio preparation/resume on departure and reset duplicate activation protection on pageshow for Back restoration. No deployment, storage migration, or gameplay changes are part of this integration.

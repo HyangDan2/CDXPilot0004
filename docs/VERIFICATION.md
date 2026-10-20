@@ -171,3 +171,21 @@ Read-only HTTP inspection of the published assets/tracks.json returned all 20 ex
 Tests: tests/signals.js and startup-contract.js passed; Pages path checks passed under /CDXPilot0004/ and /renamed-project/ for all 20 MP3s and 160 charts; sharing checks passed. Selection tests cover migration, save/reload, invalid values, unavailable storage, unchanged unrelated settings and score identity. Browser/mobile tab layout and physical interactions remain unverified; existing browser restrictions were not bypassed. No music, chart revision, or gameplay scoring changed.
 
 The complete `npm test` suite also passed using bundled modern Node, including all 160 chart replays and existing gameplay, settings, records, touch, health, and character regressions. `git diff --check` passed.
+
+## 2026-10-20 — Game Hub integration (local release 6.3)
+
+Repository CDXPilot0004, uncommitted integration based on 5015af7. Added secondary Game Hub anchors on main menu, pause, and clear/fail results, with an unfinished-run loss warning in pause. No deployment performed; AGENTS.md prohibits deployment.
+
+Passed: full `npm test` using bundled modern Node, including new focused hub tests, all 160 chart replays, existing record/settings/input/audio mocks, and static asset checks under /CDXPilot0004/ and /renamed-project/. Hub cleanup/pending-save checks use mocks, not physical audio or a completed browser record submission.
+
+Actual in-app browser checks over http://127.0.0.1:8765/: Enter on the menu link and click on the paused link both reached the exact live https://hyangdan2.github.io/GameHub/ in the same tab, displaying the GameHub three-game collection. Back returned to a usable fresh main menu with the previous selected track/difficulty; this run did not establish Back/forward cache preservation of a paused run. A real STANDARD all-miss run displayed the failure result and its Game Hub link. Pause during retry count-in displayed the loss warning and primary RESUME control. The pause link measured about 115×53 CSS pixels. Captured desktop menu, 390×844 portrait menu/results/pause, and 844×390 landscape pause screenshots in /tmp/particle-beat-hub/. These are browser viewport checks, not physical touch-device testing.
+
+An initial browser attempt found the local server stopped (connection refused); after starting the documented server, localhost loaded successfully. A delayed pause attempt encountered an already-failed run; retry and immediate pause succeeded. No access denial was bypassed.
+
+Remaining: physical iOS/Android touch, safe areas and orientation behavior; audible stop/listening acceptance; successful-run name/save UI before exit; interrupted asynchronous start/resume and true Back/forward cache behavior in a real browser; deployed game→hub→game round trip. Public game URL remains https://hyangdan2.github.io/CDXPilot0004/ and has not received this local revision.
+
+The failure-result link was subsequently clicked at 844×390 and also reached the exact live hub in the same tab; Back again returned to a fresh usable menu. Additional landscape menu/results screenshots were captured. All three implemented surfaces therefore have actual local-to-live-hub navigation evidence. `git diff --check` and Node syntax checks for main.js/hub.js passed. The viewport override was reset after verification.
+
+### Release authorization
+
+The user subsequently explicitly authorized committing, pushing, and deploying this integration. Re-ran the full `npm test` suite successfully before committing. Existing GitHub `pages build and deployment` runs identify main as the publishing branch. Hosted acceptance will be checked after this release's Pages run completes.

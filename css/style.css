@@ -40,7 +40,8 @@ a,
 input {
   touch-action: manipulation;
 }
-button {
+button,
+.hub-link {
   font: 700 11px Arial;
   letter-spacing: 1.3px;
   cursor: pointer;
@@ -53,9 +54,19 @@ button {
     background 0.2s,
     transform 0.2s;
 }
-button:hover {
+button:hover,
+.hub-link:hover {
   background: #252b43;
   transform: translateY(-1px);
+}
+.hub-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+  text-decoration: none;
 }
 button:disabled {
   opacity: 0.45;
