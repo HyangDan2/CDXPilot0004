@@ -6,7 +6,7 @@ const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8'
 const html = read('index.html'), main = read('js/main.js');
 assert.equal(HUB_URL, 'https://hyangdan2.github.io/GameHub/');
 const anchors = html.match(/<a\b[^>]*data-game-hub[^>]*>/g);
-assert.equal(anchors.length, 3);
+assert.equal(anchors.length, 2);
 assert(anchors.every(tag => !/target=|download=/.test(tag)));
 assert(html.includes('aria-describedby="hub-exit-warning"'));
 assert(html.includes('discards this unfinished run'));
@@ -24,7 +24,7 @@ event = click(); links[1].click(event);
 assert.equal(event.defaultPrevented, true, 'Duplicate navigation is blocked');
 assert.equal(cleanups, 1);
 page.pageshow();
-event = click(); links[2].click(event);
+event = click(); links[0].click(event);
 assert.equal(event.defaultPrevented, false, 'Back restores usable links');
 assert.equal(cleanups, 2);
 const leave = main.match(/function leavePage\(\) \{[\s\S]*?\n\}/)[0];

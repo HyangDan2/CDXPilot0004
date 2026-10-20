@@ -118,3 +118,7 @@ Group the existing catalog using challenge metadata rather than changing track I
 ## 2026-10-20 — Return to Game Hub
 
 Add secondary English Game Hub anchors to the existing main menu, pause dialog, and clear/fail results. Keep one fixed destination in hub.js and native same-tab navigation. Use a visible pause-menu loss explanation instead of a second confirmation dialog; RESUME remains the primary action. Preserve normal record submission and use existing synchronous cleanup, including pagehide. Invalidate pending audio preparation/resume on departure and reset duplicate activation protection on pageshow for Back restoration. No deployment, storage migration, or gameplay changes are part of this integration.
+
+## 2026-10-20 — Header Game Hub placement
+
+Move the menu Game Hub action beside SETTINGS in the header at the user's request. Results share that header action instead of duplicating it below the score. Hide the header anchor during play/countdown/pause, while retaining the pause dialog's warning and link. Keep the action group together and allow a second header row on narrow screens. CSS release 6.4 refreshes the changed layout without changing JavaScript or navigation behavior.

@@ -132,6 +132,6 @@ On desktop and phone, open TRACK SELECT, switch SIGNAL 1/2, choose a different s
 
 ## Game Hub navigation regression
 
-`npm test` includes tests/hub.js: exact fixed destination, all three anchors, native activation, duplicate protection, pageshow reset, and mocked main departure cleanup/pending record ordering. Cleanup mocks do not establish browser audio behavior or Back/forward cache acceptance.
+`npm test` includes tests/hub.js: exact fixed destination, shared header and pause anchors, native activation, duplicate protection, pageshow reset, and mocked main departure cleanup/pending record ordering. Cleanup mocks do not establish browser audio behavior or Back/forward cache acceptance.
 
 Serve the game and activate Game Hub with Enter from the main menu and by click from pause/results. Verify https://hyangdan2.github.io/GameHub/ in the same tab. From pause, read the unfinished-run warning, verify RESUME still works without exiting, then leave. After browser Back, require either a usable paused run or a fresh menu with no automatic music. Check initial/resume audio preparation interrupted by navigation. Inspect 390×844 portrait and 844×390 landscape for wrapping, scroll access, visible focus, and targets at least 44px. Finish/save/skip a qualifying record before exiting results and verify records/preferences after return. Hosted game→hub→game acceptance remains separate from localhost→live hub and requires an authorized deployment.

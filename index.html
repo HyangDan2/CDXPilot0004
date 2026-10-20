@@ -30,7 +30,7 @@
     <link rel="icon" type="image/png" href="assets/branding/favicon-32.png" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="assets/branding/favicon.svg" sizes="any" />
     <link rel="apple-touch-icon" href="assets/branding/apple-touch-icon.png" sizes="180x180" />
-    <link rel="stylesheet" href="css/style.css?v=6.3" />
+    <link rel="stylesheet" href="css/style.css?v=6.4" />
   </head>
   <body>
     <canvas id="cosmos" aria-hidden="true"></canvas>
@@ -38,7 +38,11 @@
       <a class="brand" href="./"
         ><span class="brand-icon">✳</span> PARTICLE<span>BEAT</span></a
       ><span class="edition">VOLUME 03 <i></i> TWENTY COSMIC FREQUENCIES</span
-      ><button id="settings-open" class="small">SETTINGS ↗</button>
+      >
+      <div class="header-actions">
+        <a class="hub-link small" data-game-hub>Game Hub</a>
+        <button id="settings-open" class="small">SETTINGS ↗</button>
+      </div>
     </header>
     <main>
       <section id="menu" class="screen">
@@ -70,7 +74,6 @@
             <button id="start" class="primary" disabled>
               START GAME <span>↗</span></button
             ><button id="tracks-open">TRACK SELECT <span>≡</span></button>
-            <a class="hub-link" data-game-hub>Game Hub</a>
           </div>
           <div class="keyboard-help">
             <div id="menu-keys">
@@ -240,7 +243,6 @@
           <button id="retry" class="primary">PLAY AGAIN ↗</button
           ><button id="result-tracks">TRACK SELECT</button
           ><button id="main-menu">MAIN MENU</button>
-          <a class="hub-link" data-game-hub>Game Hub</a>
         </div>
       </section>
     </main>
